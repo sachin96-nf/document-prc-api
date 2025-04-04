@@ -1,12 +1,13 @@
 %dw 2.0
 output application/java
 import dataweave::regex
-var broker_data = vars.broker_opp_details.'broker-details'.'broker_data'
+var broker_data = vars.broker_opp_details.'broker-details'.broker_data
+var contact=regex::phoneCheck(broker_data.contact)
 var contacts = 
-    if (broker_data.contact is Array) 
-    broker_data.contact 
-    else if (broker_data.contact != null) 
-    [broker_data.contact] 
+    if (contact is Array) 
+    contact 
+    else if (contact != null) 
+    [contact] 
     else [] // Convert string to an array for consistency
 var validContacts = contacts filter ($ != null and $ != "") // Remove null/empty values
 var phoneCondition = 

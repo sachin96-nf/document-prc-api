@@ -153,8 +153,7 @@ output application/java
 		<set-payload value="#[vars.client_id]" doc:name="client_id" doc:id="62086df7-4454-4b65-8aeb-be866f14efc1" />
 	</sub-flow>
 	<sub-flow name="sf-upsert-opportunity-subflow" doc:id="670a1dde-e8a6-4da2-b511-a05dec81a872" >
-		<set-variable value="#[&quot;select Id from User where email='&quot; ++ (vars.broker_opp_details.'opportunity-data'.opportunity_data.email default &quot; &quot;) ++ &quot;' or Phone = '&quot; ++ (vars.broker_opp_details.'opportunity-data'.opportunity_data.contact default &quot; &quot;) ++ &quot;'&quot;]" doc:name="query" doc:id="8a9fb7d0-648b-4b48-89c2-5eed9e2a6c3b" variableName="query" />
-		<ee:transform doc:name="query and client_id" doc:id="f662e212-bb18-4461-8c84-1541cbada020">
+		<ee:transform doc:name="query" doc:id="f662e212-bb18-4461-8c84-1541cbada020">
 			<ee:message />
 			<ee:variables>
 				<ee:set-variable resource="dataweave/vOppQuery.dwl" variableName="query" />
@@ -181,8 +180,8 @@ output application/java
 		</validation:is-true>
 	</sub-flow>
 	<sub-flow name="send-attachments-to-sf-subflow" doc:id="228a2836-e332-46a1-a591-eac8b78cd79d">
-		<set-variable value="${sf.docobj_contentversion}" doc:name="contentversion" doc:id="d7979970-2dd5-4cc1-91e8-f83a11b6b7da" variableName="objectname" />
-		<set-variable value="${sf.docobj_externalid}" doc:name="externalid" doc:id="c3be2dc8-ffe3-40ed-9eb9-8457daa0a762" variableName="externalid" />
+		<set-variable value="${salesforce.docobj_contentversion}" doc:name="contentversion" doc:id="d7979970-2dd5-4cc1-91e8-f83a11b6b7da" variableName="objectname" />
+		<set-variable value="${salesforce.docobj_externalid}" doc:name="externalid" doc:id="c3be2dc8-ffe3-40ed-9eb9-8457daa0a762" variableName="externalid" />
 		<set-variable value='#["attachment.zip"]' doc:name="attachmentName" doc:id="ba392d34-d097-4364-9619-91bfdab751de" variableName="attachmentName" />
 		<set-payload value='#[%dw 2.0&#10;import * from dw::core::Binaries&#10;output application/java&#10;---&#10;[{&#10;    PathOnClient: vars.attachmentName,&#10;    VersionData: vars.zipped_data as Binary {&#10;        class: "byte[]"&#10;    }&#10;}]]' doc:name="Payload to Zip" doc:id="fd90123b-7aa3-4900-a16a-5951556f2b1c" />
 		<flow-ref doc:name="salesforce-upsert-subflow" doc:id="e4883456-7ae5-4824-ae70-e9c66f0655e9" name="salesforce-upsert-subflow" />
@@ -193,7 +192,7 @@ output application/java
 				<ee:set-payload resource="dataweave/pAttachmentPayload.dwl" />
 			</ee:message>
 		</ee:transform>
-		<set-variable value="${sf.docobj_contentdocumentlink}" doc:name="contentdocumentlink" doc:id="953ed2c2-8b9b-4297-b0be-65db2472ad7c" variableName="objectname" />
+		<set-variable value="${salesforce.docobj_contentdocumentlink}" doc:name="contentdocumentlink" doc:id="953ed2c2-8b9b-4297-b0be-65db2472ad7c" variableName="objectname" />
 		<flow-ref doc:name="salesforce-upsert-subflow1" doc:id="4b8a5b02-41ef-4ac4-b10c-1ae9f3c3df0d" name="salesforce-upsert-subflow" />
 		<logger level="INFO" doc:name="Info Log" doc:id="e2fa42c1-0ecf-4dc4-b42d-0a36c96d326e" message='#[{&#10;	"Salesforce Output": payload&#10;}]' />
 	</sub-flow>

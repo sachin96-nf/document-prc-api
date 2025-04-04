@@ -1,7 +1,7 @@
 %dw 2.0
 output application/json skipNullOn="everywhere"
-import dataweave::nullCheck
-var client_details=vars.client_details.'client-details'.client_details 
+import dataweave::regex
+var client_details=vars.client_details.'client-details'.client_details
 fun getFteRange(fte) =
 	if (fte == null) null
     else if (fte as Number <= 50) "50 or Less"
@@ -11,14 +11,14 @@ fun getFteRange(fte) =
 ---
 [
 	{
-		"RecordTypeId": Mule::p('sf.record_type.client'),
-		"Name": nullCheck::nullChars(client_details.name),
-		"Email__c": nullCheck::nullChars(client_details.email),
+		"RecordTypeId": Mule::p('salesforce.record_type.client'),
+		"Name": regex::nullChars(client_details.name),
+		"Email__c": regex::nullChars(client_details.email),
 		"Company_Size__c": getFteRange(client_details.fte),
-		"BillingCity": nullCheck::nullChars(client_details.address.city),
+		"BillingCity": regex::nullChars(client_details.address.city),
 		"BillingCountry": 'United States',
-		"BillingPostalCode": nullCheck::nullChars(client_details.address.zip),
-		"BillingState": nullCheck::nullChars(client_details.address.state),
-		"BillingStreet": nullCheck::nullChars(client_details.address.street)
+		"BillingPostalCode": regex::nullChars(client_details.address.zip),
+		"BillingState": regex::nullChars(client_details.address.state),
+		"BillingStreet": regex::nullChars(client_details.address.street)
 	}
 ]

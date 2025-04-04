@@ -3,8 +3,7 @@ gmail:
   password: "![/R7y8K1uWUYrjKoba4pdu14w1Kzt07+/]"
   
 slack:
-  key: "![3WldBg40cOpz5AjmUCFWQv5c09XtmoopPOUQUCAte6M=]"
-  secret: "![nxNaeJFOsV3zqWFElbQNomHzvLU3wkQ4jWtV+zF0BEdR7bc2sl/cpw==]"
+  token: "![NrlSRw2kDwD20d22AwiN+6fNLehSmGmRtogzUJkgJdkNVrF5Yp3OaPBxLU+A56MhpcQXvM8VB0F81230FfQ7Lw==]"
   
 sf:
   client_id: "![dTEg4FOb0w4TgFpOeRGy4Thj81Ol7KHalvKPY1PkmM/1phBP86fGKA==]"

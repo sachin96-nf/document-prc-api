@@ -20,10 +20,18 @@ http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-110 http://www.mule
 		<logger level="INFO" doc:name="Info Log"
 			doc:id="5c5b0dee-e7c8-45e4-9f64-4eddde1a8ddf"
 			message="Start posting pdf file into IDP" />
-		<until-successful maxRetries="${retry.count}" doc:name="Until Successful" doc:id="fa46ff39-c58f-490a-82b4-ddf72b8feae3" millisBetweenRetries="${retry.freq}">
-			<idp-idp-curative-emailbody-dev-120:postdocumentactionexecution doc:name="postDocumentActionExecution" doc:id="ca15d9a2-bb63-4269-832b-3e352eab8ba7" config-ref="IDP___idp_curative_emailbody_dev___1_2_0_Config" />
+		<until-successful maxRetries="${retry.count}"
+			doc:name="Until Successful"
+			doc:id="fa46ff39-c58f-490a-82b4-ddf72b8feae3"
+			millisBetweenRetries="${retry.freq}">
+			<idp-idp-curative-emailbody-dev-120:postdocumentactionexecution
+				doc:name="postDocumentActionExecution"
+				doc:id="ca15d9a2-bb63-4269-832b-3e352eab8ba7"
+				config-ref="IDP___idp_curative_emailbody_dev___1_2_0_Config" />
 		</until-successful>
-		<logger level="INFO" doc:name="Exit Log" doc:id="352e75d7-e845-4667-9e81-2dcdcecb6e37" message="File posted to IDP successfully" />
+		<logger level="INFO" doc:name="Exit Log"
+			doc:id="352e75d7-e845-4667-9e81-2dcdcecb6e37"
+			message="File posted to IDP successfully" />
 	</sub-flow>
 	<sub-flow name="idp-get-emailbody-subflow"
 		doc:id="15025b18-ec30-4825-b4fa-7a1f797d94c7">
@@ -43,49 +51,103 @@ output application/json
 } wait (Mule::p('sleep.freq') as Number)]]></ee:set-variable>
 			</ee:variables>
 		</ee:transform>
-		<until-successful maxRetries="${retry.count}" doc:name="Until Successful" doc:id="1323a1b5-46e5-43ea-8b23-7af5ecfd07c0" millisBetweenRetries="${retry.freq}">
-			<idp-idp-curative-emailbody-dev-120:getdocumentactionexecution doc:name="getDocumentActionExecution" doc:id="2418c485-5621-4618-9ff7-a705d90bf732" config-ref="IDP___idp_curative_emailbody_dev___1_2_0_Config" execution-id="#[payload.id]" />
+		<until-successful maxRetries="${retry.count}"
+			doc:name="Until Successful"
+			doc:id="1323a1b5-46e5-43ea-8b23-7af5ecfd07c0"
+			millisBetweenRetries="${retry.freq}">
+			<idp-idp-curative-emailbody-dev-120:getdocumentactionexecution
+				doc:name="getDocumentActionExecution"
+				doc:id="2418c485-5621-4618-9ff7-a705d90bf732"
+				config-ref="IDP___idp_curative_emailbody_dev___1_2_0_Config"
+				execution-id="#[payload.id]" />
 		</until-successful>
-		<choice doc:name="Check if IDP returns prompt values" doc:id="38c0eb5c-7964-4d0c-b4a9-7f97f219e245" >
-			<when expression="#[output application/java --- ((payload.status default &quot;&quot;) == &quot;IN_PROGRESS&quot;) and (vars.count_idp &lt; Mule::p('sleep.retry_count'))]">
-				<logger level="INFO" doc:name="Info Log" doc:id="601dd6b8-8e26-4cdb-833e-3171d9fbfd04" message="Didnot get response from IDP. Retrying..." />
-				<set-variable value="#[(vars.count_idp default 0) + 1]" doc:name="count_idp" doc:id="1b21219f-42aa-42ce-90fb-9129db848eb4" variableName="count_idp"/>
-				<flow-ref doc:name="idp-get-emailbody-subflow" doc:id="3eaedf25-ec02-4a39-9d38-c9767eb14e52" name="idp-get-emailbody-subflow"/>
-			</when>
-			<otherwise >
-				<set-variable value="#[0]" doc:name="count_idp" doc:id="fe0c2a62-97c7-499f-afb5-3c2fda3b4376" variableName="count_idp" />
-			</otherwise>
-		</choice>
-		<logger level="INFO" doc:name="Exit Log" doc:id="67bc476a-a675-4a9f-9986-aeaf26a265f6" message="Response received from IDP successfully" />
-	</sub-flow>
-	<sub-flow name="idp-post-attachment-subflow" doc:id="adcc91a0-c418-40a4-97c5-920f315c7e27" >
-		<logger level="INFO" doc:name="Info Log" doc:id="3266af49-cc1b-4350-9648-50c6aa65fa5a" message="Start posting pdf file into IDP" />
-		<until-successful maxRetries="${retry.count}" doc:name="Until Successful" doc:id="f3211829-7f05-4971-943e-95a188284bbd" millisBetweenRetries="${retry.freq}">
-			<idp-idp-curative-pdf-dev-110:postdocumentactionexecution doc:name="postDocumentActionExecution" doc:id="3194fa92-4cec-4bb0-95b5-c7adb65b6882" config-ref="IDP___idp_curative_pdf_dev___1_1_0_Config" />
-		</until-successful>
-		<logger level="INFO" doc:name="Exit Log" doc:id="cbfafdca-50b9-4466-bc74-e771f0b79140" message="File posted to IDP successfully" />
-	</sub-flow>
-	<sub-flow name="idp-get-attachment-subflow" doc:id="56497a54-8dc3-4ca2-844a-df8d33626027" >
-		<logger level="INFO" doc:name="Info Log" doc:id="353f4bd0-2523-4865-9fdb-9d8d33b46b2c" message="Start getting prompts response from IDP" />
-		<ee:transform doc:name="sleep" doc:id="a6b53b78-3483-4a0a-9d71-7d7e174e6b0b" >
-			<ee:message />
-			<ee:variables >
-				<ee:set-variable resource="dataweave/vSleep.dwl" variableName="sleep" />
-			</ee:variables>
-		</ee:transform>
-		<until-successful maxRetries="${retry.count}" doc:name="Until Successful" doc:id="a2f6faf4-97ee-4657-8fc9-060c26c531a3" millisBetweenRetries="${retry.freq}">
-			<idp-idp-curative-pdf-dev-110:getdocumentactionexecution doc:name="getDocumentActionExecution" doc:id="7342673d-122b-4a17-b287-319d8bb9fc80" config-ref="IDP___idp_curative_pdf_dev___1_1_0_Config" execution-id="#[payload.id]" />
-		</until-successful>
-		<choice doc:name="Check if IDP returns prompt values" doc:id="e7557ca8-b7a0-48d3-bf03-ccd19cd27c26">
-			<when expression="#[output application/java --- ((payload.status default &quot;&quot;) == &quot;IN_PROGRESS&quot;) and (vars.count_idp &lt; Mule::p('sleep.retry_count'))]">
-				<logger level="INFO" doc:name="Info Log" doc:id="f1a9f692-8ca4-4ccd-9382-7ef3288160af" message="Didnot get response from IDP. Retrying..."/>
-				<set-variable value="#[(vars.count_idp default 0) + 1]" doc:name="count_idp" doc:id="4eec316a-f990-4ab2-b51f-cb4d29c2409f" variableName="count_idp" />
-				<flow-ref doc:name="idp-get-attachment-subflow" doc:id="289082c4-b3d1-4e5b-9510-41ade4b309e5" name="idp-get-attachment-subflow" />
+		<choice doc:name="Check if IDP returns prompt values"
+			doc:id="38c0eb5c-7964-4d0c-b4a9-7f97f219e245">
+			<when
+				expression="#[output application/java --- ((payload.status default &quot;&quot;) == &quot;IN_PROGRESS&quot;) and (vars.count_idp &lt; Mule::p('sleep.retry_count'))]">
+				<logger level="INFO" doc:name="Info Log"
+					doc:id="601dd6b8-8e26-4cdb-833e-3171d9fbfd04"
+					message="Didnot get response from IDP. Retrying..." />
+				<set-variable value="#[(vars.count_idp default 0) + 1]"
+					doc:name="count_idp" doc:id="1b21219f-42aa-42ce-90fb-9129db848eb4"
+					variableName="count_idp" />
+				<flow-ref doc:name="idp-get-emailbody-subflow"
+					doc:id="3eaedf25-ec02-4a39-9d38-c9767eb14e52"
+					name="idp-get-emailbody-subflow" />
 			</when>
 			<otherwise>
-				<set-variable value="#[0]" doc:name="count_idp" doc:id="9f660214-d412-4e2c-9112-6fe07a468497" variableName="count_idp" />
+				<set-variable value="#[0]" doc:name="count_idp"
+					doc:id="fe0c2a62-97c7-499f-afb5-3c2fda3b4376"
+					variableName="count_idp" />
 			</otherwise>
 		</choice>
-		<logger level="INFO" doc:name="Exit Log" doc:id="2340a492-ef6a-43c2-af1d-1a79d6970bbd" message="Response received from IDP successfully" />
+		<logger level="INFO" doc:name="Exit Log"
+			doc:id="67bc476a-a675-4a9f-9986-aeaf26a265f6"
+			message="Response received from IDP successfully" />
+	</sub-flow>
+	<sub-flow name="idp-post-attachment-subflow"
+		doc:id="adcc91a0-c418-40a4-97c5-920f315c7e27">
+		<logger level="INFO" doc:name="Info Log"
+			doc:id="3266af49-cc1b-4350-9648-50c6aa65fa5a"
+			message="Start posting pdf file into IDP" />
+		<until-successful maxRetries="${retry.count}"
+			doc:name="Until Successful"
+			doc:id="f3211829-7f05-4971-943e-95a188284bbd"
+			millisBetweenRetries="${retry.freq}">
+			<idp-idp-curative-pdf-dev-110:postdocumentactionexecution
+				doc:name="postDocumentActionExecution"
+				doc:id="3194fa92-4cec-4bb0-95b5-c7adb65b6882"
+				config-ref="IDP___idp_curative_pdf_dev___1_1_0_Config" />
+		</until-successful>
+		<logger level="INFO" doc:name="Exit Log"
+			doc:id="cbfafdca-50b9-4466-bc74-e771f0b79140"
+			message="File posted to IDP successfully" />
+	</sub-flow>
+	<sub-flow name="idp-get-attachment-subflow"
+		doc:id="56497a54-8dc3-4ca2-844a-df8d33626027">
+		<logger level="INFO" doc:name="Info Log"
+			doc:id="353f4bd0-2523-4865-9fdb-9d8d33b46b2c"
+			message="Start getting prompts response from IDP" />
+		<ee:transform doc:name="sleep"
+			doc:id="a6b53b78-3483-4a0a-9d71-7d7e174e6b0b">
+			<ee:message />
+			<ee:variables>
+				<ee:set-variable resource="dataweave/vSleep.dwl"
+					variableName="sleep" />
+			</ee:variables>
+		</ee:transform>
+		<until-successful maxRetries="${retry.count}"
+			doc:name="Until Successful"
+			doc:id="a2f6faf4-97ee-4657-8fc9-060c26c531a3"
+			millisBetweenRetries="${retry.freq}">
+			<idp-idp-curative-pdf-dev-110:getdocumentactionexecution
+				doc:name="getDocumentActionExecution"
+				doc:id="7342673d-122b-4a17-b287-319d8bb9fc80"
+				config-ref="IDP___idp_curative_pdf_dev___1_1_0_Config"
+				execution-id="#[payload.id]" />
+		</until-successful>
+		<choice doc:name="Check if IDP returns prompt values"
+			doc:id="e7557ca8-b7a0-48d3-bf03-ccd19cd27c26">
+			<when
+				expression="#[output application/java --- ((payload.status default &quot;&quot;) == &quot;IN_PROGRESS&quot;) and (vars.count_idp &lt; Mule::p('sleep.retry_count'))]">
+				<logger level="INFO" doc:name="Info Log"
+					doc:id="f1a9f692-8ca4-4ccd-9382-7ef3288160af"
+					message="Didnot get response from IDP. Retrying..." />
+				<set-variable value="#[(vars.count_idp default 0) + 1]"
+					doc:name="count_idp" doc:id="4eec316a-f990-4ab2-b51f-cb4d29c2409f"
+					variableName="count_idp" />
+				<flow-ref doc:name="idp-get-attachment-subflow"
+					doc:id="289082c4-b3d1-4e5b-9510-41ade4b309e5"
+					name="idp-get-attachment-subflow" />
+			</when>
+			<otherwise>
+				<set-variable value="#[0]" doc:name="count_idp"
+					doc:id="9f660214-d412-4e2c-9112-6fe07a468497"
+					variableName="count_idp" />
+			</otherwise>
+		</choice>
+		<logger level="INFO" doc:name="Exit Log"
+			doc:id="2340a492-ef6a-43c2-af1d-1a79d6970bbd"
+			message="Response received from IDP successfully" />
 	</sub-flow>
 </mule>

@@ -47,48 +47,6 @@ http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-110 http://www.mule
 			</tls:context>
 		</email:imaps-connection>
 	</email:imap-config>
-	<slack:config name="Slack_Connector_Config"
-		doc:name="Slack Connector Config"
-		doc:id="349ee775-fcf0-4f79-b245-71cd5e8bca47">
-		<slack:slack-auth-connection
-			baseUri="${slack.uri}" connectionTimeout="${slack.conn_timeout}"
-			connectionIdleTimeout="${slack.conn_idle_timeout}">
-			<reconnection>
-				<reconnect frequency="${slack.reconnection.freq}"
-					count="${slack.reconnection.attempts}" />
-			</reconnection>
-			<slack:oauth-authorization-code
-				consumerKey="${secure::slack.key}"
-				consumerSecret="${secure::slack.secret}"
-				authorizationUrl="${slack.auth_url}"
-				accessTokenUrl="${slack.token_url}" scopes="${slack.scopes}" />
-			<slack:oauth-callback-config
-				listenerConfig="HTTPS_Listener_config"
-				callbackPath="${slack.callback_path}"
-				authorizePath="${slack.auth_path}"
-				externalCallbackUrl="${slack.callback_url}" />
-			<slack:oauth-store-config
-				objectStore="Slack_OS" />
-		</slack:slack-auth-connection>
-	</slack:config>
-	<http:request-config
-		name="HTTP_Request_configuration"
-		doc:name="HTTP Request configuration"
-		doc:id="4ad77ce4-037d-4613-aab6-e43fd7099f50"
-		basePath="${sf.base_path}" sendCorrelationId="ALWAYS"
-		responseTimeout="${sf.response_timeout}">
-		<http:request-connection protocol="HTTPS"
-			host="${sf.host}" port="${sf.port}"
-			connectionIdleTimeout="${sf.conn_idle_timeout}">
-			<reconnection>
-				<reconnect frequency="${sf.reconnection.freq}"
-					count="${sf.reconnection.attempts}" />
-			</reconnection>
-			<tls:context>
-				<tls:trust-store insecure="true" />
-			</tls:context>
-		</http:request-connection>
-	</http:request-config>
 	<configuration-properties
 		doc:name="Configuration properties"
 		doc:id="a56a4bfb-8976-4842-bd30-c9f3abf421c2"
@@ -152,4 +110,24 @@ http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-110 http://www.mule
 		property_responseTimeout="60000"
 		property_client-id="a84f34384d8e4ad58c6dcd7551a9cfcc"
 		property_client-secret="3B892B8FF4e2461B81E0C17022dfBC69" />
+	<http:request-config name="Slack_Request"
+		doc:name="HTTP Request configuration"
+		doc:id="8051e518-f624-4b1c-992d-1aa27d192064"
+		responseTimeout="${slack.response_timeout}">
+		<http:request-connection host="${slack.host}"
+			port="${slack.port}" protocol="HTTPS"
+			connectionIdleTimeout="${slack.conn_idle_timeout}">
+			<reconnection>
+				<reconnect frequency="${slack.reconnection.freq}"
+					count="${slack.reconnection.attempts}" />
+			</reconnection>
+			<tls:context>
+				<tls:trust-store insecure="true" />
+			</tls:context>
+		</http:request-connection>
+		<http:default-headers>
+			<http:default-header key="Authorization"
+				value="Bearer ${secure::slack.token}" />
+		</http:default-headers>
+	</http:request-config>
 </mule>
