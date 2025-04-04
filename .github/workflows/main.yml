@@ -13,6 +13,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      BUSINESS_GROUP_ID: ${{ vars.BUSINESS_GROUP_ID }}
+      API_NAME: ${{ vars.API_NAME }}
+      ANYPOINT_DEV_ID: ${{ vars.ANYPOINT_DEV_ID }}
+      ANYPOINT_TEST_ID: ${{ vars.ANYPOINT_TEST_ID }}
+      ANYPOINT_PROD_ID: ${{ vars.ANYPOINT_PROD_ID }}
     steps:
       - name: Checkout Source
         uses: actions/checkout@v3
