@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:slack="http://www.mulesoft.org/schema/mule/slack" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/slack http://www.mulesoft.org/schema/mule/slack/current/mule-slack.xsd">
+	<error-handler name="global-error-handler" doc:id="883e21b1-b3d1-49d3-ab3b-8d7221ea9b43" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="f08eea02-9155-4506-9e0f-dbf4d167598d" type="BROKER_ACCOUNT:MISSING_FILEDS">
+			<set-variable value='#[error.errorType.identifier match {&#10;	case "BAD_REQUEST" -&gt; 400&#10;	case "MISSING_FILEDS" -&gt; 400&#10;	case "USER_MISSING" -&gt; 400&#10;	case "UNAUTHORIZED" -&gt; 401&#10;	case "FORBIDDEN" -&gt; 403&#10;	case "NOT_FOUND" -&gt; 404&#10;	case "METHOD_NOT_ALLOWED" -&gt; 405&#10;	case "NOT_ACCEPTABLE" -&gt; 406&#10;	case "TIMEOUT" -&gt; 408&#10;	case "SESSION_TIMED_OUT" -&gt; 408&#10;	case "UNSUPPORTED_MEDIA_TYPE" -&gt; 415&#10;	case "NOT_IMPLEMENTED" -&gt; 515&#10;	else -&gt; 500&#10;}]' doc:name="httpStatus" doc:id="42af314b-961b-4d1d-958e-4bea44f433f8" variableName="httpStatus" />
+			<ee:transform doc:name="Error Payload" doc:id="22294e24-51c9-4274-9a67-48a660d861f9" >
+				<ee:message >
+					<ee:set-payload resource="dataweave/pBrokerAccountErrorPayload.dwl" />
+				</ee:message>
+			</ee:transform>
+			<logger level="ERROR" doc:name="Error Log" doc:id="2dffc31a-38f6-4f06-a4f1-a4eecc84fc4a" message="#[payload]" />
+			<slack:create-chatpost-message doc:name="Slack Message" doc:id="32aae705-bd82-464b-84df-111e5b36f4d4" config-ref="Slack_Connector_Config" >
+				<slack:chatpost-message-content ><![CDATA[#[%dw 2.0
+output application/json
+---
+{
+	"channel": Mule::p('slack.channel'),
+	"text": payload
+}]]]></slack:chatpost-message-content>
+			</slack:create-chatpost-message>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="15cb2b32-4c7a-4e01-ae47-deee53ab349b" type="BROKER_CONTACT:MISSING_FILEDS">
+			<set-variable value='#[error.errorType.identifier match {&#10;	case "BAD_REQUEST" -&gt; 400&#10;	case "MISSING_FILEDS" -&gt; 400&#10;	case "USER_MISSING" -&gt; 400&#10;	case "UNAUTHORIZED" -&gt; 401&#10;	case "FORBIDDEN" -&gt; 403&#10;	case "NOT_FOUND" -&gt; 404&#10;	case "METHOD_NOT_ALLOWED" -&gt; 405&#10;	case "NOT_ACCEPTABLE" -&gt; 406&#10;	case "TIMEOUT" -&gt; 408&#10;	case "SESSION_TIMED_OUT" -&gt; 408&#10;	case "UNSUPPORTED_MEDIA_TYPE" -&gt; 415&#10;	case "NOT_IMPLEMENTED" -&gt; 515&#10;	else -&gt; 500&#10;}]' doc:name="httpStatus" doc:id="fa4f613b-3a9c-402d-b4fc-41b6d942e632" variableName="httpStatus" />
+			<ee:transform doc:name="Error Payload" doc:id="87b3e501-d6ba-4644-9bf3-1da71d4f8186">
+				<ee:message>
+					<ee:set-payload resource="dataweave/pBrokerContactErrorPayload.dwl" />
+				</ee:message>
+			</ee:transform>
+			<logger level="ERROR" doc:name="Error Log" doc:id="549bd580-b9a4-472a-9e9f-8d1f6b6a9131" message="#[payload]" />
+			<slack:create-chatpost-message doc:name="Slack Message" doc:id="0bd0d852-03f2-4df4-b690-c12deae93eb4" config-ref="Slack_Connector_Config">
+				<slack:chatpost-message-content><![CDATA[#[%dw 2.0
+output application/json
+---
+{
+	"channel": Mule::p('slack.channel'),
+	"text": payload
+}]]]></slack:chatpost-message-content>
+			</slack:create-chatpost-message>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="c277aa77-8b5a-4acc-b071-d956b312448b" type="CLIENT_ACCOUNT:MISSING_FILEDS" >
+			<set-variable value='#[error.errorType.identifier match {&#10;	case "BAD_REQUEST" -&gt; 400&#10;	case "MISSING_FILEDS" -&gt; 400&#10;	case "USER_MISSING" -&gt; 400&#10;	case "UNAUTHORIZED" -&gt; 401&#10;	case "FORBIDDEN" -&gt; 403&#10;	case "NOT_FOUND" -&gt; 404&#10;	case "METHOD_NOT_ALLOWED" -&gt; 405&#10;	case "NOT_ACCEPTABLE" -&gt; 406&#10;	case "TIMEOUT" -&gt; 408&#10;	case "SESSION_TIMED_OUT" -&gt; 408&#10;	case "UNSUPPORTED_MEDIA_TYPE" -&gt; 415&#10;	case "NOT_IMPLEMENTED" -&gt; 515&#10;	else -&gt; 500&#10;}]' doc:name="httpStatus" doc:id="482593ed-f491-4398-867d-f1eb0ba8bb96" variableName="httpStatus" />
+			<ee:transform doc:name="Error Payload" doc:id="14c943f9-5fb9-4fd2-88ca-a78f0f507f7c" >
+				<ee:message >
+					<ee:set-payload resource="dataweave/pClientAccountErrorPayload.dwl" />
+				</ee:message>
+			</ee:transform>
+			<logger level="ERROR" doc:name="Error Log" doc:id="64a9667b-d1fd-4e3d-a20f-0b942cf6a337" message="#[payload]" />
+			<slack:create-chatpost-message doc:name="Slack Message" doc:id="56d17012-16bb-4561-ae11-187de1d13ccc" config-ref="Slack_Connector_Config" >
+				<slack:chatpost-message-content ><![CDATA[#[%dw 2.0
+output application/json
+---
+{
+	"channel": Mule::p('slack.channel'),
+	"text": payload
+}]]]></slack:chatpost-message-content>
+			</slack:create-chatpost-message>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="93a2a3b8-6fcf-4ac4-bce7-56d3e6b7017f" type="OPPORTUNITY:USER_MISSING" >
+			<set-variable value='#[error.errorType.identifier match {&#10;	case "BAD_REQUEST" -&gt; 400&#10;	case "MISSING_FILEDS" -&gt; 400&#10;	case "USER_MISSING" -&gt; 400&#10;	case "UNAUTHORIZED" -&gt; 401&#10;	case "FORBIDDEN" -&gt; 403&#10;	case "NOT_FOUND" -&gt; 404&#10;	case "METHOD_NOT_ALLOWED" -&gt; 405&#10;	case "NOT_ACCEPTABLE" -&gt; 406&#10;	case "TIMEOUT" -&gt; 408&#10;	case "SESSION_TIMED_OUT" -&gt; 408&#10;	case "UNSUPPORTED_MEDIA_TYPE" -&gt; 415&#10;	case "NOT_IMPLEMENTED" -&gt; 515&#10;	else -&gt; 500&#10;}]' doc:name="httpStatus" doc:id="e03e0748-01de-4ac8-8361-8c1f5006d9b6" variableName="httpStatus" />
+			<ee:transform doc:name="Error Payload" doc:id="fd5904ae-c79c-4b36-9263-a5ee0d5abc70" >
+				<ee:message >
+					<ee:set-payload resource="dataweave/pOpportunityErrorPayload.dwl" />
+				</ee:message>
+			</ee:transform>
+			<logger level="ERROR" doc:name="Error Log" doc:id="62ef91f5-c27a-4279-8f1d-e39f36572d1a" message="#[payload]" />
+			<slack:create-chatpost-message doc:name="Slack Message" doc:id="39a661c3-591f-4c31-979b-e92e90b59b65" config-ref="Slack_Connector_Config" >
+				<slack:chatpost-message-content ><![CDATA[#[%dw 2.0
+output application/json
+---
+{
+	"channel": Mule::p('slack.channel'),
+	"text": payload
+}]]]></slack:chatpost-message-content>
+			</slack:create-chatpost-message>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="77c52e48-560b-4b06-af81-18c874c2b241" type="EMAIL_PDF:NOT_PRESENT">
+			<set-variable value='#[error.errorType.identifier match {&#10;	case "BAD_REQUEST" -&gt; 400&#10;	case "MISSING_FILEDS" -&gt; 400&#10;	case "USER_MISSING" -&gt; 400&#10;	case "NOT_PRESENT" -&gt; 400&#10;	case "UNAUTHORIZED" -&gt; 401&#10;	case "FORBIDDEN" -&gt; 403&#10;	case "NOT_FOUND" -&gt; 404&#10;	case "METHOD_NOT_ALLOWED" -&gt; 405&#10;	case "NOT_ACCEPTABLE" -&gt; 406&#10;	case "TIMEOUT" -&gt; 408&#10;	case "SESSION_TIMED_OUT" -&gt; 408&#10;	case "UNSUPPORTED_MEDIA_TYPE" -&gt; 415&#10;	case "NOT_IMPLEMENTED" -&gt; 515&#10;	else -&gt; 500&#10;}]' doc:name="httpStatus" doc:id="0afbe109-8126-4bb9-afa9-06440c83507e" variableName="httpStatus" />
+			<ee:transform doc:name="Error Payload" doc:id="597cf920-13e9-410f-a8c6-fd3dea6489cc" >
+				<ee:message >
+					<ee:set-payload resource="dataweave/pPdfMissingErrorPayload.dwl" />
+				</ee:message>
+			</ee:transform>
+			<logger level="ERROR" doc:name="Error Log" doc:id="31bc8e75-a048-4431-9d87-1c0e3cea0065" message="#[payload]" />
+			<slack:create-chatpost-message doc:name="Slack Message" doc:id="9e153e02-f9f4-43cb-8b18-026c98b7cb18" config-ref="Slack_Connector_Config" >
+				<slack:chatpost-message-content ><![CDATA[#[%dw 2.0
+output application/json
+---
+{
+	"channel": Mule::p('slack.channel'),
+	"text": payload
+}]]]></slack:chatpost-message-content>
+			</slack:create-chatpost-message>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="0d97c987-7dfc-4b44-acc7-c088ed1a23a8" >
+			<set-variable value='#[error.errorType.identifier match {&#10;	case "BAD_REQUEST" -&gt; 400&#10;	case "MISSING_FILEDS" -&gt; 400&#10;	case "USER_MISSING" -&gt; 400&#10;	case "UNAUTHORIZED" -&gt; 401&#10;	case "FORBIDDEN" -&gt; 403&#10;	case "NOT_FOUND" -&gt; 404&#10;	case "METHOD_NOT_ALLOWED" -&gt; 405&#10;	case "NOT_ACCEPTABLE" -&gt; 406&#10;	case "TIMEOUT" -&gt; 408&#10;	case "SESSION_TIMED_OUT" -&gt; 408&#10;	case "UNSUPPORTED_MEDIA_TYPE" -&gt; 415&#10;	case "NOT_IMPLEMENTED" -&gt; 515&#10;	else -&gt; 500&#10;}]' doc:name="httpStatus" doc:id="d33e2875-1f15-4a04-82ff-9bcb0f485613" variableName="httpStatus" />
+			<ee:transform doc:name="Error Payload" doc:id="afb9f79c-2dba-4ee3-9d83-58ddca729804">
+				<ee:message>
+					<ee:set-payload resource="dataweave/pErrorPayload.dwl" />
+				</ee:message>
+			</ee:transform>
+			<logger level="ERROR" doc:name="Error Log" doc:id="175264a0-c90b-43c9-9f3a-09f19b64c254" message="#[payload]" />
+			<slack:create-chatpost-message doc:name="Slack Message" doc:id="08640198-7fff-417f-8361-d269518a71af" config-ref="Slack_Connector_Config">
+				<slack:chatpost-message-content><![CDATA[#[%dw 2.0
+output application/json
+---
+{
+	"channel": Mule::p('slack.channel'),
+	"text": payload
+}]]]></slack:chatpost-message-content>
+			</slack:create-chatpost-message>
+		</on-error-propagate>
+	</error-handler>
+</mule>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule
+	xmlns:idp-idp-curative-pdf-dev-110="http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-110"
+	xmlns:idp-idp-curative-emailbody-dev-120="http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-120"
+	xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:os="http://www.mulesoft.org/schema/mule/os"
+	xmlns:idp-idp-curative-emailbody-dev-100="http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-100"
+	xmlns:idp-idp-curative-pdf-dev-100="http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-100"
+	xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
+	xmlns:slack="http://www.mulesoft.org/schema/mule/slack"
+	xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:email="http://www.mulesoft.org/schema/mule/email"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/secure-properties 
+http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/slack http://www.mulesoft.org/schema/mule/slack/current/mule-slack.xsd
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd
+http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-100 http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-100/current/mule-idp-idp-curative-pdf-dev-100.xsd
+http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-100 http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-100/current/mule-idp-idp-curative-emailbody-dev-100.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-120 http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-120/current/mule-idp-idp-curative-emailbody-dev-120.xsd
+http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-110 http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-110/current/mule-idp-idp-curative-pdf-dev-110.xsd">
+	<email:imap-config name="Email_IMAP"
+		doc:name="Email IMAP" doc:id="3265d9fc-f0c1-46a3-a81d-2139ed73c016">
+		<email:imaps-connection host="${gmail.host}"
+			port="${gmail.port}" user="${secure::gmail.username}"
+			password="${secure::gmail.password}"
+			connectionTimeout="${gmail.conn_timeout}"
+			readTimeout="${gmail.read_timeout}"
+			writeTimeout="${gmail.write_timeout}">
+			<reconnection>
+				<reconnect frequency="${gmail.reconnection.freq}"
+					count="${gmail.reconnection.attempts}" />
+			</reconnection>
+			<tls:context>
+				<tls:trust-store insecure="true" />
+			</tls:context>
+		</email:imaps-connection>
+	</email:imap-config>
+	<slack:config name="Slack_Connector_Config"
+		doc:name="Slack Connector Config"
+		doc:id="349ee775-fcf0-4f79-b245-71cd5e8bca47">
+		<slack:slack-auth-connection
+			baseUri="${slack.uri}" connectionTimeout="${slack.conn_timeout}"
+			connectionIdleTimeout="${slack.conn_idle_timeout}">
+			<reconnection>
+				<reconnect frequency="${slack.reconnection.freq}"
+					count="${slack.reconnection.attempts}" />
+			</reconnection>
+			<slack:oauth-authorization-code
+				consumerKey="${secure::slack.key}"
+				consumerSecret="${secure::slack.secret}"
+				authorizationUrl="${slack.auth_url}"
+				accessTokenUrl="${slack.token_url}" scopes="${slack.scopes}" />
+			<slack:oauth-callback-config
+				listenerConfig="HTTPS_Listener_config"
+				callbackPath="${slack.callback_path}"
+				authorizePath="${slack.auth_path}"
+				externalCallbackUrl="${slack.callback_url}" />
+			<slack:oauth-store-config
+				objectStore="Slack_OS" />
+		</slack:slack-auth-connection>
+	</slack:config>
+	<http:request-config
+		name="HTTP_Request_configuration"
+		doc:name="HTTP Request configuration"
+		doc:id="4ad77ce4-037d-4613-aab6-e43fd7099f50"
+		basePath="${sf.base_path}" sendCorrelationId="ALWAYS"
+		responseTimeout="${sf.response_timeout}">
+		<http:request-connection protocol="HTTPS"
+			host="${sf.host}" port="${sf.port}"
+			connectionIdleTimeout="${sf.conn_idle_timeout}">
+			<reconnection>
+				<reconnect frequency="${sf.reconnection.freq}"
+					count="${sf.reconnection.attempts}" />
+			</reconnection>
+			<tls:context>
+				<tls:trust-store insecure="true" />
+			</tls:context>
+		</http:request-connection>
+	</http:request-config>
+	<configuration-properties
+		doc:name="Configuration properties"
+		doc:id="a56a4bfb-8976-4842-bd30-c9f3abf421c2"
+		file="properties/${mule.env}.yaml" />
+	<secure-properties:config
+		name="Secure_Properties_Config" doc:name="Secure Properties Config"
+		doc:id="c8f54165-3bb9-4ca2-9e6f-24a889b55b8d"
+		file="secure-properties/${mule.env}.yaml" key="${mule.key}">
+		<secure-properties:encrypt
+			algorithm="Blowfish" />
+	</secure-properties:config>
+	<http:listener-config name="HTTPS_Listener_config"
+		doc:name="HTTP Listener config"
+		doc:id="cff39f6b-7d23-4adc-92a6-e1b2c1196d56">
+		<http:listener-connection protocol="HTTPS"
+			host="${https.host}" port="${https.port}"
+			readTimeout="${https.read_timeout}">
+			<tls:context>
+				<tls:trust-store insecure="true" />
+				<tls:key-store type="jks" path="keystore.jks"
+					alias="ssl" keyPassword="mulesoft" password="mulesoft" />
+			</tls:context>
+		</http:listener-connection>
+	</http:listener-config>
+	<os:object-store name="Slack_OS"
+		doc:name="Object store" doc:id="eee3714f-6205-4f97-bf7e-200b2cfd8d63" />
+	<salesforce:sfdc-config name="Salesforce_Config"
+		doc:name="Salesforce Config"
+		doc:id="332f16c9-af44-46b5-9f54-82afc7f7b34f">
+		<salesforce:jwt-connection
+			consumerKey="${secure::salesforce.consumer_key}"
+			keyStore="${salesforce.keystore}"
+			storePassword="${secure::salesforce.password}"
+			principal="${secure::salesforce.principal}"
+			certificateAlias="${secure::salesforce.alias}"
+			tokenEndpoint="${salesforce.token_endpoint}"
+			audienceUrl="${salesforce.audience_url}"
+			connectionTimeout="${salesforce.conn_timeout}"
+			loginRequestTimeout="${salesforce.login_timeout}">
+			<reconnection failsDeployment="true">
+				<reconnect frequency="${salesforce.reconnection.freq}"
+					count="${salesforce.reconnection.attempts}" />
+			</reconnection>
+		</salesforce:jwt-connection>
+	</salesforce:sfdc-config>
+	<idp-idp-curative-emailbody-dev-120:config
+		name="IDP___idp_curative_emailbody_dev___1_2_0_Config"
+		doc:name="IDP - idp-curative-emailbody-dev - 1.2.0 Config"
+		doc:id="20f450b8-8975-4e2e-af2c-f2d886fdc1a7"
+		property_host="idp-rt.us-east-1.anypoint.mulesoft.com"
+		property_port="443" property_protocol="HTTPS"
+		property_responseTimeout="60000"
+		property_client-id="a84f34384d8e4ad58c6dcd7551a9cfcc"
+		property_client-secret="3B892B8FF4e2461B81E0C17022dfBC69" />
+	<idp-idp-curative-pdf-dev-110:config
+		name="IDP___idp_curative_pdf_dev___1_1_0_Config"
+		doc:name="IDP - idp-curative-pdf-dev - 1.1.0 Config"
+		doc:id="e6a306c0-9309-407a-b7c2-22517c05bc37"
+		property_host="idp-rt.us-east-1.anypoint.mulesoft.com"
+		property_port="443" property_protocol="HTTPS"
+		property_responseTimeout="60000"
+		property_client-id="a84f34384d8e4ad58c6dcd7551a9cfcc"
+		property_client-secret="3B892B8FF4e2461B81E0C17022dfBC69" />
+</mule>

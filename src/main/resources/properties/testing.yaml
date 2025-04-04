@@ -1,0 +1,26 @@
+https:
+  port: "8081"
+mule:
+  apiId: "20147615"
+salesforce:
+  oauth_endpoint: "https://forestlawnmortuary--nfqa.sandbox.my.salesforce.com/services/oauth2/token"
+  soap_endpoint: "https://forestlawnmortuary--nfqa.sandbox.my.salesforce.com/services/Soap/u/55.0"
+  consumer_key: "3MVG9L6vUmMQkenP4ipqrwNWdOOyElJyHv7bucrPWhs4HfgmanFoYz9Tbit9agaJJz20SjJLiV7526JaXAMrD"
+  consumer_secret: "8CEB66346BE9687AF169C15E0C5A426F2D18A6262591DE256A7B7D8695BAAAC4"
+  username: "forest-lawn-integrations@neuraflash.com.nfqa"
+  security_token: "lFkKJtiCOIEBFMHphwBjoT1cA"
+  password: "Neuraflash@123"
+
+invoiceApi:
+  host: https://forestlawnmortuary--nfqa.sandbox.my.salesforce.com
+  basePath: /services/data/v62.0
+  path: /commerce/invoicing/invoices/collection/actions/generate
+  oauth:
+    host: https://forestlawnmortuary--nfqa.sandbox.my.salesforce.com
+    basePath: /services
+    path: /oauth2/token
+    grant_type: password
+    client_id: "3MVG9L6vUmMQkenP4ipqrwNWdOOyElJyHv7bucrPWhs4HfgmanFoYz9Tbit9agaJJz20SjJLiV7526JaXAMrD"
+    client_secret: "8CEB66346BE9687AF169C15E0C5A426F2D18A6262591DE256A7B7D8695BAAAC4"
+    username: "forest-lawn-integrations@neuraflash.com.nfqa"
+    password: "Neuraflash@123lFkKJtiCOIEBFMHphwBjoT1cA"

@@ -1,0 +1,76 @@
+# Http Configuration
+https:
+    port: "8082"
+    read_timeout: "30000"
+    host: "0.0.0.0"
+
+# Gmail Connector Configuration
+gmail:
+    host: "imap.gmail.com"
+    port: "993"
+    conn_timeout: "30"
+    read_timeout: "30"
+    write_timeout: "30"
+    subject: "TestMule"
+    read_freq_secs: "5"
+    reconnection:
+        freq: "30000"
+        attempts: "3"
+
+# Slack Connector Configuration
+slack:
+    uri: "https://slack.com/api"
+    auth_url: "https://slack.com/oauth/v2/authorize"
+    token_url: "https://slack.com/api/oauth.v2.access"
+    scopes: "chat:write"
+    callback_path: "/callback"
+    auth_path: "/authorize"
+    callback_url: "https://localhost:8082/callback"
+    conn_timeout: "30"
+    conn_idle_timeout: "30"
+    channel: "mule-demo"
+    reconnection:
+        freq: "30000"
+        attempts: "3"
+
+# Salesforce Request Configuration
+sf:
+    host: "salesforce-sys-api-dev-i6yj6p.89v9sy.usa-e2.cloudhub.io"
+    port: "443"
+    base_path: "/api"
+    upsert_endpoint: "/upsert"
+    query_endpoint: "/query"
+    docobj_contentversion: "ContentVersion"
+    docobj_contentdocumentlink: "ContentDocumentLink"
+    docobj_externalid: "Id"
+    response_timeout: "30000"
+    conn_idle_timeout: "30000"
+    reconnection:
+        freq: "30000"
+        attempts: "3"
+    record_type:
+        broker: "0124W000000yAn2QAE"
+        client: "0124W000000yAmxQAE"
+        broker_account: "0124W000000yAnCQAU"
+        opportunity: "0124W000000yAnHQAU"
+        
+sleep:
+  freq: "30000"
+  retry_count: "3"
+retry:
+  freq: "30000"
+  count: "2"
+
+#Salesforce Configuration
+salesforce:
+  keystore: "certs/nonprod.jks"
+  token_endpoint: "https://test.salesforce.com/services/oauth2/token"
+  audience_url: "https://test.salesforce.com"
+  conn_timeout: "30000"
+  login_timeout: "30000"
+  reconnection:
+    freq: "30000"
+    attempts: "3"
+    
+
+

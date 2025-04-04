@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule
+	xmlns:slack="http://www.mulesoft.org/schema/mule/slack"
+	xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:idp-idp-curative-emailbody-dev-100="http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-100"
+	xmlns:compression="http://www.mulesoft.org/schema/mule/compression"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:java="http://www.mulesoft.org/schema/mule/java"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/java http://www.mulesoft.org/schema/mule/java/current/mule-java.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/compression http://www.mulesoft.org/schema/mule/compression/current/mule-compression.xsd
+http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-100 http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-100/current/mule-idp-idp-curative-emailbody-dev-100.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
+http://www.mulesoft.org/schema/mule/slack http://www.mulesoft.org/schema/mule/slack/current/mule-slack.xsd">
+	<sub-flow name="email-processing-subflow"
+		doc:id="9c73e0b5-2ad5-4c3e-b713-2a118b045654">
+		<ee:transform doc:name="Init variables" doc:id="dde9873f-7bad-473e-a0c4-a814b5a3ce31" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="path" ><![CDATA[%dw 2.0
+output application/java
+---
+Mule::p('app.home') ++ "/sample.pdf"]]></ee:set-variable>
+				<ee:set-variable variableName="scan_pdf_filename" ><![CDATA[%dw 2.0
+output application/java
+---
+flatten(payload.body scan(/(?i)Scan file([A-Za-z]*\s*)*:\s*([\w\s-.]+\.pdf)/))[2]]]></ee:set-variable>
+				<ee:set-variable variableName="emailbody" ><![CDATA[%dw 2.0
+output application/java
+---
+payload.body]]></ee:set-variable>
+				<ee:set-variable variableName="count_idp" ><![CDATA[%dw 2.0
+output application/java
+---
+0]]></ee:set-variable>
+				<ee:set-variable variableName="emailPayload" ><![CDATA[%dw 2.0
+output application/java
+---
+entriesOf(payload.attachments mapObject ((value, key) -> {(key) : value.^raw})) default []]]></ee:set-variable>
+				<ee:set-variable variableName="emailSubject" ><![CDATA[%dw 2.0
+output application/java
+---
+attributes.subject]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="fetch-pdfbody-idp-data-subflow" doc:id="f2274926-9dbc-4a87-bf5d-db8340a25d7c" target="client_details" name="fetch-pdfbody-idp-data-subflow"/>
+		<flow-ref doc:name="fetch-emailbody-idp-data-subflow" doc:id="5e16b0e0-1c2b-4ded-8f69-81a8245e002b" name="fetch-emailbody-idp-data-subflow" target="broker_opp_details"/>
+		<!-- [STUDIO:"Transform Message"]<ee:transform doc:name="Transform Message" doc:id="a55c37fe-f992-4bc4-b39d-7989e771517b" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="client_details" ><![CDATA[%dw 2.0
+output application/json
+&#45;&#45;-
+{
+  "client-details": {
+    "client_details": {
+      "name": "Brazos Valley Schools Credit Union",
+      "email": "jennifer.heidt@alliant.com",
+      "fte": "166",
+      "address": {
+        "street": "null",
+        "city": "null",
+        "state": "null",
+        "zip": "null"
+      },
+      "carrier": {
+        "name": "Cigna",
+        "type": "Advantage PDL"
+      }
+    },
+    "broker_details": {
+      "agency_name": "Alliant Insurance Services",
+      "email": "null",
+      "address": {
+        "street": "800 Gessner, Ste 300",
+        "city": "Houston",
+        "state": "TX",
+        "zip": "77024"
+      }
+    }
+  }
+}&#93;&#93;></ee:set-variable>
+				<ee:set-variable variableName="broker_opp_details" ><![CDATA[%dw 2.0
+output application/java
+&#45;&#45;-
+{
+  "broker-details": {
+    "broker_data": {
+      "name": "Jennifer Heidt",
+      "contact": [
+        "(713) 470-4138",
+        "(281) 546-7438"
+      &#93;,
+      "address": {
+        "street": "",
+        "city": "",
+        "state": "",
+        "zip": ""
+      },
+      "email": "jennifer.heidt@alliant.com",
+      "commission": null
+    }
+  },
+  "opportunity-data": {
+    "opportunity_data": {
+      "name": "Julia Baggish",
+      "email": "julia@curative.com",
+      "contact": null,
+      "received_date": "04/02/2025"
+    }
+  }
+}&#93;&#93;></ee:set-variable>
+			</ee:variables>
+		</ee:transform> [STUDIO] -->
+		<flow-ref doc:name="upsert-broker-client-opp-details-sf-subflow"
+			doc:id="bf9ce829-2ebd-46be-9c7d-4542ad8c64a5"
+			name="upsert-broker-client-opp-details-sf-subflow" target="opp_payload"/>
+		<flow-ref doc:name="zip-attachments-subflow" doc:id="3959772d-59ec-49a6-90c0-b63d34363cc2" name="zip-attachments-subflow" target="zipped_data" />
+		<flow-ref doc:name="send-attachments-to-sf-subflow" doc:id="19db82f4-8afb-4b81-b4f4-ecbdb0ff2c74" name="send-attachments-to-sf-subflow" />
+		<ee:transform doc:name="Success Slack Message" doc:id="b0b34367-4dff-4a60-b009-b4f631fc4c51" >
+			<ee:message >
+				<ee:set-payload resource="dataweave/pSlackSuccessPayload.dwl" />
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Info Log" doc:id="98970a4a-4bdc-49c9-8803-a63b6814e0be" message="#[payload]"/>
+		<slack:create-chatpost-message doc:name="Slack Message" doc:id="7cd10e7d-8777-4766-9f0b-3e969b95ebfc" config-ref="Slack_Connector_Config" >
+			<slack:chatpost-message-content ><![CDATA[#[%dw 2.0
+output application/json
+---
+{
+	"channel": Mule::p('slack.channel'),
+	"text": payload
+}]]]></slack:chatpost-message-content>
+		</slack:create-chatpost-message>
+	</sub-flow>
+	<sub-flow name="zip-attachments-subflow"
+		doc:id="8e798583-1781-43ed-bb98-49aa9e8b11b9">
+		<set-variable value="#[{}]" doc:name="attachments"
+			doc:id="7eded7f3-e8de-40d4-9be2-68dee0576aeb"
+			variableName="attachments" />
+		<foreach doc:name="For Each Attachment"
+			doc:id="2c0e2d18-a11d-4d44-acbe-6fb3f456735e"
+			collection="#[vars.emailPayload]">
+			<set-variable value="#[payload.key]" doc:name="filename"
+				doc:id="3e10e3dd-b234-4641-b164-71e5911b5cb9"
+				variableName="filename" />
+			<choice doc:name="CHECK pdf OR xlsx"
+				doc:id="3e93ba9c-ef17-4cc9-b05e-20041360bd70">
+				<when expression='#[lower(vars.filename) contains ".pdf"]'>
+					<ee:transform doc:name="PDF Attachment"
+						doc:id="c006495b-b6ce-4236-85ed-3af8c572a875">
+						<ee:message />
+						<ee:variables>
+							<ee:set-variable variableName="attachment"><![CDATA[%dw 2.0
+output application/octet-stream
+---
+payload.value]]></ee:set-variable>
+						</ee:variables>
+					</ee:transform>
+					<set-variable
+						value='#[output application/java --- &#10;vars.attachments ++ {&#10;	"$(vars.filename)" : vars.attachment as Binary {&#10;        class: "byte[]"&#10;    }&#10;}]'
+						doc:name="attachments"
+						doc:id="fd898a9c-be62-4fcc-a587-ee038ad93940"
+						variableName="attachments" />
+				</when>
+				<when expression='#[lower(vars.filename) contains ".xls"]'>
+					<set-variable
+						value='#[output application/java --- &#10;vars.attachments ++ {&#10;	"$(vars.filename)" : payload.value&#10;}]'
+						doc:name="attachments"
+						doc:id="b05fa4ae-6d01-4fc9-bb2e-31bf2caaa338"
+						variableName="attachments" />
+				</when>
+				<otherwise>
+					<logger level="INFO" doc:name="Ignore other files"
+						doc:id="9506dae2-477b-4e6c-9042-fee934a901bb"
+						message='#["Ignore file to attach in Salesforce: " ++ vars.filename]' />
+				</otherwise>
+			</choice>
+			<logger level="INFO" doc:name="Success Logger"
+				doc:id="6a64c59a-fef1-4893-9d67-28a23d775277"
+				message='#["Successfully processed file: " ++ (vars.filename as String)]' />
+		</foreach>
+		<compression:archive
+			doc:name="Compress attcahments into Zip"
+			doc:id="d54402a4-4ea1-4a5a-8971-ad53f6d68418">
+			<compression:entries><![CDATA[#[vars.attachments]]]></compression:entries>
+			<compression:archiver>
+				<compression:zip-archiver />
+			</compression:archiver>
+		</compression:archive>
+	</sub-flow>
+	<sub-flow name="fetch-pdfbody-idp-data-subflow"
+		doc:id="57a935cf-6e5b-4c66-9e77-6ee5f74c495d">
+		<set-variable value="#[{}]" doc:name="client_detail" doc:id="43020ed8-0813-4cf4-911e-4ba06fad374d" variableName="client_detail" />
+		<ee:transform doc:name="Filter attachments" doc:id="5eba927d-831c-4830-8f1f-ba6767198435" >
+			<ee:message >
+				<ee:set-payload resource="dataweave/pFilterEmailAttachments.dwl" />
+			</ee:message>
+		</ee:transform>
+		<validation:is-true doc:name="Check PDF name present in Email Body" doc:id="43099920-e8a6-4bee-96b3-259ff0636414" expression="#[!isEmpty(payload)]" message="No PDF attachment name given in the email body to scan into IDP">
+			<error-mapping targetType="EMAIL_PDF:NOT_PRESENT" />
+		</validation:is-true>
+		<logger level="INFO" doc:name="Info Log" doc:id="20ad2d53-9022-4ed4-a050-8aa9c39b8a04" message='#["Scanning File : " ++ payload[0].key as String]'/>
+		<ee:transform doc:name="PDF Attachment" doc:id="481b5d11-f2aa-488b-8484-3f23a3e96586">
+						<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/octet-stream
+---
+payload[0].value]]></ee:set-payload>
+			</ee:message>
+						<ee:variables>
+						</ee:variables>
+					</ee:transform>
+		<ee:transform doc:name="convert pdfAttachment as idp format" doc:id="850cc9d8-d59f-4154-b2be-fd1eb70f15f6">
+			<ee:message>
+				<ee:set-payload resource="dataweave/pIDP-PDF-Payload.dwl" />
+			</ee:message>
+			<ee:variables />
+		</ee:transform>
+		<flow-ref doc:name="idp-post-attachment-subflow" doc:id="cf69d8c5-e071-4e21-a71d-232576bd6cfc" name="idp-post-attachment-subflow" />
+		<flow-ref doc:name="idp-get-attachment-subflow" doc:id="15be7909-6b16-44ac-aa70-7360d652d336" name="idp-get-attachment-subflow" />
+		<ee:transform doc:name="client-details" doc:id="57072545-b044-4a68-840b-2cd8623f16df" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"client-details" : read(payload.prompts."client-details".answer.value, "application/json")
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Log Client and broker-agency details"
+			doc:id="878553c5-1377-413d-94a8-c4b04bbf0927"
+			message="#[payload]" />
+	</sub-flow>
+	<sub-flow name="fetch-emailbody-idp-data-subflow"
+		doc:id="5b5f0bac-ede2-494e-9eec-3d21f9844ad5">
+		<java:invoke-static
+			doc:name="convert email body to pdf"
+			doc:id="2e0486bf-3b0b-4380-9b1a-d08368cf495b"
+			class="pdfConvertor.emailBodyToPdf"
+			method="createpdf(java.lang.String,java.lang.String)">
+			<java:args><![CDATA[#[{
+	args: ("<div" ++ (vars.emailbody splitBy "\n<div")[1]) as String,
+	path: vars.path as String
+}]]]></java:args>
+		</java:invoke-static>
+		<ee:transform doc:name="convert emailbody as idp format"
+			doc:id="3e8bbb1b-e85a-4fbf-8aa4-b7a80e97195d">
+			<ee:message>
+				<ee:set-payload resource="dataweave/pIDP-EmaikBody-Payload.dwl" />
+			</ee:message>
+			<ee:variables>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="idp-post-emailbody-subflow"
+			doc:id="ed865993-c405-4bb2-9787-d3507ec47f79"
+			name="idp-post-emailbody-subflow" />
+		<flow-ref doc:name="idp-get-emailbody-subflow"
+			doc:id="f1266696-5c5d-447d-9c58-76f4812480b2"
+			name="idp-get-emailbody-subflow" />
+		<ee:transform doc:name="broker-opp-details"
+			doc:id="6c3ad355-c526-435e-b91c-87c4cbd4a325">
+			<ee:message>
+				<ee:set-payload resource="dataweave/pfetchBrokerDetails.dwl" />
+			</ee:message>
+			<ee:variables>
+			</ee:variables>
+		</ee:transform>
+		<logger level="INFO" doc:name="Log Opp and broker details"
+			doc:id="da132067-47b0-4a98-bc8d-fae6ccc75b05"
+			message='#[payload]' />
+	</sub-flow>
+</mule>

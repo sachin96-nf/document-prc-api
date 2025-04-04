@@ -1,0 +1,17 @@
+gmail:
+  username: "![oE6j3jSd0Z28+c6Onpi7PA2HkCFSJgVn]"
+  password: "![/R7y8K1uWUYrjKoba4pdu14w1Kzt07+/]"
+  
+slack:
+  key: "![3WldBg40cOpz5AjmUCFWQv5c09XtmoopPOUQUCAte6M=]"
+  secret: "![nxNaeJFOsV3zqWFElbQNomHzvLU3wkQ4jWtV+zF0BEdR7bc2sl/cpw==]"
+  
+sf:
+  client_id: "![dTEg4FOb0w4TgFpOeRGy4Thj81Ol7KHalvKPY1PkmM/1phBP86fGKA==]"
+  client_secret: "![K2Vmd+T6Vs1Ot8oOvyvTJN9A4wxtuX/Sj6O/rb67nKRhVULocWybDg==]"
+  
+salesforce:
+  consumer_key: "![Fe0XqYZvQlxNk+NfVf0O6Z9WOkZrSxbLkBy4vs1Mix3Ieeb7jQqVX8fzZxm5DUX/gHf9M7pJnYlPyVuLhsribElrJ99Lilxo3VHt07HK0yYG/WZCXNPTiQ==]"
+  principal: "![a7LlmzHokGCHRxuyljWIoSWnNrtNLlb6kdQ3GouuD+g=]"
+  password: "![g/zsPmCCashepqiuKrTaGQ==]"
+  alias: "![TK4A3uMh/pP43O8URQoOU5/j/NFzv1bP]"

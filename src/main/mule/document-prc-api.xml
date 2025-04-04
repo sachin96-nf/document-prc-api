@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:email="http://www.mulesoft.org/schema/mule/email" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd">
+	<flow name="document-prc-apiFlow" doc:id="a61da17e-ef01-4c69-a0da-e2bb29f79b10" >
+		<email:listener-imap
+			doc:name="On New Email - IMAP"
+			doc:id="dc132fbc-061c-4c72-85db-4d2747a6f3fe" config-ref="Email_IMAP">
+			<scheduling-strategy>
+				<fixed-frequency frequency="${gmail.read_freq_secs}" timeUnit="SECONDS"/>
+			</scheduling-strategy>
+			<email:imap-matcher subjectRegex="${gmail.subject}" />
+		</email:listener-imap>
+		<logger level="INFO" doc:name="Info Log" doc:id="24f21944-b6d0-4703-bf00-2f801ff0bae8" message='#["Start processing email into Salesforce through IDP with Subject : " ++ attributes.subject as String]'/>
+		<flow-ref doc:name="email-processing-subflow" doc:id="1ffbcf5b-68da-4fb4-8ea7-4bc3ceaa221e" name="email-processing-subflow"/>
+		<logger level="INFO" doc:name="Exit Log" doc:id="e675ab8d-e02a-4867-9b52-df2f11fd57db" message="End processing email into Salesforce through IDP" />
+		<error-handler ref="global-error-handler" />
+	</flow>
+</mule>

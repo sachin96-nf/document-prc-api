@@ -1,0 +1,8 @@
+%dw 2.0
+import dataweave::regex
+var client=vars.client_details.'client-details'.client_details
+var email=regex::escapeSingleQuote(client.email default " ")
+var name=regex::escapeSingleQuote(client.name default " ")
+output application/java
+---
+"select Id from Account where Email__c='" ++ email ++ "' OR Name='" ++ name ++ "'"
