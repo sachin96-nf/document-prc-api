@@ -77,5 +77,5 @@ jobs:
             mvn -s settings.xml -B clean -DskipTests deploy \
               -DmuleDeploy -Denvironment="PROD" -Dmule.env="production" -Dmule.key="${{ secrets.prod_key }}" \
               -Dcloudhub.application.name=${{ vars.apiname }} \
-              -Danypoint.platform.client_id="${{ ANYPOINT_PROD_ID }}" \
+              -Danypoint.platform.client_id="${{ vars.ANYPOINT_PROD_ID }}" \
               -Danypoint.platform.client_secret="${{ secrets.ANYPOINT_PROD_SECRET }}"
