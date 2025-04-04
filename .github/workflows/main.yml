@@ -53,7 +53,7 @@ jobs:
 
       - name: Modify POM
         run: |
-          sed -i -e "s/<groupId>com.mycompany<\/groupId>/<groupId>${{ secrets.BUSINESS_GROUP_ID }}<\/groupId>/" pom.xml
+          sed -i -e "s/<groupId>com.mycompany<\/groupId>/<groupId>${{ BUSINESS_GROUP_ID }}<\/groupId>/" pom.xml
           sed -i -e "s/<version>1.0.0-SNAPSHOT<\/version>/<version>1.0.0-${{ github.run_number }}-${{ github.ref_name }}<\/version>/" pom.xml
           head -n 10 pom.xml
 
@@ -62,20 +62,20 @@ jobs:
           mvn -s settings.xml -B clean -DskipTests deploy
           if [[ "${GITHUB_REF##*/}" == "development" ]]; then
             mvn -s settings.xml -B clean -DskipTests deploy \
-              -DmuleDeploy -Denvironment="Development" -Dmule.env="development" -Dmule.key="${{ secrets.NONPROD_KEY }}" \
-              -Dcloudhub.application.name=${{ secrets.API_NAME }}-dev \
-              -Danypoint.platform.client_id="${{ secrets.ANYPOINT_DEV_ID }}" \
+              -DmuleDeploy -Denvironment="DEV" -Dmule.env="development" -Dmule.key="${{ secrets.NONPROD_KEY }}" \
+              -Dcloudhub.application.name=${{ API_NAME }}-dev \
+              -Danypoint.platform.client_id="${{ ANYPOINT_DEV_ID }}" \
               -Danypoint.platform.client_secret="${{ secrets.ANYPOINT_DEV_SECRET }}"
           elif [[ "${GITHUB_REF##*/}" == "uat" ]]; then
             mvn -s settings.xml -B clean -DskipTests deploy \
-              -DmuleDeploy -Denvironment="Testing" -Dmule.env="testing" -Dmule.key="${{ secrets.NONPROD_KEY }}" \
-              -Dcloudhub.application.name=${{ secrets.API_NAME }}-testing \
-              -Danypoint.platform.client_id="${{ secrets.ANYPOINT_TEST_ID }}" \
+              -DmuleDeploy -Denvironment="QA" -Dmule.env="testing" -Dmule.key="${{ secrets.NONPROD_KEY }}" \
+              -Dcloudhub.application.name=${{ API_NAME }}-testing \
+              -Danypoint.platform.client_id="${{ ANYPOINT_TEST_ID }}" \
               -Danypoint.platform.client_secret="${{ secrets.ANYPOINT_TEST_SECRET }}"
           elif [[ "${GITHUB_REF##*/}" == "master" ]]; then
             head -n 50 pom.xml
             mvn -s settings.xml -B clean -DskipTests deploy \
-              -DmuleDeploy -Denvironment="Production" -Dmule.env="production" -Dmule.key="${{ secrets.PROD_KEY }}" \
-              -Dcloudhub.application.name=${{ secrets.API_NAME }} \
-              -Danypoint.platform.client_id="${{ secrets.ANYPOINT_PROD_ID }}" \
+              -DmuleDeploy -Denvironment="PROD" -Dmule.env="production" -Dmule.key="${{ secrets.PROD_KEY }}" \
+              -Dcloudhub.application.name=${{ API_NAME }} \
+              -Danypoint.platform.client_id="${{ ANYPOINT_PROD_ID }}" \
               -Danypoint.platform.client_secret="${{ secrets.ANYPOINT_PROD_SECRET }}"
