@@ -15,4 +15,4 @@ var phoneCondition =
     " OR Phone IN (" ++ ((validContacts map ("'" ++ $ ++ "'")) joinBy ",") ++ ")" 
     else "" // Avoids adding an empty IN clause---
 ---
-"SELECT Id, Name, AccountId, Email FROM Contact WHERE Email = '" ++ regex::escapeSingleQuote(broker_data.email default " ") ++ "'" ++ phoneCondition
+"SELECT Id, Name, AccountId, Email FROM Contact WHERE Email = '" ++ regex::escapeSingleQuote(regex::nullChars(broker_data.email) default " ") ++ "'" ++ phoneCondition

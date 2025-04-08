@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:email="http://www.mulesoft.org/schema/mule/email"
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:email="http://www.mulesoft.org/schema/mule/email"
 	xmlns="http://www.mulesoft.org/schema/mule/core"
 	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
 	<flow name="document-prc-apiFlow"
 		doc:id="a61da17e-ef01-4c69-a0da-e2bb29f79b10">
 		<email:listener-imap
@@ -28,5 +29,9 @@ http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/em
 			doc:id="e675ab8d-e02a-4867-9b52-df2f11fd57db"
 			message="End processing email into Salesforce through IDP" />
 		<error-handler ref="global-error-handler" />
+	</flow>
+	<flow name="Test-flow" doc:id="47883e7a-1780-49f9-8bff-9193bc7abca2" >
+		<http:listener doc:name="Listener" doc:id="192fcfb4-5866-4e48-b857-4d67a7412152" config-ref="HTTPS_Listener_config" path="/temp"/>
+		<flow-ref doc:name="email-processing-subflow" doc:id="c5578048-ab6c-42e4-beb0-51ecb2326f4d" name="email-processing-subflow"/>
 	</flow>
 </mule>

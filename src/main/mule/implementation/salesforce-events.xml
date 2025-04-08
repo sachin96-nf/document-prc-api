@@ -37,8 +37,8 @@ output application/java
 		<choice doc:name="Check IF broker-contact exist" doc:id="bdc4583d-5ca7-40c7-a4ce-0e3c1a0bb87f" >
 			<when expression="#[!isEmpty(payload)]">
 				<logger level="INFO" doc:name="Log Info" doc:id="44337f0e-2017-4b5b-b242-1ff68bc34ccc" message="Broker contact and account details already present in Salesforce"/>
-				<set-variable value="#[payload[0].Id]" doc:name="broker_contact_id" doc:id="d7de65c4-3318-487f-9176-ec2b79ccced2" variableName="broker_contact_id"/>
 				<set-variable value="#[payload[0].AccountId]" doc:name="broker_account_id" doc:id="7ad7a386-2d83-4ab2-bbc8-d8f9f8f043a8" variableName="broker_account_id" />
+				<set-variable value="#[payload[0].Id]" doc:name="broker_contact_id" doc:id="d7de65c4-3318-487f-9176-ec2b79ccced2" variableName="broker_contact_id"/>
 			</when>
 			<otherwise>
 				<flow-ref doc:name="sf-upsert-account-subflow" doc:id="17b2ed81-6267-437b-bf59-20acc3445df7" name="sf-upsert-account-subflow" target="broker_account_id"/>
@@ -46,6 +46,7 @@ output application/java
 			</otherwise>
 		</choice>
 		<flow-ref doc:name="sf-upsert-client-subflow" doc:id="d87a22eb-4a61-45b9-bbc7-e99905133b62" name="sf-upsert-client-subflow" target="client_id"/>
+		<logger level="INFO" doc:name="Log Info" doc:id="7c94485c-abd7-414d-a3ec-b0b62b439734" message='#[{&#10;	"Broker Account ID": vars.broker_account_id,&#10;	"Broker Contact ID": vars.broker_contact_id,&#10;	"Client Account ID": vars.client_id,&#10;}]'/>
 		<flow-ref doc:name="sf-upsert-opportunity-subflow" doc:id="3929ae47-843d-42f7-bcba-6fc4a6fa703b" name="sf-upsert-opportunity-subflow"/>
 	</sub-flow>
 	<sub-flow name="sf-upsert-account-subflow" doc:id="14aaa2c3-7b24-46d3-bc8c-fc20a47138be">

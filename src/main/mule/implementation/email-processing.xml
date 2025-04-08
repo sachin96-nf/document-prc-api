@@ -34,7 +34,7 @@ Mule::p('app.home') ++ "/sample.pdf"]]></ee:set-variable>
 				<ee:set-variable variableName="scan_pdf_filename"><![CDATA[%dw 2.0
 output application/java
 ---
-flatten(payload.body scan(/(?i)Scan file([A-Za-z]*\s*)*:\s*([\w\s-.,]+\.pdf)/))[2]]]></ee:set-variable>
+flatten(payload.body scan(/(?i)Scan file([A-Za-z]*\s*)*:\s*([^\r\n]+\.pdf)/))[2]]]></ee:set-variable>
 				<ee:set-variable variableName="emailbody"><![CDATA[%dw 2.0
 output application/java
 ---
@@ -61,22 +61,22 @@ attributes.subject]]></ee:set-variable>
 			name="fetch-emailbody-idp-data-subflow" target="broker_opp_details" />
 		<!-- [STUDIO:"Transform Message"]<ee:transform doc:name="Transform Message" 
 			doc:id="a55c37fe-f992-4bc4-b39d-7989e771517b" > <ee:message > </ee:message> 
-			<ee:variables > <ee:set-variable variableName="client_details" ><![CDATA[%dw 
-			2.0 output application/json &#45;&#45;- { "client-details": { "client_details": 
-			{ "name": "Brazos Valley Schools Credit Union", "email": "jennifer.heidt@alliant.com", 
-			"fte": "166", "address": { "street": "null", "city": "null", "state": "null", 
-			"zip": "null" }, "carrier": { "name": "Cigna", "type": "Advantage PDL" } 
-			}, "broker_details": { "agency_name": "Alliant Insurance Services", "email": 
-			"null", "address": { "street": "800 Gessner, Ste 300", "city": "Houston", 
-			"state": "TX", "zip": "77024" } } } }&#93;&#93;></ee:set-variable> <ee:set-variable 
-			variableName="broker_opp_details" ><![CDATA[%dw 2.0 output application/java 
-			&#45;&#45;- { "broker-details": { "broker_data": { "name": "Jennifer Heidt", 
-			"contact": [ "(713) 470-4138", "(281) 546-7438" &#93;, "address": { "street": 
-			"", "city": "", "state": "", "zip": "" }, "email": "jennifer.heidt@alliant.com", 
-			"commission": null } }, "opportunity-data": { "opportunity_data": { "name": 
-			"Julia Baggish", "email": "julia@curative.com", "contact": null, "received_date": 
-			"04/02/2025" } } }&#93;&#93;></ee:set-variable> </ee:variables> </ee:transform> 
-			[STUDIO] -->
+			<ee:variables > <ee:set-variable variableName="client_details" ><![CDATA[{ 
+			"client-details": { "client_details": { "name": "LunchPail Service Partners, 
+			Inc.", "email": "hr@lunchpailservicepartners.com", "address": { "street": 
+			"6545 Trade Center Drive", "city": "Jacksonville", "state": "FL", "zip": 
+			"32254", "fte": "159" }, "carrier": { "name": "UHC/Surest", "type": "PPO" 
+			} }, "broker_details": { "agency_name": "Brown & Brown of Florida, Inc.", 
+			"email": null, "address": { "street": null, "city": null, "state": null, 
+			"zip": null } } } }&#93;&#93;></ee:set-variable> <ee:set-variable variableName="broker_opp_details" 
+			><![CDATA[{ "broker-details": { "broker_data": { "name": "Morgan Harberson", 
+			"contact": [ "(386) 252-9601", "(386) 316-0227" &#93;, "address": { "street": 
+			"300 North Beach Street", "City": "Daytona Beach", "State": "Fl.", "Zip": 
+			"32114" }, "email": "Morgan.Harberson@bbrown.com", "commission": 6 } }, "opportunity-data": 
+			{ "opportunity_data": { "name": "Kellee Martinez", "email": "kelleemartinez@curative.com", 
+			"contact": "407-883-1069", "received_date": "03/14/2025" } } } &#93;&#93;></ee:set-variable> 
+			</ee:variables> </ee:transform> [STUDIO] -->
+
 		<flow-ref
 			doc:name="upsert-broker-client-opp-details-sf-subflow"
 			doc:id="bf9ce829-2ebd-46be-9c7d-4542ad8c64a5"
@@ -266,8 +266,12 @@ payload[0].value]]></ee:set-payload>
 					resource="dataweave/pSlackMessageColor.dwl" />
 			</ee:message>
 		</ee:transform>
-		<http:request method="POST" doc:name="Slack" doc:id="1ce7f508-faf5-4586-bfd6-7d7f3c299b08" config-ref="Slack_Request" path="/api/chat.postMessage">
+		<http:request method="POST" doc:name="Slack"
+			doc:id="1ce7f508-faf5-4586-bfd6-7d7f3c299b08"
+			config-ref="Slack_Request" path="/api/chat.postMessage">
 		</http:request>
-		<logger level="INFO" doc:name="Exit Log" doc:id="ce308295-1678-45ef-952c-d8628f58a646" message="Slack Notification sent!" />
+		<logger level="INFO" doc:name="Exit Log"
+			doc:id="ce308295-1678-45ef-952c-d8628f58a646"
+			message="Slack Notification sent!" />
 	</sub-flow>
 </mule>
