@@ -14,3 +14,7 @@ salesforce:
   principal: "![a7LlmzHokGCHRxuyljWIoSWnNrtNLlb6kdQ3GouuD+g=]"
   password: "![g/zsPmCCashepqiuKrTaGQ==]"
   alias: "![TK4A3uMh/pP43O8URQoOU5/j/NFzv1bP]"
+  
+idp:
+    client_id: "![s0eMHHq3t5ckWNPxqRVzL5VJS73VY6/aXJh1z1MrPwlykYlqpRSzlQ==]"
+    client_secret: "![jZRmFagrW7e/+9dJm5pe4DH6SgBq00d9zlC7OgPDwBvuyysv65VG3A==]"

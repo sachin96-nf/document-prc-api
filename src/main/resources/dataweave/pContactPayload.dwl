@@ -10,7 +10,7 @@ var broker_opp_details=vars.broker_opp_details.'broker-details'.broker_data
 		"FirstName": (broker_opp_details.name splitBy " ")[0],
 		"LastName": (broker_opp_details.name splitBy " ")[1 to -1] joinBy " ",
 		"AccountId": vars.broker_account_id,
-		"Email": regex::nullChars(broker_opp_details.email),
+		"Email": regex::nullChars(broker_opp_details.email replace  " " with "_"),
 		"Phone": if (broker_opp_details.contact is Array) broker_opp_details.contact[0] else regex::nullChars(broker_opp_details.contact),
 		"MailingCity": regex::nullChars(broker_opp_details.address.city) default regex::nullChars(broker_details.address.city),
 		"MailingCountry": 'United States',

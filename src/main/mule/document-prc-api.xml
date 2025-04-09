@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
 	xmlns:email="http://www.mulesoft.org/schema/mule/email"
 	xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd
-http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
 	<flow name="document-prc-apiFlow"
 		doc:id="a61da17e-ef01-4c69-a0da-e2bb29f79b10">
 		<email:listener-imap
@@ -32,6 +33,25 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 	</flow>
 	<flow name="Test-flow" doc:id="47883e7a-1780-49f9-8bff-9193bc7abca2" >
 		<http:listener doc:name="Listener" doc:id="192fcfb4-5866-4e48-b857-4d67a7412152" config-ref="HTTPS_Listener_config" path="/temp"/>
-		<flow-ref doc:name="email-processing-subflow" doc:id="c5578048-ab6c-42e4-beb0-51ecb2326f4d" name="email-processing-subflow"/>
+		<ee:transform doc:name="Transform Message" doc:id="f3bcd156-541a-4ef0-9342-4efa8ae32e8f" >
+			<ee:message />
+			<ee:variables >
+				<ee:set-variable variableName="client_details" ><![CDATA[{ 
+			"client-details": { "client_details": { "name": "LunchPail Service Partners, 
+			Inc.", "email": "hr@lunchpailservicepartners.com", "address": { "street": 
+			"6545 Trade Center Drive", "city": "Jacksonville", "state": "FL", "zip": 
+			"32254", "fte": "159" }, "carrier": { "name": "UHC/Surest", "type": "PPO" 
+			} }, "broker_details": { "agency_name": "Brown & Brown of Florida, Inc.", 
+			"email": null, "address": { "street": null, "city": null, "state": null, 
+			"zip": null } } } }]]></ee:set-variable>
+				<ee:set-variable variableName="broker_opp_details" ><![CDATA[{ "broker-details": { "broker_data": { "name": "Morgan Harberson", 
+			"contact": [ "(386) 252-9601", "(386) 316-0227" ], "address": { "street": 
+			"300 North Beach Street", "City": "Daytona Beach", "State": "Fl.", "Zip": 
+			"32114" }, "email": "Morgan.Harberson@bbrown.com", "commission": 6 } }, "opportunity-data": 
+			{ "opportunity_data": { "name": "Kellee Martinez", "email": "kelleemartinez@curative.com", 
+			"contact": "407-883-1069", "received_date": "03/14/2025" } } } ]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="upsert-broker-client-opp-details-sf-subflow" doc:id="6abe0cee-1560-4d33-9f41-7aaee8b3f8e7" name="upsert-broker-client-opp-details-sf-subflow"/>
 	</flow>
 </mule>

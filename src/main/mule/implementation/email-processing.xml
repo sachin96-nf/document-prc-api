@@ -59,23 +59,6 @@ attributes.subject]]></ee:set-variable>
 		<flow-ref doc:name="fetch-emailbody-idp-data-subflow"
 			doc:id="5e16b0e0-1c2b-4ded-8f69-81a8245e002b"
 			name="fetch-emailbody-idp-data-subflow" target="broker_opp_details" />
-		<!-- [STUDIO:"Transform Message"]<ee:transform doc:name="Transform Message" 
-			doc:id="a55c37fe-f992-4bc4-b39d-7989e771517b" > <ee:message > </ee:message> 
-			<ee:variables > <ee:set-variable variableName="client_details" ><![CDATA[{ 
-			"client-details": { "client_details": { "name": "LunchPail Service Partners, 
-			Inc.", "email": "hr@lunchpailservicepartners.com", "address": { "street": 
-			"6545 Trade Center Drive", "city": "Jacksonville", "state": "FL", "zip": 
-			"32254", "fte": "159" }, "carrier": { "name": "UHC/Surest", "type": "PPO" 
-			} }, "broker_details": { "agency_name": "Brown & Brown of Florida, Inc.", 
-			"email": null, "address": { "street": null, "city": null, "state": null, 
-			"zip": null } } } }&#93;&#93;></ee:set-variable> <ee:set-variable variableName="broker_opp_details" 
-			><![CDATA[{ "broker-details": { "broker_data": { "name": "Morgan Harberson", 
-			"contact": [ "(386) 252-9601", "(386) 316-0227" &#93;, "address": { "street": 
-			"300 North Beach Street", "City": "Daytona Beach", "State": "Fl.", "Zip": 
-			"32114" }, "email": "Morgan.Harberson@bbrown.com", "commission": 6 } }, "opportunity-data": 
-			{ "opportunity_data": { "name": "Kellee Martinez", "email": "kelleemartinez@curative.com", 
-			"contact": "407-883-1069", "received_date": "03/14/2025" } } } &#93;&#93;></ee:set-variable> 
-			</ee:variables> </ee:transform> [STUDIO] -->
 
 		<flow-ref
 			doc:name="upsert-broker-client-opp-details-sf-subflow"

@@ -2,6 +2,7 @@
 output application/java
 import dataweave::regex
 var broker_data = vars.broker_opp_details.'broker-details'.broker_data
+var email = regex::escapeSingleQuote(regex::nullChars(broker_data.email replace  " " with "_") default " ")
 var contact=regex::phoneCheck(broker_data.contact)
 var contacts = 
     if (contact is Array) 
@@ -15,4 +16,4 @@ var phoneCondition =
     " OR Phone IN (" ++ ((validContacts map ("'" ++ $ ++ "'")) joinBy ",") ++ ")" 
     else "" // Avoids adding an empty IN clause---
 ---
-"SELECT Id, Name, AccountId, Email FROM Contact WHERE Email = '" ++ regex::escapeSingleQuote(regex::nullChars(broker_data.email) default " ") ++ "'" ++ phoneCondition
+"SELECT Id, Name, AccountId, Email FROM Contact WHERE Email = '" ++ email ++ "'" ++ phoneCondition

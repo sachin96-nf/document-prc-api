@@ -47,7 +47,16 @@ salesforce:
         freq: "30000"
         attempts: "3"
 
-# Common Configurations                
+# IDP Configuration
+idp:
+    host: "idp-rt.us-east-1.anypoint.mulesoft.com"
+    port: "443"
+    basePath: "/"
+    protocol: "HTTPS"
+    response_timeout: "90000"
+    access_token_url: "https://anypoint.mulesoft.com/accounts/api/v2/oauth2/token"
+
+# Common Configurations
 sleep:
     freq: "30000"
     retry_count: "3"
