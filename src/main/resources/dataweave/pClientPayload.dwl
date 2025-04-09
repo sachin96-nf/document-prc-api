@@ -14,7 +14,7 @@ fun getFteRange(fte) =
 		"RecordTypeId": Mule::p('salesforce.record_type.client'),
 		"Name": regex::nullChars(client_details.name),
 		"Email__c": regex::nullChars(client_details.email),
-		"Company_Size__c": getFteRange(client_details.fte),
+		"Company_Size__c": getFteRange(regex::nullChars(client_details.fte)),
 		"BillingCity": regex::nullChars(client_details.address.city),
 		"BillingCountry": 'United States',
 		"BillingPostalCode": regex::nullChars(client_details.address.zip),
