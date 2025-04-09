@@ -9,7 +9,7 @@ http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/em
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
 	<flow name="document-prc-apiFlow"
-		doc:id="a61da17e-ef01-4c69-a0da-e2bb29f79b10">
+		doc:id="a61da17e-ef01-4c69-a0da-e2bb29f79b10" initialState="stopped">
 		<email:listener-imap
 			doc:name="On New Email - IMAP"
 			doc:id="dc132fbc-061c-4c72-85db-4d2747a6f3fe" config-ref="Email_IMAP">
@@ -36,22 +36,73 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 		<ee:transform doc:name="Transform Message" doc:id="f3bcd156-541a-4ef0-9342-4efa8ae32e8f" >
 			<ee:message />
 			<ee:variables >
-				<ee:set-variable variableName="client_details" ><![CDATA[{ 
-			"client-details": { "client_details": { "name": "LunchPail Service Partners, 
-			Inc.", "email": "hr@lunchpailservicepartners.com", "address": { "street": 
-			"6545 Trade Center Drive", "city": "Jacksonville", "state": "FL", "zip": 
-			"32254", "fte": "159" }, "carrier": { "name": "UHC/Surest", "type": "PPO" 
-			} }, "broker_details": { "agency_name": "Brown & Brown of Florida, Inc.", 
-			"email": null, "address": { "street": null, "city": null, "state": null, 
-			"zip": null } } } }]]></ee:set-variable>
-				<ee:set-variable variableName="broker_opp_details" ><![CDATA[{ "broker-details": { "broker_data": { "name": "Morgan Harberson", 
-			"contact": [ "(386) 252-9601", "(386) 316-0227" ], "address": { "street": 
-			"300 North Beach Street", "City": "Daytona Beach", "State": "Fl.", "Zip": 
-			"32114" }, "email": "Morgan.Harberson@bbrown.com", "commission": 6 } }, "opportunity-data": 
-			{ "opportunity_data": { "name": "Kellee Martinez", "email": "kelleemartinez@curative.com", 
-			"contact": "407-883-1069", "received_date": "03/14/2025" } } } ]]></ee:set-variable>
+				<ee:set-variable variableName="client_details" ><![CDATA[{
+  "client-details": {
+    "client_details": {
+      "name": "LunchPail Service Partners, Inc.",
+      "email": "hr@lunchpailservicepartners.com",
+      "fte": "159",
+      "due_date": "null",
+      "commission": "null",
+      "address": {
+        "street": "6545 Trade Center Drive",
+        "city": "Jacksonville",
+        "state": "FL",
+        "zip": "32254"
+      },
+      "carrier": {
+        "name": "UHC/Surest",
+        "type": "PPO"
+      }
+    },
+    "broker_details": {
+      "agency_name": "Brown & Brown of Florida, Inc.",
+      "email": "null",
+      "address": {
+        "street": "null",
+        "city": "null",
+        "state": "null",
+        "zip": "null"
+      }
+    }
+  }
+}]]></ee:set-variable>
+				<ee:set-variable variableName="broker_opp_details" ><![CDATA[{
+  "broker-details": {
+    "broker_data": {
+      "name": "Morgan Harberson",
+      "contact": [
+        "(386) 252-9601",
+        "(386) 316-0227"
+      ],
+      "address": {
+        "street": "300 North Beach Street",
+        "city": "Daytona Beach",
+        "state": "Fl",
+        "zip": "32114"
+      },
+      "email": "Morgan.Harberson@bbrown.com",
+      "commission": 6
+    }
+  },
+  "opportunity-data": {
+    "opportunity_data": {
+      "name": "Kellee Martinez",
+      "email": "kelleemartinez@curative.com",
+      "contact": "407-883-1069",
+      "received_date": "03/14/2025"
+    }
+  }
+}]]></ee:set-variable>
 			</ee:variables>
 		</ee:transform>
-		<flow-ref doc:name="upsert-broker-client-opp-details-sf-subflow" doc:id="6abe0cee-1560-4d33-9f41-7aaee8b3f8e7" name="upsert-broker-client-opp-details-sf-subflow"/>
+		<flow-ref doc:name="upsert-broker-client-opp-details-sf-subflow" doc:id="6abe0cee-1560-4d33-9f41-7aaee8b3f8e7" name="upsert-broker-client-opp-details-sf-subflow" target="opp_payload"/>
+		<ee:transform doc:name="Success Slack Message" doc:id="0c93e16d-dfd7-44ca-992d-6b84cc4802c9" >
+			<ee:message >
+				<ee:set-payload resource="dataweave/pSlackSuccessPayload.dwl" />
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Info Log" doc:id="f3e18154-01a5-4e50-ae2b-cd193aee8de0" message="#[payload]" />
+		<flow-ref doc:name="slack-subflow" doc:id="66530a8d-37e6-42bc-bdb3-e56bdc030bb3" name="slack-subflow" />
 	</flow>
 </mule>

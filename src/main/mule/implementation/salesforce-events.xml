@@ -141,7 +141,7 @@ output application/java
 "Account"]]></ee:set-variable>
 			</ee:variables>
 		</ee:transform>
-				<validation:is-true doc:name="Check null values" doc:id="7c26f8ef-4163-4947-9a68-f068648282db" expression="#[!isEmpty(payload[0].Name) and !isEmpty(payload[0].BillingStreet) and !isEmpty(payload[0].Company_Size__c)]" message="Important fields are missing from the Email body like Client name or address or company size">
+				<validation:is-true doc:name="Check null values" doc:id="7c26f8ef-4163-4947-9a68-f068648282db" expression="#[!isEmpty(payload[0].Name) and (!isEmpty(payload[0].BillingStreet) or !isEmpty(payload[0].BillingState)) and !isEmpty(payload[0].Company_Size__c)]" message="Important fields are missing from the Email body like Client name or address or company size">
 			<error-mapping targetType="CLIENT_ACCOUNT:MISSING_FILEDS" />
 		</validation:is-true>
 				<flow-ref doc:name="salesforce-upsert-subflow" doc:id="4a521aca-bd48-4ac8-9f95-1100d1ea5fb0" name="salesforce-upsert-subflow" />
