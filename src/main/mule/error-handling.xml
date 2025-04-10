@@ -92,26 +92,6 @@ http://www.mulesoft.org/schema/mule/slack http://www.mulesoft.org/schema/mule/sl
 		</on-error-propagate>
 		<on-error-propagate enableNotifications="true"
 			logException="true" doc:name="On Error Propagate"
-			doc:id="77c52e48-560b-4b06-af81-18c874c2b241"
-			type="EMAIL_PDF:NOT_PRESENT">
-			<set-variable
-				value='#[error.errorType.identifier match {&#10;	case "BAD_REQUEST" -&gt; 400&#10;	case "MISSING_FILEDS" -&gt; 400&#10;	case "USER_MISSING" -&gt; 400&#10;	case "NOT_PRESENT" -&gt; 400&#10;	case "UNAUTHORIZED" -&gt; 401&#10;	case "FORBIDDEN" -&gt; 403&#10;	case "NOT_FOUND" -&gt; 404&#10;	case "METHOD_NOT_ALLOWED" -&gt; 405&#10;	case "NOT_ACCEPTABLE" -&gt; 406&#10;	case "TIMEOUT" -&gt; 408&#10;	case "SESSION_TIMED_OUT" -&gt; 408&#10;	case "UNSUPPORTED_MEDIA_TYPE" -&gt; 415&#10;	case "NOT_IMPLEMENTED" -&gt; 515&#10;	else -&gt; 500&#10;}]'
-				doc:name="httpStatus" doc:id="0afbe109-8126-4bb9-afa9-06440c83507e"
-				variableName="httpStatus" />
-			<ee:transform doc:name="Error Payload"
-				doc:id="597cf920-13e9-410f-a8c6-fd3dea6489cc">
-				<ee:message>
-					<ee:set-payload
-						resource="dataweave/pPdfMissingErrorPayload.dwl" />
-				</ee:message>
-			</ee:transform>
-			<logger level="ERROR" doc:name="Error Log"
-				doc:id="31bc8e75-a048-4431-9d87-1c0e3cea0065" message="#[payload]" />
-			<flow-ref doc:name="slack-subflow"
-				doc:id="f576af21-4962-4b08-b544-8f00dd9f9109" name="slack-subflow" />
-		</on-error-propagate>
-		<on-error-propagate enableNotifications="true"
-			logException="true" doc:name="On Error Propagate"
 			doc:id="0d97c987-7dfc-4b44-acc7-c088ed1a23a8">
 			<set-variable
 				value='#[error.errorType.identifier match {&#10;	case "BAD_REQUEST" -&gt; 400&#10;	case "MISSING_FILEDS" -&gt; 400&#10;	case "USER_MISSING" -&gt; 400&#10;	case "UNAUTHORIZED" -&gt; 401&#10;	case "FORBIDDEN" -&gt; 403&#10;	case "NOT_FOUND" -&gt; 404&#10;	case "METHOD_NOT_ALLOWED" -&gt; 405&#10;	case "NOT_ACCEPTABLE" -&gt; 406&#10;	case "TIMEOUT" -&gt; 408&#10;	case "SESSION_TIMED_OUT" -&gt; 408&#10;	case "UNSUPPORTED_MEDIA_TYPE" -&gt; 415&#10;	case "NOT_IMPLEMENTED" -&gt; 515&#10;	else -&gt; 500&#10;}]'

@@ -7,6 +7,8 @@ var broker_opp_details=vars.broker_opp_details.'broker-details'.broker_data
 var currentDate = now() as Date
 var dateMinus30Days = currentDate - |P30D|
 var due_date=regex::nullChars(opp_details.due_date) default regex::nullChars(client_details.due_date)
+var duedate=if (due_date != null) due_date as Date {format:"MM/dd/yyyy"} as Date  {format:"yyyy/MM/dd"} else null
+var duedate_day=duedate as String {format: "EEEE"}
 var carrier_values=['Aetna','Blues','Cigna','Curative','United Healthcare','Virgin','Self-Insured']
 var Incumbent_Carrier_Notes__c="Other"
 var funding_type=["Fully Insured", "Level Funded", "ASO"]
@@ -31,7 +33,7 @@ fun getStateCategory(market_value: String) =
 		"Effective_Date__c": currentDate as Date {format:"yyyy/MM/dd"},
 		"CloseDate": dateMinus30Days as Date {format:"yyyy/MM/dd"},
 		"RFP_Received_Date__c": if (regex::nullChars(opp_details.received_date) != null) opp_details.received_date as Date {format:"MM/dd/yyyy"} as Date  {format:"yyyy/MM/dd"} else null,
-		"RFP_Due_Date__c": if (due_date != null) due_date as Date {format:"MM/dd/yyyy"} as Date  {format:"yyyy/MM/dd"} else null,
+		"RFP_Due_Date__c": if (["Saturday","Sunday"] contains(duedate_day)) null else duedate,
 		"Market__c": getStateCategory(upper(client_details.address.state) default ""),
 		"Sale_Type__c": "Full Replacement",
 		"StageName": "Receipt of RFP",

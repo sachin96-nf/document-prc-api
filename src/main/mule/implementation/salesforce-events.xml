@@ -79,7 +79,7 @@ output application/java
 "Account"]]></ee:set-variable>
 							</ee:variables>
 				</ee:transform>
-				<validation:is-true doc:name="Check null values" doc:id="cfab5bcb-0812-44b6-859a-74eb3154e117" expression="#[!isEmpty(payload[0].Name) and !isEmpty(payload[0].BillingStreet)]" message="Important fields are missing from the Email attachment like Broker agency name or address.">
+				<validation:is-true doc:name="Check null values" doc:id="cfab5bcb-0812-44b6-859a-74eb3154e117" expression="#[!isEmpty(payload[0].Name) and (!isEmpty(payload[0].BillingStreet) or !isEmpty(payload[0].BillingCity) or !isEmpty(payload[0].BillingState))]" message="Important fields are missing from the Email attachment like Broker agency name or address.">
 			<error-mapping targetType="BROKER_ACCOUNT:MISSING_FILEDS" />
 		</validation:is-true>
 				<flow-ref doc:name="salesforce-upsert-subflow" doc:id="c6f5fb6a-5d01-4153-8c05-ce9e6e409328" name="salesforce-upsert-subflow" />
@@ -141,7 +141,7 @@ output application/java
 "Account"]]></ee:set-variable>
 			</ee:variables>
 		</ee:transform>
-				<validation:is-true doc:name="Check null values" doc:id="7c26f8ef-4163-4947-9a68-f068648282db" expression="#[!isEmpty(payload[0].Name) and (!isEmpty(payload[0].BillingStreet) or !isEmpty(payload[0].BillingState)) and !isEmpty(payload[0].Company_Size__c)]" message="Important fields are missing from the Email body like Client name or address or company size">
+				<validation:is-true doc:name="Check null values" doc:id="7c26f8ef-4163-4947-9a68-f068648282db" expression="#[!isEmpty(payload[0].Name) and (!isEmpty(payload[0].BillingStreet) or !isEmpty(payload[0].BillingState) or !isEmpty(payload[0].BillingCity)) and !isEmpty(payload[0].Company_Size__c)]" message="Important fields are missing from the Email body like Client name or address or company size">
 			<error-mapping targetType="CLIENT_ACCOUNT:MISSING_FILEDS" />
 		</validation:is-true>
 				<flow-ref doc:name="salesforce-upsert-subflow" doc:id="4a521aca-bd48-4ac8-9f95-1100d1ea5fb0" name="salesforce-upsert-subflow" />
@@ -207,7 +207,17 @@ output application/java
 				<ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
-payload]]></ee:set-payload>
+if (payload.items[0].statusCode=="DUPLICATES_DETECTED") 
+(
+	"items": [
+		{
+			"id": payload..Id[-1],
+			payload: {
+				errors: []
+			}
+		}
+	]
+) else payload]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 		<logger level="INFO" doc:name="Exit Log" doc:id="c60de00d-7ce2-4c37-84ed-594d93fe4fab" message="Finished upserting data into Salesforce" />

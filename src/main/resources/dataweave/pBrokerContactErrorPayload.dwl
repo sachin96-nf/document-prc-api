@@ -7,6 +7,7 @@ import dataweave::regex
 	"Correlation Id": correlationId,
 	"Email Subject": vars.emailSubject,
 	"Broker Name": vars.broker_opp_details.'broker-details'.broker_data.name,
+	"Opportunity Owner": vars.broker_opp_details.'opportunity-data'.opportunity_data.name default "",
 	"Error Type": (error.errorType.namespace default "ERROR") ++ ":" ++ (error.errorType.identifier default "INTERNAL_SERVER_ERROR"),
 	"Error Code": vars.httpStatus,
 	"Error Description": error.description,

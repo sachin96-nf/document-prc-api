@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <mule
+	xmlns:idp-idp-curative-emailbody-dev-180="http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-180"
+	xmlns:idp-idp-curative-pdf-dev-140="http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-140"
 	xmlns:idp-idp-curative-pdf-dev-130="http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-130"
 	xmlns:idp-idp-curative-emailbody-dev-160="http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-160"
 	xmlns:idp-idp-curative-emailbody-dev-150="http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-150"
@@ -41,7 +43,9 @@ http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-120 http://www.mule
 http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-140 http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-140/current/mule-idp-idp-curative-emailbody-dev-140.xsd
 http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-150 http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-150/current/mule-idp-idp-curative-emailbody-dev-150.xsd
 http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-160 http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-160/current/mule-idp-idp-curative-emailbody-dev-160.xsd
-http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-130 http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-130/current/mule-idp-idp-curative-pdf-dev-130.xsd">
+http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-130 http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-130/current/mule-idp-idp-curative-pdf-dev-130.xsd
+http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-140 http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-140/current/mule-idp-idp-curative-pdf-dev-140.xsd
+http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-180 http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-180/current/mule-idp-idp-curative-emailbody-dev-180.xsd">
 	<email:imap-config name="Email_IMAP"
 		doc:name="Email IMAP" doc:id="3265d9fc-f0c1-46a3-a81d-2139ed73c016">
 		<email:imaps-connection host="${gmail.host}"
@@ -125,10 +129,10 @@ http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-130 http://www.mule
 				value="Bearer ${secure::slack.token}" />
 		</http:default-headers>
 	</http:request-config>
-	<idp-idp-curative-emailbody-dev-160:config
-		name="IDP___idp_curative_emailbody_dev___1_6_0_Config"
-		doc:name="IDP - idp-curative-emailbody-dev - 1.6.0 Config"
-		doc:id="3b38b267-fb19-4553-9a59-7731071531dd"
+	<idp-idp-curative-pdf-dev-140:config
+		name="IDP___idp_curative_pdf_dev___1_4_0_Config"
+		doc:name="IDP - idp-curative-pdf-dev - 1.4.0 Config"
+		doc:id="84d8a404-865c-43d3-a0fc-8c665adbc6c1"
 		property_host="${idp.host}" property_port="${idp.port}"
 		property_protocol="${idp.protocol}"
 		property_responseTimeout="${idp.response_timeout}"
@@ -136,10 +140,10 @@ http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-130 http://www.mule
 		property_client-secret="${secure::idp.client_secret}"
 		property_basePath="${idp.basePath}"
 		property_access-token-url="${idp.access_token_url}" />
-	<idp-idp-curative-pdf-dev-130:config
-		name="IDP___idp_curative_pdf_dev___1_3_0_Config"
-		doc:name="IDP - idp-curative-pdf-dev - 1.3.0 Config"
-		doc:id="ee57bb63-76cb-42d0-aefe-130ec9e919be"
+	<idp-idp-curative-emailbody-dev-180:config
+		name="IDP___idp_curative_emailbody_dev___1_8_0_Config"
+		doc:name="IDP - idp-curative-emailbody-dev - 1.8.0 Config"
+		doc:id="401b228f-12c9-4a54-8340-e476b35c7ed6"
 		property_host="${idp.host}" property_port="${idp.port}"
 		property_protocol="${idp.protocol}"
 		property_responseTimeout="${idp.response_timeout}"

@@ -5,6 +5,7 @@ output application/json
 	"API Name": app.name,
 	"Correlation Id": correlationId,
 	"Email Subject": vars.emailSubject,
+	"Opportunity Owner": vars.broker_opp_details.'opportunity-data'.opportunity_data.name default "",
 	"Error Type": (error.errorType.namespace default "ERROR") ++ ":" ++ (error.errorType.identifier default "INTERNAL_SERVER_ERROR"),
 	"Error Code": vars.httpStatus,
 	"Error Description": error.description,

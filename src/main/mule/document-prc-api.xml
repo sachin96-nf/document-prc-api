@@ -9,7 +9,7 @@ http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/em
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
 	<flow name="document-prc-apiFlow"
-		doc:id="a61da17e-ef01-4c69-a0da-e2bb29f79b10" initialState="stopped">
+		doc:id="a61da17e-ef01-4c69-a0da-e2bb29f79b10">
 		<email:listener-imap
 			doc:name="On New Email - IMAP"
 			doc:id="dc132fbc-061c-4c72-85db-4d2747a6f3fe" config-ref="Email_IMAP">
@@ -39,30 +39,30 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 				<ee:set-variable variableName="client_details" ><![CDATA[{
   "client-details": {
     "client_details": {
-      "name": "LunchPail Service Partners, Inc.",
-      "email": "hr@lunchpailservicepartners.com",
-      "fte": "159",
-      "due_date": "null",
-      "commission": "null",
+      "name": "Mac Texas Realty Group, LLC",
+      "email": null,
+      "fte": "380",
+      "due_date": "04/09/2025",
+      "commission": "40",
       "address": {
-        "street": "6545 Trade Center Drive",
-        "city": "Jacksonville",
-        "state": "FL",
-        "zip": "32254"
+        "street": "400 E Centre Park Blvd Ste 101",
+        "city": "Desoto",
+        "state": "Texas",
+        "zip": "75115-8802"
       },
       "carrier": {
-        "name": "UHC/Surest",
-        "type": "PPO"
+        "name": null,
+        "type": null
       }
     },
     "broker_details": {
-      "agency_name": "Brown & Brown of Florida, Inc.",
-      "email": "null",
+      "agency_name": "Gallager Office",
+      "email": null,
       "address": {
-        "street": "null",
-        "city": "null",
-        "state": "null",
-        "zip": "null"
+        "street": null,
+        "city": "Dallas",
+        "state": null,
+        "zip": null
       }
     }
   }
@@ -70,27 +70,26 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 				<ee:set-variable variableName="broker_opp_details" ><![CDATA[{
   "broker-details": {
     "broker_data": {
-      "name": "Morgan Harberson",
+      "name": "Stephen Schulze",
       "contact": [
-        "(386) 252-9601",
-        "(386) 316-0227"
+        
       ],
       "address": {
-        "street": "300 North Beach Street",
-        "city": "Daytona Beach",
-        "state": "Fl",
-        "zip": "32114"
+        "street": "",
+        "city": "Dallas",
+        "state": "Texas",
+        "zip": ""
       },
-      "email": "Morgan.Harberson@bbrown.com",
-      "commission": 6
+      "email": null,
+      "commission": "40"
     }
   },
   "opportunity-data": {
     "opportunity_data": {
-      "name": "Kellee Martinez",
-      "email": "kelleemartinez@curative.com",
-      "contact": "407-883-1069",
-      "received_date": "03/14/2025"
+      "name": "Michael Kohl",
+      "email": "mikekohl@curative.com",
+      "contact": null,
+      "received_date": "04/02/2025"
     }
   }
 }]]></ee:set-variable>

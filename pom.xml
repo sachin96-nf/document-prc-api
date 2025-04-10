@@ -157,14 +157,14 @@
 		</dependency>
 		<dependency>
 			<groupId>355e5afc-f268-4623-b311-7e3a7073590f</groupId>
-			<artifactId>mule-plugin-idp-action-adfd78c2-0e2f-465d-956f-9108e40385db</artifactId>
-			<version>1.6.0</version>
+			<artifactId>mule-plugin-idp-action-72233c34-4305-406b-81ec-f800bfddd1f9</artifactId>
+			<version>1.4.0</version>
 			<classifier>mule-plugin</classifier>
 		</dependency>
 		<dependency>
 			<groupId>355e5afc-f268-4623-b311-7e3a7073590f</groupId>
-			<artifactId>mule-plugin-idp-action-72233c34-4305-406b-81ec-f800bfddd1f9</artifactId>
-			<version>1.3.0</version>
+			<artifactId>mule-plugin-idp-action-adfd78c2-0e2f-465d-956f-9108e40385db</artifactId>
+			<version>1.8.0</version>
 			<classifier>mule-plugin</classifier>
 		</dependency>
 	</dependencies>
