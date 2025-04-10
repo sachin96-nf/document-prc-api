@@ -260,7 +260,7 @@ vars.pdfPayload[0].value]]></ee:set-payload>
 		</ee:transform>
 		<http:request method="POST" doc:name="Slack"
 			doc:id="1ce7f508-faf5-4586-bfd6-7d7f3c299b08"
-			config-ref="Slack_Request" path="/api/chat.postMessage">
+			config-ref="Slack_Request" path="${slack.path}" sendCorrelationId="ALWAYS">
 		</http:request>
 		<logger level="INFO" doc:name="Exit Log"
 			doc:id="ce308295-1678-45ef-952c-d8628f58a646"

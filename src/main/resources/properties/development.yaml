@@ -21,6 +21,7 @@ gmail:
 slack:
     host: "slack.com"
     port: "443"
+    path: "/api/chat.postMessage"
     response_timeout: "300000"
     conn_idle_timeout: "30000"
     channel: "mule-demo"
