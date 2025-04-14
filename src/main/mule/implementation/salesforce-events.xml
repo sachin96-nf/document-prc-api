@@ -62,7 +62,7 @@ output application/java
 			</ee:variables>
 		</ee:transform>
 		<flow-ref doc:name="salesforce-query-subflow" doc:id="1f9d7870-7dcb-4d08-b1d8-b4e8b7f95fae" name="salesforce-query-subflow" />
-		<choice doc:name="Choice" doc:id="6a89a2f6-6cdb-4162-b627-471febda3fd0" >
+		<choice doc:name="Check IF empty response from Query" doc:id="6a89a2f6-6cdb-4162-b627-471febda3fd0" >
 			<when expression="#[!isEmpty(payload)]">
 				<logger level="INFO" doc:name="Log Info" doc:id="0ac76735-e95e-4d1a-a661-bf3539b2f721" message="Broker account details already present in Salesforce" />
 				<set-variable value="#[payload[0].Id]" doc:name="account_id" doc:id="46cb1285-66f5-44a9-80a6-f91a6b13a171" variableName="account_id" />
@@ -124,7 +124,7 @@ output application/java
 			</ee:variables>
 		</ee:transform>
 		<flow-ref doc:name="salesforce-query-subflow" doc:id="d928985f-61db-4751-b3ea-ab38b44980b0" name="salesforce-query-subflow" />
-		<choice doc:name="Choice" doc:id="ce553af2-cd57-4431-a438-3e4d97428e7e" >
+		<choice doc:name="Check IF empty response from Query" doc:id="ce553af2-cd57-4431-a438-3e4d97428e7e" >
 			<when expression="#[!isEmpty(payload)]">
 				<logger level="INFO" doc:name="Log Info" doc:id="626029aa-ddd1-4474-953b-cb21f14d2c70" message="Client account details already present in Salesforce" />
 				<set-variable value="#[payload[0].Id]" doc:name="client_id" doc:id="df8e6300-3d2d-42d6-a7b0-01bedd4873b9" variableName="client_id" />
@@ -199,9 +199,16 @@ output application/java
 	</sub-flow>
 	<sub-flow name="salesforce-upsert-subflow" doc:id="8664effd-8f43-49a7-ade6-e2c481d43168" >
 		<logger level="INFO" doc:name="Info Log" doc:id="515fbb36-0f0f-45b7-a6b4-91519c8c0f3b" message="Start upserting data into Salesforce"/>
-		<until-successful maxRetries="${retry.count}" doc:name="Until Successful" doc:id="34a27fcc-5809-4170-9ff5-6a26efab77ae" millisBetweenRetries="${retry.freq}">
+		<try doc:name="Try" doc:id="4229be27-5f08-4aac-a00b-803da5db5ebe" >
+			<until-successful maxRetries="${retry.count}" doc:name="Until Successful" doc:id="34a27fcc-5809-4170-9ff5-6a26efab77ae" millisBetweenRetries="${retry.freq}">
 			<salesforce:upsert objectType="#[vars.objectname]" externalIdFieldName='#[vars.externalid default "Id"]' doc:name="Upsert in SF" doc:id="b0b5f341-e211-423a-bfad-4b3d84ba7f86" config-ref="Salesforce_Config" />
 		</until-successful>
+			<error-handler >
+				<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="d336d2d3-27b6-4551-8191-55cd2984a3ea" >
+					<logger level="ERROR" doc:name="Log Error" doc:id="b7db6cd3-d062-4674-abf3-ebc1b6ff0df7" message="Salesforce Upsert failed due to connectivity/upsert issues"/>
+				</on-error-propagate>
+			</error-handler>
+		</try>
 		<ee:transform doc:name="Convert Response to JSON" doc:id="5e0ac34d-0055-4462-aef1-44e4ef4c64c6">
 			<ee:message>
 				<ee:set-payload><![CDATA[%dw 2.0
@@ -224,11 +231,18 @@ if (payload.items[0].statusCode=="DUPLICATES_DETECTED")
 	</sub-flow>
 	<sub-flow name="salesforce-query-subflow" doc:id="6e64ce08-24ae-4f32-8219-f9bab4424101" >
 		<logger level="INFO" doc:name="Info Log" doc:id="1a117354-10cd-479e-9fa1-b21224a23cd9" message='#["Start query data from Salesforce : " ++ vars.query as String]' />
-		<until-successful maxRetries="${retry.count}" doc:name="Until Successful" doc:id="6f278469-ed88-470f-866a-abcfa7ed4713" millisBetweenRetries="${retry.freq}">
+		<try doc:name="Try" doc:id="fbecf16b-9780-4232-9d18-0d97cee156a9" >
+			<until-successful maxRetries="${retry.count}" doc:name="Until Successful" doc:id="6f278469-ed88-470f-866a-abcfa7ed4713" millisBetweenRetries="${retry.freq}">
 			<salesforce:query doc:name="Query Salesforce" doc:id="86290577-fa43-4729-abb1-183b17676270" config-ref="Salesforce_Config">
 			<salesforce:salesforce-query><![CDATA[#[vars.query]]]></salesforce:salesforce-query>
 		</salesforce:query>
 		</until-successful>
+			<error-handler >
+				<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="30c0c121-0dda-4210-a340-5d23b3bd531b" >
+					<logger level="ERROR" doc:name="Log Error" doc:id="2abc2336-7604-49a6-acc6-f864901438f0" message="Salesforce Query failed due to connectivity/invalid-query issues" />
+				</on-error-propagate>
+			</error-handler>
+		</try>
 		<ee:transform doc:name="Convert Response to JSON" doc:id="01b52378-5f66-4adf-935c-813c5c4a0e66">
 			<ee:message>
 				<ee:set-payload><![CDATA[%dw 2.0

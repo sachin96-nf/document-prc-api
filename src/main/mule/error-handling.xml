@@ -27,8 +27,9 @@ http://www.mulesoft.org/schema/mule/slack http://www.mulesoft.org/schema/mule/sl
 			</ee:transform>
 			<logger level="ERROR" doc:name="Error Log"
 				doc:id="2dffc31a-38f6-4f06-a4f1-a4eecc84fc4a" message="#[payload]" />
-			<flow-ref doc:name="slack-subflow"
-				doc:id="65baa5f0-2dba-4ec4-9d94-448f3869db05" name="slack-subflow" />
+			<async doc:name="Async" doc:id="bf980a1f-4f83-4bc8-a54e-440e2a5139b7" >
+				<flow-ref doc:name="slack-subflow" doc:id="65baa5f0-2dba-4ec4-9d94-448f3869db05" name="slack-subflow" />
+			</async>
 		</on-error-propagate>
 		<on-error-propagate enableNotifications="true"
 			logException="true" doc:name="On Error Propagate"
@@ -47,8 +48,9 @@ http://www.mulesoft.org/schema/mule/slack http://www.mulesoft.org/schema/mule/sl
 			</ee:transform>
 			<logger level="ERROR" doc:name="Error Log"
 				doc:id="549bd580-b9a4-472a-9e9f-8d1f6b6a9131" message="#[payload]" />
-			<flow-ref doc:name="slack-subflow"
-				doc:id="f0c30251-8d5e-41b7-a47e-231d2a2bc3dd" name="slack-subflow" />
+			<async doc:name="Async" doc:id="b495f61e-9a21-4ab9-8d6b-eba5196c2ceb" >
+				<flow-ref doc:name="slack-subflow" doc:id="f0c30251-8d5e-41b7-a47e-231d2a2bc3dd" name="slack-subflow" />
+			</async>
 		</on-error-propagate>
 		<on-error-propagate enableNotifications="true"
 			logException="true" doc:name="On Error Propagate"
@@ -67,8 +69,9 @@ http://www.mulesoft.org/schema/mule/slack http://www.mulesoft.org/schema/mule/sl
 			</ee:transform>
 			<logger level="ERROR" doc:name="Error Log"
 				doc:id="64a9667b-d1fd-4e3d-a20f-0b942cf6a337" message="#[payload]" />
-			<flow-ref doc:name="slack-subflow"
-				doc:id="23f3748c-cea8-42de-a5ed-0e1dddfad1df" name="slack-subflow" />
+			<async doc:name="Async" doc:id="037e92b3-5503-43df-b27e-8b8794162001" >
+				<flow-ref doc:name="slack-subflow" doc:id="23f3748c-cea8-42de-a5ed-0e1dddfad1df" name="slack-subflow" />
+			</async>
 		</on-error-propagate>
 		<on-error-propagate enableNotifications="true"
 			logException="true" doc:name="On Error Propagate"
@@ -87,8 +90,9 @@ http://www.mulesoft.org/schema/mule/slack http://www.mulesoft.org/schema/mule/sl
 			</ee:transform>
 			<logger level="ERROR" doc:name="Error Log"
 				doc:id="62ef91f5-c27a-4279-8f1d-e39f36572d1a" message="#[payload]" />
-			<flow-ref doc:name="slack-subflow"
-				doc:id="0a372e9a-21ed-471f-8ba7-a22e44a6bf3e" name="slack-subflow" />
+			<async doc:name="Async" doc:id="c4b86360-4139-4fa6-9453-5bdea000b77c" >
+				<flow-ref doc:name="slack-subflow" doc:id="0a372e9a-21ed-471f-8ba7-a22e44a6bf3e" name="slack-subflow" />
+			</async>
 		</on-error-propagate>
 		<on-error-propagate enableNotifications="true"
 			logException="true" doc:name="On Error Propagate"
@@ -106,8 +110,9 @@ http://www.mulesoft.org/schema/mule/slack http://www.mulesoft.org/schema/mule/sl
 			</ee:transform>
 			<logger level="ERROR" doc:name="Error Log"
 				doc:id="175264a0-c90b-43c9-9f3a-09f19b64c254" message="#[payload]" />
-			<flow-ref doc:name="slack-subflow"
-				doc:id="8eea6d83-d3f8-49ad-a0cb-29f3443c09b5" name="slack-subflow" />
+			<async doc:name="Async" doc:id="31ec679c-f4ae-484b-8097-2223f02620e3" >
+				<flow-ref doc:name="slack-subflow" doc:id="8eea6d83-d3f8-49ad-a0cb-29f3443c09b5" name="slack-subflow" />
+			</async>
 		</on-error-propagate>
 	</error-handler>
 </mule>

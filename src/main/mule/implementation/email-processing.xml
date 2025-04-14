@@ -24,17 +24,7 @@ http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/
 		doc:id="9c73e0b5-2ad5-4c3e-b713-2a118b045654">
 		<ee:transform doc:name="Init variables"
 			doc:id="dde9873f-7bad-473e-a0c4-a814b5a3ce31">
-			<ee:message>
-			</ee:message>
 			<ee:variables>
-				<ee:set-variable variableName="path"><![CDATA[%dw 2.0
-output application/java
----
-Mule::p('app.home') ++ "/sample.pdf"]]></ee:set-variable>
-				<ee:set-variable variableName="scan_pdf_filename"><![CDATA[%dw 2.0
-output application/java
----
-flatten(payload.body scan(/(?i)Scan file([A-Za-z]*\s*)*:\s*([^\r\n]+\.pdf)/))[2]]]></ee:set-variable>
 				<ee:set-variable variableName="emailbody"><![CDATA[%dw 2.0
 output application/java
 ---
@@ -43,10 +33,6 @@ payload.body]]></ee:set-variable>
 output application/java
 ---
 0]]></ee:set-variable>
-				<ee:set-variable variableName="emailPayload"><![CDATA[%dw 2.0
-output application/java
----
-entriesOf(payload.attachments mapObject ((value, key) -> {(key) : value.^raw})) default []]]></ee:set-variable>
 				<ee:set-variable variableName="emailSubject"><![CDATA[%dw 2.0
 output application/java
 ---
@@ -61,6 +47,9 @@ output application/json
 ---
 {
 }]]></ee:set-variable>
+				<ee:set-variable resource="dataweave/vPath.dwl" variableName="path" />
+				<ee:set-variable resource="dataweave/vScanFileFromEmail.dwl" variableName="scan_pdf_filename" />
+				<ee:set-variable resource="dataweave/vEmailAttachmentsPayload.dwl" variableName="emailPayload" />
 			</ee:variables>
 		</ee:transform>
 		<java:invoke-static doc:name="convert email body to pdf" doc:id="2e0486bf-3b0b-4380-9b1a-d08368cf495b" class="pdfConvertor.emailBodyToPdf" method="createpdf(java.lang.String,java.lang.String)">
@@ -82,38 +71,36 @@ vars.emailPayload filter (vars.scan_pdf_filename contains $.key)]]></ee:set-vari
 		</ee:transform>
 		<choice doc:name="Check if no attachment to scan" doc:id="c8b148d6-77f5-4a01-a516-747d29501879" >
 			<when expression="#[isEmpty(vars.pdfPayload)]">
-				<flow-ref doc:name="fetch-email-pdfbody-idp-data-subflow" doc:id="a652fa05-89b9-4d83-a3bd-74af001e0d50" target="client_details" name="fetch-email-pdfbody-idp-data-subflow"/>
+				<flow-ref doc:name="fetch-email-pdfbody-idp-data-subflow" doc:id="a652fa05-89b9-4d83-a3bd-74af001e0d50" target="client_details" name="fetch-email-pdfbody-idp-data-subflow" targetValue="#[payload default {}]"/>
 			</when>
 			<otherwise >
-				<flow-ref doc:name="fetch-pdfbody-idp-data-subflow" doc:id="f2274926-9dbc-4a87-bf5d-db8340a25d7c" target="client_details" name="fetch-pdfbody-idp-data-subflow" />
+				<flow-ref doc:name="fetch-pdfbody-idp-data-subflow" doc:id="f2274926-9dbc-4a87-bf5d-db8340a25d7c" target="client_details" name="fetch-pdfbody-idp-data-subflow" targetValue="#[payload default {}]"/>
 			</otherwise>
 		</choice>
 		<flow-ref doc:name="fetch-emailbody-idp-data-subflow"
 			doc:id="5e16b0e0-1c2b-4ded-8f69-81a8245e002b"
-			name="fetch-emailbody-idp-data-subflow" target="broker_opp_details" />
+			name="fetch-emailbody-idp-data-subflow" target="broker_opp_details" targetValue="#[payload default {}]"/>
 
 		<flow-ref
 			doc:name="upsert-broker-client-opp-details-sf-subflow"
 			doc:id="bf9ce829-2ebd-46be-9c7d-4542ad8c64a5"
 			name="upsert-broker-client-opp-details-sf-subflow"
-			target="opp_payload" />
+			target="opp_payload" targetValue="#[payload default {}]"/>
 		<flow-ref doc:name="zip-attachments-subflow"
 			doc:id="3959772d-59ec-49a6-90c0-b63d34363cc2"
 			name="zip-attachments-subflow" target="zipped_data" />
 		<flow-ref doc:name="send-attachments-to-sf-subflow"
 			doc:id="19db82f4-8afb-4b81-b4f4-ecbdb0ff2c74"
 			name="send-attachments-to-sf-subflow" />
-		<ee:transform doc:name="Success Slack Message"
-			doc:id="b0b34367-4dff-4a60-b009-b4f631fc4c51">
+		<async doc:name="Async" doc:id="600f48d9-2c54-42b7-aae1-66350c309aa6" >
+			<ee:transform doc:name="Success Slack Message" doc:id="b0b34367-4dff-4a60-b009-b4f631fc4c51">
 			<ee:message>
-				<ee:set-payload
-					resource="dataweave/pSlackSuccessPayload.dwl" />
+				<ee:set-payload resource="dataweave/pSlackSuccessPayload.dwl" />
 			</ee:message>
 		</ee:transform>
-		<logger level="INFO" doc:name="Info Log"
-			doc:id="98970a4a-4bdc-49c9-8803-a63b6814e0be" message="#[payload]" />
-		<flow-ref doc:name="slack-subflow"
-			doc:id="0e9dd9bb-ebf2-4185-ac33-258812b0cd03" name="slack-subflow" />
+			<logger level="INFO" doc:name="Info Log" doc:id="98970a4a-4bdc-49c9-8803-a63b6814e0be" message="#[payload]" />
+			<flow-ref doc:name="slack-subflow" doc:id="0e9dd9bb-ebf2-4185-ac33-258812b0cd03" name="slack-subflow" />
+		</async>
 	</sub-flow>
 	<sub-flow name="zip-attachments-subflow"
 		doc:id="8e798583-1781-43ed-bb98-49aa9e8b11b9">
@@ -122,7 +109,7 @@ vars.emailPayload filter (vars.scan_pdf_filename contains $.key)]]></ee:set-vari
 			variableName="attachments" />
 		<foreach doc:name="For Each Attachment"
 			doc:id="2c0e2d18-a11d-4d44-acbe-6fb3f456735e"
-			collection="#[vars.emailPayload]">
+			collection="#[vars.emailPayload default []]">
 			<set-variable value="#[payload.key]" doc:name="filename"
 				doc:id="3e10e3dd-b234-4641-b164-71e5911b5cb9"
 				variableName="filename" />
@@ -182,10 +169,7 @@ payload.value]]></ee:set-variable>
 		<ee:transform doc:name="PDF Attachment"
 			doc:id="481b5d11-f2aa-488b-8484-3f23a3e96586">
 			<ee:message>
-				<ee:set-payload><![CDATA[%dw 2.0
-output application/octet-stream
----
-vars.pdfPayload[0].value]]></ee:set-payload>
+				<ee:set-payload resource="dataweave/pPdfPayloadConvert.dwl" />
 			</ee:message>
 			<ee:variables>
 			</ee:variables>
@@ -258,10 +242,17 @@ vars.pdfPayload[0].value]]></ee:set-payload>
 					resource="dataweave/pSlackMessageColor.dwl" />
 			</ee:message>
 		</ee:transform>
-		<http:request method="POST" doc:name="Slack"
-			doc:id="1ce7f508-faf5-4586-bfd6-7d7f3c299b08"
-			config-ref="Slack_Request" path="${slack.path}" sendCorrelationId="ALWAYS">
+		<try doc:name="Try" doc:id="e1e8f60f-b233-453a-925d-5491c7ff12c4" >
+			<until-successful maxRetries="${retry.count}" doc:name="Until Successful" doc:id="75b5be66-0b0f-40a1-9b6e-6ccd625910dd" millisBetweenRetries="${retry.freq}">
+			<http:request method="POST" doc:name="Slack" doc:id="1ce7f508-faf5-4586-bfd6-7d7f3c299b08" config-ref="Slack_Request" path="${slack.path}" sendCorrelationId="ALWAYS">
 		</http:request>
+		</until-successful>
+			<error-handler >
+				<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="7f2ebe00-15b0-40ce-94e3-6b0b1a68b3be" >
+					<logger level="ERROR" doc:name="Log Error" doc:id="60e7df1c-f939-4e83-847d-daafa1a7ab5e" message="Unable to send notifications to slack due to connectivity/messaging issues" />
+				</on-error-propagate>
+			</error-handler>
+		</try>
 		<logger level="INFO" doc:name="Exit Log"
 			doc:id="ce308295-1678-45ef-952c-d8628f58a646"
 			message="Slack Notification sent!" />
