@@ -3,8 +3,8 @@
     <servers>
         <server>
             <id>anypoint-exchange-v3</id>
-            <username>${username}</username>
-            <password>${password}</password>
+            <username>${{vars.username}}</username>
+            <password>${{secrets.password}}</password>
         </server>
     </servers>
 </settings>
