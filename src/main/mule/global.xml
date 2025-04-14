@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <mule
+	xmlns:idp-idp-curative-emailbody-dev-190="http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-190"
 	xmlns:idp-idp-curative-emailbody-dev-180="http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-180"
 	xmlns:idp-idp-curative-pdf-dev-140="http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-140"
 	xmlns:idp-idp-curative-pdf-dev-130="http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-130"
@@ -45,7 +46,8 @@ http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-150 http://ww
 http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-160 http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-160/current/mule-idp-idp-curative-emailbody-dev-160.xsd
 http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-130 http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-130/current/mule-idp-idp-curative-pdf-dev-130.xsd
 http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-140 http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-140/current/mule-idp-idp-curative-pdf-dev-140.xsd
-http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-180 http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-180/current/mule-idp-idp-curative-emailbody-dev-180.xsd">
+http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-180 http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-180/current/mule-idp-idp-curative-emailbody-dev-180.xsd
+http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-190 http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-190/current/mule-idp-idp-curative-emailbody-dev-190.xsd">
 	<email:imap-config name="Email_IMAP"
 		doc:name="Email IMAP" doc:id="3265d9fc-f0c1-46a3-a81d-2139ed73c016">
 		<email:imaps-connection host="${gmail.host}"
@@ -102,7 +104,7 @@ http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-180 http://ww
 			audienceUrl="${salesforce.audience_url}"
 			connectionTimeout="${salesforce.conn_timeout}"
 			loginRequestTimeout="${salesforce.login_timeout}">
-			<reconnection failsDeployment="true">
+			<reconnection>
 				<reconnect frequency="${salesforce.reconnection.freq}"
 					count="${salesforce.reconnection.attempts}" />
 			</reconnection>
@@ -140,10 +142,10 @@ http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-180 http://ww
 		property_client-secret="${secure::idp.client_secret}"
 		property_basePath="${idp.basePath}"
 		property_access-token-url="${idp.access_token_url}" />
-	<idp-idp-curative-emailbody-dev-180:config
-		name="IDP___idp_curative_emailbody_dev___1_8_0_Config"
-		doc:name="IDP - idp-curative-emailbody-dev - 1.8.0 Config"
-		doc:id="401b228f-12c9-4a54-8340-e476b35c7ed6"
+	<idp-idp-curative-emailbody-dev-190:config
+		name="IDP___idp_curative_emailbody_dev___1_9_0_Config"
+		doc:name="IDP - idp-curative-emailbody-dev - 1.9.0 Config"
+		doc:id="f7b222a6-7187-4786-9c08-28b05e679b6e"
 		property_host="${idp.host}" property_port="${idp.port}"
 		property_protocol="${idp.protocol}"
 		property_responseTimeout="${idp.response_timeout}"

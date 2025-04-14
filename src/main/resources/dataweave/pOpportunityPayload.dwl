@@ -8,7 +8,7 @@ var currentDate = now() as Date
 var dateMinus30Days = currentDate - |P30D|
 var due_date=regex::nullChars(opp_details.due_date) default regex::nullChars(client_details.due_date)
 var duedate=if (due_date != null) due_date as Date {format:"MM/dd/yyyy"} as Date  {format:"yyyy/MM/dd"} else null
-var duedate_day=duedate as String {format: "EEEE"}
+var duedate_day=(duedate default "") as String {format: "EEEE"}
 var carrier_values=['Aetna','Blues','Cigna','Curative','United Healthcare','Virgin','Self-Insured']
 var Incumbent_Carrier_Notes__c="Other"
 var funding_type=["Fully Insured", "Level Funded", "ASO"]

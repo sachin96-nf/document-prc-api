@@ -164,7 +164,7 @@
 		<dependency>
 			<groupId>355e5afc-f268-4623-b311-7e3a7073590f</groupId>
 			<artifactId>mule-plugin-idp-action-adfd78c2-0e2f-465d-956f-9108e40385db</artifactId>
-			<version>1.8.0</version>
+			<version>1.9.0</version>
 			<classifier>mule-plugin</classifier>
 		</dependency>
 	</dependencies>
