@@ -198,7 +198,7 @@ output application/java
 		<logger level="INFO" doc:name="Info Log" doc:id="e2fa42c1-0ecf-4dc4-b42d-0a36c96d326e" message='#[{&#10;	"Salesforce Output": payload&#10;}]' />
 	</sub-flow>
 	<sub-flow name="salesforce-upsert-subflow" doc:id="8664effd-8f43-49a7-ade6-e2c481d43168" >
-		<logger level="INFO" doc:name="Info Log" doc:id="515fbb36-0f0f-45b7-a6b4-91519c8c0f3b" message="Start upserting data into Salesforce"/>
+		<logger level="INFO" doc:name="Info Log" doc:id="515fbb36-0f0f-45b7-a6b4-91519c8c0f3b" message='#["Start upserting data into Salesforce for Object: " ++ (vars.objectname default "") as String]'/>
 		<try doc:name="Try" doc:id="4229be27-5f08-4aac-a00b-803da5db5ebe" >
 			<until-successful maxRetries="${retry.count}" doc:name="Until Successful" doc:id="34a27fcc-5809-4170-9ff5-6a26efab77ae" millisBetweenRetries="${retry.freq}">
 			<salesforce:upsert objectType="#[vars.objectname]" externalIdFieldName='#[vars.externalid default "Id"]' doc:name="Upsert in SF" doc:id="b0b5f341-e211-423a-bfad-4b3d84ba7f86" config-ref="Salesforce_Config" />
@@ -227,7 +227,7 @@ if (payload.items[0].statusCode=="DUPLICATES_DETECTED")
 ) else payload]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<logger level="INFO" doc:name="Exit Log" doc:id="c60de00d-7ce2-4c37-84ed-594d93fe4fab" message="Finished upserting data into Salesforce" />
+		<logger level="INFO" doc:name="Exit Log" doc:id="c60de00d-7ce2-4c37-84ed-594d93fe4fab" message='#["Finished upserting data into Salesforce for Object: " ++ (vars.objectname default "") as String]' />
 	</sub-flow>
 	<sub-flow name="salesforce-query-subflow" doc:id="6e64ce08-24ae-4f32-8219-f9bab4424101" >
 		<logger level="INFO" doc:name="Info Log" doc:id="1a117354-10cd-479e-9fa1-b21224a23cd9" message='#["Start query data from Salesforce : " ++ vars.query as String]' />

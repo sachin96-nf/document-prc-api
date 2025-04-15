@@ -55,6 +55,7 @@ output application/json
 		<validation:is-not-blank-string doc:name="EmailBody not null" doc:id="25a0d924-223a-4401-9578-ab66d5e9d385" value='#[(vars.emailbody splitBy "&lt;div")[0]]' message="Email body is blank. Please repush the email with broker and opportunity owner details in the email">
 			<error-mapping sourceType="VALIDATION:BLANK_STRING" targetType="EMAIL_ERROR:BLANK_EMAIL" />
 		</validation:is-not-blank-string>
+		<validation:is-true doc:name="Check scan file extension" doc:id="c3a2b7c6-4346-42ed-ad19-abd3850f7d4e" expression='#[isEmpty(vars.scan_pdf_filename) or (lower(vars.scan_pdf_filename) endsWith ".pdf") or (lower(vars.scan_pdf_filename) endsWith ".docx") or (lower(vars.scan_pdf_filename) contains ".xls")]' message="Couldnot scan the document. Expected document types are pdf,docx,xls,xlsx"/>
 		<java:invoke-static doc:name="convert email body to pdf" doc:id="2e0486bf-3b0b-4380-9b1a-d08368cf495b" class="pdfConvertor.emailBodyToPdf" method="createpdf(java.lang.String,java.lang.String)" target="emailBodyPDF">
 			<java:args><![CDATA[#[{
 	args: ("<div" ++ ((vars.emailbody splitBy "\n<div")[1 to -1] joinBy " ")) as String,
@@ -69,7 +70,7 @@ output application/json
 				<ee:set-variable variableName="pdfPayload" ><![CDATA[%dw 2.0
 output application/java
 ---
-vars.emailPayload filter (vars.scan_pdf_filename contains $.key)]]></ee:set-variable>
+vars.emailPayload filter (lower(vars.scan_pdf_filename) contains lower($.key))]]></ee:set-variable>
 			</ee:variables>
 		</ee:transform>
 		<choice doc:name="Check if no attachment to scan" doc:id="c8b148d6-77f5-4a01-a516-747d29501879" >
@@ -131,7 +132,7 @@ payload.value]]></ee:set-variable>
 						doc:id="fd898a9c-be62-4fcc-a587-ee038ad93940"
 						variableName="attachments" />
 				</when>
-				<when expression='#[lower(vars.filename) contains ".xls"]'>
+				<when expression='#[(lower(vars.filename) contains ".xls") or (lower(vars.filename) contains ".doc")]'>
 					<set-variable
 						value='#[output application/java --- &#10;vars.attachments ++ {&#10;	"$(vars.filename)" : payload.value&#10;}]'
 						doc:name="attachments"
@@ -175,16 +176,15 @@ payload.value]]></ee:set-variable>
 			</ee:variables>
 		</ee:transform>
 			</when>
-			<when expression='#[lower(vars.scan_pdf_filename) contains ".doc"]'>
+			<when expression='#[lower(vars.scan_pdf_filename) endsWith ".docx"]'>
 				<ee:transform doc:name="convert to base64" doc:id="54fae777-fd62-4508-9d17-6659d61c2775" >
 					<ee:message >
 						<ee:set-payload resource="dataweave/pDocDocxBase64.dwl" />
 					</ee:message>
 				</ee:transform>
-				<java:invoke-static method="convertDocOrDocxToPdf(java.lang.String,java.lang.String)" doc:name="doc/docx to pdf" doc:id="3630788b-05b4-4d5d-a242-8af855fc2610" class="pdfConvertor.DocToPdf" >
+				<java:invoke-static method="convertDocOrDocxToPdf(java.lang.String)" doc:name="doc/docx to pdf" doc:id="3630788b-05b4-4d5d-a242-8af855fc2610" class="pdfConvertor.DocToPdf" >
 					<java:args ><![CDATA[#[{
-	base64Input: payload.encodedFile,
-	extension: payload.extension as String
+	base64Input: payload.encodedFile
 }]]]></java:args>
 				</java:invoke-static>
 				<ee:transform doc:name="base64 to pdf" doc:id="93f39617-5850-4d85-bf5c-c9fdcb37765d" >
@@ -251,6 +251,7 @@ import * from dw::core::Binaries
 			doc:id="878553c5-1377-413d-94a8-c4b04bbf0927" message="#[payload]" />
 	</sub-flow>
 	<sub-flow name="fetch-email-pdfbody-idp-data-subflow" doc:id="7d12cec8-e1e2-49d6-985b-a61ca1aa7f30" >
+		<logger level="INFO" doc:name="Log Info" doc:id="e55bcf1a-fc64-44ee-8852-90f0c08cd4df" message="Scanning Email body to fetch client details since valid attachments to scan"/>
 		<flow-ref doc:name="idp-post-attachment-subflow" doc:id="62510477-8a73-45ed-9af6-84a3db831a1e" name="idp-post-attachment-subflow" />
 		<flow-ref doc:name="idp-get-attachment-subflow" doc:id="f8e2d22b-7347-4f2c-a5fd-976cff69b4fb" name="idp-get-attachment-subflow" />
 		<ee:transform doc:name="client-details" doc:id="76ac60e2-2f4a-425d-a207-05eaf73ab662" >
@@ -262,6 +263,7 @@ import * from dw::core::Binaries
 	</sub-flow>
 	<sub-flow name="fetch-emailbody-idp-data-subflow"
 		doc:id="5b5f0bac-ede2-494e-9eec-3d21f9844ad5">
+		<logger level="INFO" doc:name="Log Info" doc:id="5b87ced0-1f02-4b23-855f-01d01ad40f10" message="Scanning Email body to fetch broker/opportunity-owner details" />
 		<flow-ref doc:name="idp-post-emailbody-subflow"
 			doc:id="ed865993-c405-4bb2-9787-d3507ec47f79"
 			name="idp-post-emailbody-subflow" />

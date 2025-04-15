@@ -8,6 +8,5 @@ var encodedFile=toBase64(vars.pdfPayload[0].value as Binary) as String {
 	}
 ---
 {
-	encodedFile: encodedFile,
-	extension: if (docAttachment) "doc" else "docx"
+	encodedFile: encodedFile
 }

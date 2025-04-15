@@ -46,6 +46,7 @@ public class excelToHTML {
 
     private static String getCellValue(Cell cell) {
         if (cell == null) return "";
+
         switch (cell.getCellType()) {
             case STRING:
                 return cell.getStringCellValue();
@@ -60,14 +61,29 @@ public class excelToHTML {
                 return Boolean.toString(cell.getBooleanCellValue());
             case FORMULA:
                 try {
-                    return cell.getStringCellValue();
-                } catch (IllegalStateException e) {
-                    return String.valueOf(cell.getNumericCellValue());
+                    FormulaEvaluator evaluator = cell.getSheet().getWorkbook().getCreationHelper().createFormulaEvaluator();
+                    CellValue evaluatedValue = evaluator.evaluate(cell);
+                    switch (evaluatedValue.getCellType()) {
+                        case STRING:
+                            return evaluatedValue.getStringValue();
+                        case NUMERIC:
+                            return String.valueOf(evaluatedValue.getNumberValue());
+                        case BOOLEAN:
+                            return Boolean.toString(evaluatedValue.getBooleanValue());
+                        case ERROR:
+                            return FormulaError.forInt(evaluatedValue.getErrorValue()).getString();
+                        default:
+                            return "";
+                    }
+                } catch (Exception e) {
+                    return "FORMULA_ERROR";
                 }
+            case ERROR:
+                return FormulaError.forInt(cell.getErrorCellValue()).getString();
             case BLANK:
-                return "";
             default:
                 return "";
         }
     }
+
 }

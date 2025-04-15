@@ -59,6 +59,7 @@ public class DocToHTML {
             html.append("</p>");
         }
         html.append("</body></html>");
+        docx.close();
         return html.toString();
     }
 
