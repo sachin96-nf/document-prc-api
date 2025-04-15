@@ -251,7 +251,7 @@ import * from dw::core::Binaries
 			doc:id="878553c5-1377-413d-94a8-c4b04bbf0927" message="#[payload]" />
 	</sub-flow>
 	<sub-flow name="fetch-email-pdfbody-idp-data-subflow" doc:id="7d12cec8-e1e2-49d6-985b-a61ca1aa7f30" >
-		<logger level="INFO" doc:name="Log Info" doc:id="e55bcf1a-fc64-44ee-8852-90f0c08cd4df" message="Scanning Email body to fetch client details since valid attachments to scan"/>
+		<logger level="INFO" doc:name="Log Info" doc:id="e55bcf1a-fc64-44ee-8852-90f0c08cd4df" message="Scanning Email body to fetch client details since valid attachments not present in Email Attachments"/>
 		<flow-ref doc:name="idp-post-attachment-subflow" doc:id="62510477-8a73-45ed-9af6-84a3db831a1e" name="idp-post-attachment-subflow" />
 		<flow-ref doc:name="idp-get-attachment-subflow" doc:id="f8e2d22b-7347-4f2c-a5fd-976cff69b4fb" name="idp-get-attachment-subflow" />
 		<ee:transform doc:name="client-details" doc:id="76ac60e2-2f4a-425d-a207-05eaf73ab662" >

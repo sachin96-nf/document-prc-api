@@ -3,7 +3,7 @@ output application/json skipNullOn="everywhere"
 import dataweave::regex
 var client_details=vars.client_details.'client-details'.client_details
 fun getFteRange(fte) =
-	if (fte == null) null
+	if (fte == null) "Unknown"
     else if (fte as Number <= 50) "50 or Less"
     else if (fte as Number <= 499) "51-499"
     else if (fte as Number <= 1999) "500-1,999"
