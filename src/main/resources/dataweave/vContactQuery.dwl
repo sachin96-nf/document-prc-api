@@ -2,7 +2,8 @@
 output application/java
 import dataweave::regex
 var broker_data = vars.broker_opp_details.'broker-details'.broker_data
-var email = regex::escapeSingleQuote(regex::nullChars(broker_data.email replace  " " with "_") default " ")
+var broker_details=vars.client_details.'client-details'.broker_details 
+var email = regex::escapeSingleQuote(regex::nullChars(broker_data.email replace  " " with "_") default regex::nullChars(broker_details.email replace  " " with "_") default " ")
 var contact=regex::phoneCheck(broker_data.contact)
 var contacts = 
     if (contact is Array) 

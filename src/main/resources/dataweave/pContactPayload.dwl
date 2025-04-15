@@ -7,8 +7,8 @@ var broker_opp_details=vars.broker_opp_details.'broker-details'.broker_data
 [
 	{
 		"RecordTypeId": Mule::p('salesforce.record_type.broker_account'),
-		"FirstName": regex::nullChars((broker_opp_details.name splitBy " ")[0]),
-		"LastName": (broker_opp_details.name splitBy " ")[1 to -1] joinBy " ",
+		"FirstName": regex::nullChars((broker_opp_details.name default broker_details.agency_name default "" splitBy " ")[0]),
+		"LastName": (broker_opp_details.name default broker_details.agency_name default "" splitBy " ")[1 to -1] joinBy " ",
 		"AccountId": vars.broker_account_id,
 		"Email": regex::nullChars(broker_opp_details.email replace  " " with "_"),
 		"Phone": if (broker_opp_details.contact is Array) broker_opp_details.contact[0] else regex::nullChars(broker_opp_details.contact),

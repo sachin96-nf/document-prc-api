@@ -55,7 +55,7 @@ output application/json
 		<validation:is-not-blank-string doc:name="EmailBody not null" doc:id="25a0d924-223a-4401-9578-ab66d5e9d385" value='#[(vars.emailbody splitBy "&lt;div")[0]]' message="Email body is blank. Please repush the email with broker and opportunity owner details in the email">
 			<error-mapping sourceType="VALIDATION:BLANK_STRING" targetType="EMAIL_ERROR:BLANK_EMAIL" />
 		</validation:is-not-blank-string>
-		<java:invoke-static doc:name="convert email body to pdf" doc:id="2e0486bf-3b0b-4380-9b1a-d08368cf495b" class="pdfConvertor.emailBodyToPdf" method="createpdf(java.lang.String,java.lang.String)">
+		<java:invoke-static doc:name="convert email body to pdf" doc:id="2e0486bf-3b0b-4380-9b1a-d08368cf495b" class="pdfConvertor.emailBodyToPdf" method="createpdf(java.lang.String,java.lang.String)" target="emailBodyPDF">
 			<java:args><![CDATA[#[{
 	args: ("<div" ++ ((vars.emailbody splitBy "\n<div")[1 to -1] joinBy " ")) as String,
 	path: vars.path as String
@@ -89,15 +89,8 @@ vars.emailPayload filter (vars.scan_pdf_filename contains $.key)]]></ee:set-vari
 			doc:id="bf9ce829-2ebd-46be-9c7d-4542ad8c64a5"
 			name="upsert-broker-client-opp-details-sf-subflow"
 			target="opp_payload" targetValue="#[payload default {}]"/>
-		<choice doc:name="Check IF Email has attachments" doc:id="b9543aaf-bb43-4e96-a912-a0996f24589e" >
-			<when expression="#[!isEmpty(vars.emailPayload)]">
-				<flow-ref doc:name="zip-attachments-subflow" doc:id="3959772d-59ec-49a6-90c0-b63d34363cc2" name="zip-attachments-subflow" target="zipped_data" />
-				<flow-ref doc:name="send-attachments-to-sf-subflow" doc:id="19db82f4-8afb-4b81-b4f4-ecbdb0ff2c74" name="send-attachments-to-sf-subflow" />
-			</when>
-			<otherwise >
-				<logger level="INFO" doc:name="Log Info" doc:id="b92751c2-57cd-41f4-98ef-18a884008959" message="No attachments found in the Email"/>
-			</otherwise>
-		</choice>
+		<flow-ref doc:name="zip-attachments-subflow" doc:id="3959772d-59ec-49a6-90c0-b63d34363cc2" name="zip-attachments-subflow" target="zipped_data" />
+		<flow-ref doc:name="send-attachments-to-sf-subflow" doc:id="19db82f4-8afb-4b81-b4f4-ecbdb0ff2c74" name="send-attachments-to-sf-subflow" />
 		<async doc:name="Async" doc:id="600f48d9-2c54-42b7-aae1-66350c309aa6" >
 			<ee:transform doc:name="Success Slack Message" doc:id="b0b34367-4dff-4a60-b009-b4f631fc4c51">
 			<ee:message>
@@ -110,7 +103,7 @@ vars.emailPayload filter (vars.scan_pdf_filename contains $.key)]]></ee:set-vari
 	</sub-flow>
 	<sub-flow name="zip-attachments-subflow"
 		doc:id="8e798583-1781-43ed-bb98-49aa9e8b11b9">
-		<set-variable value="#[{}]" doc:name="attachments"
+		<set-variable value='#[{&#10;	"EmailBody.pdf" : vars.emailBodyPDF&#10;}]' doc:name="attachments"
 			doc:id="7eded7f3-e8de-40d4-9be2-68dee0576aeb"
 			variableName="attachments" />
 		<foreach doc:name="For Each Attachment"
@@ -172,14 +165,65 @@ payload.value]]></ee:set-variable>
 		<logger level="INFO" doc:name="Info Log"
 			doc:id="20ad2d53-9022-4ed4-a050-8aa9c39b8a04"
 			message='#["Scanning File : " ++ vars.pdfPayload[0].key as String]' />
-		<ee:transform doc:name="PDF Attachment"
-			doc:id="481b5d11-f2aa-488b-8484-3f23a3e96586">
+		<choice doc:name="Check IF scan file is pdf, doc, docx, xls, xlsx" doc:id="7851b150-46fa-4f16-8578-279da95bf902" >
+			<when expression='#[lower(vars.scan_pdf_filename) endsWith ".pdf"]'>
+				<ee:transform doc:name="PDF Attachment" doc:id="481b5d11-f2aa-488b-8484-3f23a3e96586">
 			<ee:message>
 				<ee:set-payload resource="dataweave/pPdfPayloadConvert.dwl" />
 			</ee:message>
 			<ee:variables>
 			</ee:variables>
 		</ee:transform>
+			</when>
+			<when expression='#[lower(vars.scan_pdf_filename) contains ".doc"]'>
+				<ee:transform doc:name="convert to base64" doc:id="54fae777-fd62-4508-9d17-6659d61c2775" >
+					<ee:message >
+						<ee:set-payload resource="dataweave/pDocDocxBase64.dwl" />
+					</ee:message>
+				</ee:transform>
+				<java:invoke-static method="convertDocOrDocxToPdf(java.lang.String,java.lang.String)" doc:name="doc/docx to pdf" doc:id="3630788b-05b4-4d5d-a242-8af855fc2610" class="pdfConvertor.DocToPdf" >
+					<java:args ><![CDATA[#[{
+	base64Input: payload.encodedFile,
+	extension: payload.extension as String
+}]]]></java:args>
+				</java:invoke-static>
+				<ee:transform doc:name="base64 to pdf" doc:id="93f39617-5850-4d85-bf5c-c9fdcb37765d" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+import * from dw::core::Binaries
+output application/java
+---
+fromBase64(payload)]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="convert to base64" doc:id="ed5d0df6-f79f-4438-8976-76cb8d7fe9b6" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+import * from dw::core::Binaries
+---
+{
+	encodedFile: toBase64(vars.pdfPayload[0].value as Binary) as String {
+		class: "java.lang.String"
+	}
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<java:invoke-static method="excel2HtmlFromBase64(java.lang.String)" doc:name="excel to html" doc:id="06c4aed1-86fa-49db-9a0e-581aacdb2550" class="pdfConvertor.excelToHTML" >
+					<java:args ><![CDATA[#[{
+	base64Excel: payload.encodedFile
+}]]]></java:args>
+				</java:invoke-static>
+				<java:invoke-static method="createpdf(java.lang.String,java.lang.String)" doc:name="html to pdf" doc:id="fcbd6b4c-8362-468d-b64e-a1e5a3e9214d" class="pdfConvertor.htmlToPDF" >
+					<java:args ><![CDATA[#[{
+	htmlContent: payload as String,
+	outputPath: vars.path as String
+}]]]></java:args>
+				</java:invoke-static>
+			</otherwise>
+		</choice>
 		<ee:transform
 			doc:name="convert pdfAttachment as idp format"
 			doc:id="850cc9d8-d59f-4154-b2be-fd1eb70f15f6">

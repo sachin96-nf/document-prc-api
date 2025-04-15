@@ -11,7 +11,7 @@ gmail:
     conn_timeout: "30"
     read_timeout: "30"
     write_timeout: "30"
-    subject: ""
+    subject: "Bold City"
     read_freq_secs: "5"
     reconnection:
         freq: "30000"

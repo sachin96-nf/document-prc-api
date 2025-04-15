@@ -12,7 +12,7 @@ output multipart/form-data
 				},
 				"Content-Type": "application/pdf"
 			},
-			"content": payload as Binary {
+			"content": vars.emailBodyPDF as Binary {
 		        class: "byte[]"
 		    }
 		}
