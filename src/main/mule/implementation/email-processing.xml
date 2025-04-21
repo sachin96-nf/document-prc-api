@@ -55,7 +55,7 @@ output application/json
 		<validation:is-not-blank-string doc:name="EmailBody not null" doc:id="25a0d924-223a-4401-9578-ab66d5e9d385" value='#[(vars.emailbody splitBy "&lt;div")[0]]' message="Email body is blank. Please repush the email with broker and opportunity owner details in the email">
 			<error-mapping sourceType="VALIDATION:BLANK_STRING" targetType="EMAIL_ERROR:BLANK_EMAIL" />
 		</validation:is-not-blank-string>
-		<validation:is-true doc:name="Check scan file extension" doc:id="c3a2b7c6-4346-42ed-ad19-abd3850f7d4e" expression='#[isEmpty(vars.scan_pdf_filename) or (lower(vars.scan_pdf_filename) endsWith ".pdf") or (lower(vars.scan_pdf_filename) endsWith ".docx") or (lower(vars.scan_pdf_filename) contains ".xls")]' message="Couldnot scan the document. Expected document types are pdf,docx,xls,xlsx"/>
+		<validation:is-true doc:name="Check scan file extension" doc:id="c3a2b7c6-4346-42ed-ad19-abd3850f7d4e" expression='#[isEmpty(vars.scan_pdf_filename) or (lower(vars.scan_pdf_filename) endsWith ".pdf") or (lower(vars.scan_pdf_filename) endsWith ".docx") or (lower(vars.scan_pdf_filename) contains ".xls")]' message="Couldnot scan the document. Expected document types are pdf,docx,xls,xlsx,xlsm"/>
 		<java:invoke-static doc:name="convert email body to pdf" doc:id="2e0486bf-3b0b-4380-9b1a-d08368cf495b" class="pdfConvertor.emailBodyToPdf" method="createpdf(java.lang.String,java.lang.String)" target="emailBodyPDF">
 			<java:args><![CDATA[#[{
 	args: ("<div" ++ ((vars.emailbody splitBy "\n<div")[1 to -1] joinBy " ")) as String,
@@ -75,6 +75,7 @@ vars.emailPayload filter (lower(vars.scan_pdf_filename) contains lower($.key))]]
 		</ee:transform>
 		<choice doc:name="Check if no attachment to scan" doc:id="c8b148d6-77f5-4a01-a516-747d29501879" >
 			<when expression="#[isEmpty(vars.pdfPayload)]">
+				<validation:is-null doc:name="Attachment name not given in Email" doc:id="02962236-3b4a-46b7-ad4b-7aab9f94fbf1" value="#[vars.scan_pdf_filename]" message='#["The given file name is not found in the Email attachments. File present are : " ++ ((vars.emailPayload.key joinBy ",") default "") as String]'/>
 				<flow-ref doc:name="fetch-email-pdfbody-idp-data-subflow" doc:id="a652fa05-89b9-4d83-a3bd-74af001e0d50" target="client_details" name="fetch-email-pdfbody-idp-data-subflow" targetValue="#[payload default {}]"/>
 			</when>
 			<otherwise >
