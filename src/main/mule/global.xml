@@ -60,7 +60,7 @@ http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-190 http://ww
 				<reconnect frequency="${gmail.reconnection.freq}"
 					count="${gmail.reconnection.attempts}" />
 			</reconnection>
-			<tls:context>
+			<tls:context >
 				<tls:trust-store insecure="true" />
 			</tls:context>
 		</email:imaps-connection>
@@ -83,7 +83,6 @@ http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-190 http://ww
 			host="${https.host}" port="${https.port}"
 			readTimeout="${https.read_timeout}">
 			<tls:context>
-				<tls:trust-store insecure="true" />
 				<tls:key-store type="jks" path="keystore.jks"
 					alias="ssl" keyPassword="mulesoft" password="mulesoft" />
 			</tls:context>
@@ -122,9 +121,6 @@ http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-190 http://ww
 				<reconnect frequency="${slack.reconnection.freq}"
 					count="${slack.reconnection.attempts}" />
 			</reconnection>
-			<tls:context>
-				<tls:trust-store insecure="true" />
-			</tls:context>
 		</http:request-connection>
 		<http:default-headers>
 			<http:default-header key="Authorization"

@@ -43,6 +43,7 @@ fun getStateCategory(market_value: String) =
 		"Proposed_Broker_External_Commission__c": (regex::nullChars(broker_opp_details.commission) default regex::nullChars(client_details.commission) default "") as String,
 		"Proposed_Commission_Type__c": "Percent",
 		"FTEs__c": regex::nullChars(client_details.fte),
+		"Notes_to_Underwriting__c": vars.notes default "",
 		"Incumbent_Carrier__c": if (carrier_values contains client_details.carrier.name) client_details.carrier.name else Incumbent_Carrier_Notes__c,
 		"Incumbent_Funding_Type__c": if (funding_type contains client_details.carrier.'type') client_details.carrier.'type' else "",
 		("Incumbent_Carrier_Notes__c": client_details.carrier.name) if !(carrier_values contains client_details.carrier.name)

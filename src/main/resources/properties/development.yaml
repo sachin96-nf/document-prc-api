@@ -12,7 +12,7 @@ gmail:
     read_timeout: "30"
     write_timeout: "30"
     subject: ""
-    read_freq_secs: "5"
+    read_freq_secs: "300"
     reconnection:
         freq: "30000"
         attempts: "3"
@@ -24,7 +24,7 @@ slack:
     path: "/api/chat.postMessage"
     response_timeout: "300000"
     conn_idle_timeout: "30000"
-    channel: "mule-demo"
+    channel: "ext-nonprod-neuraflash"
     reconnection:
         freq: "30000"
         attempts: "3"
