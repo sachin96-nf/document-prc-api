@@ -1,26 +1,66 @@
+# Http Configuration
 https:
-  port: "8081"
-mule:
-  apiId: "20147615"
-salesforce:
-  oauth_endpoint: "https://forestlawnmortuary--nfqa.sandbox.my.salesforce.com/services/oauth2/token"
-  soap_endpoint: "https://forestlawnmortuary--nfqa.sandbox.my.salesforce.com/services/Soap/u/55.0"
-  consumer_key: "3MVG9L6vUmMQkenP4ipqrwNWdOOyElJyHv7bucrPWhs4HfgmanFoYz9Tbit9agaJJz20SjJLiV7526JaXAMrD"
-  consumer_secret: "8CEB66346BE9687AF169C15E0C5A426F2D18A6262591DE256A7B7D8695BAAAC4"
-  username: "forest-lawn-integrations@neuraflash.com.nfqa"
-  security_token: "lFkKJtiCOIEBFMHphwBjoT1cA"
-  password: "Neuraflash@123"
+    port: "8082"
+    read_timeout: "30000"
+    host: "0.0.0.0"
 
-invoiceApi:
-  host: https://forestlawnmortuary--nfqa.sandbox.my.salesforce.com
-  basePath: /services/data/v62.0
-  path: /commerce/invoicing/invoices/collection/actions/generate
-  oauth:
-    host: https://forestlawnmortuary--nfqa.sandbox.my.salesforce.com
-    basePath: /services
-    path: /oauth2/token
-    grant_type: password
-    client_id: "3MVG9L6vUmMQkenP4ipqrwNWdOOyElJyHv7bucrPWhs4HfgmanFoYz9Tbit9agaJJz20SjJLiV7526JaXAMrD"
-    client_secret: "8CEB66346BE9687AF169C15E0C5A426F2D18A6262591DE256A7B7D8695BAAAC4"
-    username: "forest-lawn-integrations@neuraflash.com.nfqa"
-    password: "Neuraflash@123lFkKJtiCOIEBFMHphwBjoT1cA"
+# Gmail Connector Configuration
+gmail:
+    host: "imap.gmail.com"
+    port: "993"
+    conn_timeout: "30"
+    read_timeout: "30"
+    write_timeout: "30"
+    subject: ""
+    read_freq_secs: "300"
+    reconnection:
+        freq: "30000"
+        attempts: "3"
+
+# Slack Configuration
+slack:
+    host: "slack.com"
+    port: "443"
+    path: "/api/chat.postMessage"
+    response_timeout: "300000"
+    conn_idle_timeout: "30000"
+    channel: "ext-nonprod-neuraflash"
+    reconnection:
+        freq: "30000"
+        attempts: "3"
+
+# Salesforce Configuration
+salesforce:
+    keystore: "certs/nonprod.jks"
+    token_endpoint: "https://test.salesforce.com/services/oauth2/token"
+    audience_url: "https://test.salesforce.com"
+    conn_timeout: "60"
+    login_timeout: "60"
+    docobj_contentversion: "ContentVersion"
+    docobj_contentdocumentlink: "ContentDocumentLink"
+    docobj_externalid: "Id"
+    record_type:
+        broker: "0124W000000yAn2QAE"
+        client: "0124W000000yAmxQAE"
+        broker_account: "0124W000000yAnCQAU"
+        opportunity: "0124W000000yAnHQAU"
+    reconnection:
+        freq: "30000"
+        attempts: "3"
+
+# IDP Configuration
+idp:
+    host: "idp-rt.us-east-1.anypoint.mulesoft.com"
+    port: "443"
+    basePath: "/"
+    protocol: "HTTPS"
+    response_timeout: "90000"
+    access_token_url: "https://anypoint.mulesoft.com/accounts/api/v2/oauth2/token"
+
+# Common Configurations
+sleep:
+    freq: "30000"
+    retry_count: "3"
+retry:
+    freq: "30000"
+    count: "2"
