@@ -147,6 +147,7 @@ payload.value]]></ee:set-variable>
 						variableName="attachments" />
 				</when>
 				<otherwise>
+					<set-variable value='#[output application/java --- &#10;vars.attachments ++ {&#10;	"$(vars.filename)" : payload.value&#10;}]' doc:name="attachments" doc:id="cceffc20-a0d9-463c-871e-1eafa923a285" variableName="attachments" />
 					<logger level="INFO" doc:name="Ignore other files"
 						doc:id="9506dae2-477b-4e6c-9042-fee934a901bb"
 						message='#["Ignore file to attach in Salesforce: " ++ vars.filename]' />
