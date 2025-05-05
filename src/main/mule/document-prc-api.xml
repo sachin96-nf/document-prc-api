@@ -9,7 +9,7 @@ http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/em
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
 	<flow name="document-prc-apiFlow"
-		doc:id="a61da17e-ef01-4c69-a0da-e2bb29f79b10">
+		doc:id="a61da17e-ef01-4c69-a0da-e2bb29f79b10" initialState="stopped">
 		<email:listener-imap
 			doc:name="On New Email - IMAP"
 			doc:id="dc132fbc-061c-4c72-85db-4d2747a6f3fe" config-ref="Email_IMAP">

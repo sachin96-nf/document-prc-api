@@ -2,6 +2,7 @@
 output application/java
 import dataweave::regex
 var client_details=vars.client_details.'client-details'.client_details
+var broker_details=vars.client_details.'client-details'.broker_details 
 var opp_details=vars.broker_opp_details.'opportunity-data'.opportunity_data
 var broker_opp_details=vars.broker_opp_details.'broker-details'.broker_data
 var currentDate = now() as Date
@@ -25,6 +26,7 @@ fun getStateCategory(market_value: String) =
 ---
 [
 	{
+		"External_Id__c": (client_details.name default "") ++ "_" ++ (broker_opp_details.name default "") ++ "_" ++ (broker_details.name default "") ++ "_" ++ (currentDate as String),
 		"RecordTypeId": Mule::p('salesforce.record_type.opportunity'),
 		"Name": regex::nullChars(client_details.name),
 		"AccountId": vars.client_id,

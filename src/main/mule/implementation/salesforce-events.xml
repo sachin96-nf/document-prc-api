@@ -173,6 +173,7 @@ output application/java
 output application/java
 ---
 "Opportunity"]]></ee:set-variable>
+				<ee:set-variable resource="dataweave/vOppExternalId.dwl" variableName="externalid" />
 			</ee:variables>
 		</ee:transform>
 		<flow-ref doc:name="salesforce-upsert-subflow" doc:id="61a2fd47-d2ba-417d-a25a-84a9e08324a8" name="salesforce-upsert-subflow" />
