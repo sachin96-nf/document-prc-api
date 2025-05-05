@@ -97,6 +97,7 @@ vars.emailPayload filter (lower(vars.scan_pdf_filename) contains lower($.key))]]
 			doc:id="bf9ce829-2ebd-46be-9c7d-4542ad8c64a5"
 			name="upsert-broker-client-opp-details-sf-subflow"
 			target="opp_payload" targetValue="#[payload default {}]"/>
+		<set-variable value="#[vars.opp_payload.items.payload.created[0] default true]" doc:name="oppCreatedStatus" doc:id="9d0d0628-8b42-43a5-8e5c-5f2e02f5ddd1" variableName="oppCreatedStatus"/>
 		<flow-ref doc:name="zip-attachments-subflow" doc:id="3959772d-59ec-49a6-90c0-b63d34363cc2" name="zip-attachments-subflow" target="zipped_data" />
 		<flow-ref doc:name="send-attachments-to-sf-subflow" doc:id="19db82f4-8afb-4b81-b4f4-ecbdb0ff2c74" name="send-attachments-to-sf-subflow" />
 		<async doc:name="Async" doc:id="600f48d9-2c54-42b7-aae1-66350c309aa6" >

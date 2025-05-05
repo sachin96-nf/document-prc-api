@@ -39,30 +39,30 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 				<ee:set-variable variableName="client_details" ><![CDATA[{
   "client-details": {
     "client_details": {
-      "name": "Mac Texas Realty Group, LLC",
+      "name": "Panhandle Community Services, Inc.",
       "email": null,
-      "fte": "380",
-      "due_date": "04/09/2025",
-      "commission": "40",
+      "fte": "127",
+      "due_date": null,
+      "commission": null,
       "address": {
-        "street": "400 E Centre Park Blvd Ste 101",
-        "city": "Desoto",
-        "state": "Texas",
-        "zip": "75115-8802"
+        "street": "1309 SW 8th Ave",
+        "city": "Amarillo",
+        "state": "TX",
+        "zip": "79101"
       },
       "carrier": {
-        "name": null,
-        "type": null
+        "name": "BCBSTX",
+        "type": "Medical"
       }
     },
     "broker_details": {
-      "agency_name": "Gallager Office",
-      "email": null,
+      "agency_name": "Gallagher Benefit Services",
+      "email": "Katherine_snodgrass@ajg.com",
       "address": {
-        "street": null,
-        "city": "Dallas",
-        "state": null,
-        "zip": null
+        "street": "5312 114th Street",
+        "city": "Lubbock",
+        "state": "TX",
+        "zip": "79424"
       }
     }
   }
@@ -70,18 +70,18 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 				<ee:set-variable variableName="broker_opp_details" ><![CDATA[{
   "broker-details": {
     "broker_data": {
-      "name": "Stephen Schulze",
+      "name": "Katherine",
       "contact": [
-        
+        "(806) 507 3981"
       ],
       "address": {
-        "street": "",
-        "city": "Dallas",
-        "state": "Texas",
-        "zip": ""
+        "street": "5312 114th Street",
+        "city": "Lubbock",
+        "state": "TX",
+        "zip": "79424"
       },
-      "email": null,
-      "commission": "40"
+      "email": "snodgrass@ajg.com",
+      "commission": null
     }
   },
   "opportunity-data": {
@@ -89,13 +89,14 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
       "name": "Michael Kohl",
       "email": "mikekohl@curative.com",
       "contact": null,
-      "received_date": "04/02/2025"
+      "received_date": "05/02/2025"
     }
   }
 }]]></ee:set-variable>
 			</ee:variables>
 		</ee:transform>
 		<flow-ref doc:name="upsert-broker-client-opp-details-sf-subflow" doc:id="6abe0cee-1560-4d33-9f41-7aaee8b3f8e7" name="upsert-broker-client-opp-details-sf-subflow" target="opp_payload"/>
+		<set-variable value="#[vars.opp_payload.items.payload.created[0] default true]" doc:name="oppCreatedStatus" doc:id="441069c1-dcf8-4f17-8f20-c9d8115558e2" variableName="oppCreatedStatus" />
 		<ee:transform doc:name="Success Slack Message" doc:id="0c93e16d-dfd7-44ca-992d-6b84cc4802c9" >
 			<ee:message >
 				<ee:set-payload resource="dataweave/pSlackSuccessPayload.dwl" />
