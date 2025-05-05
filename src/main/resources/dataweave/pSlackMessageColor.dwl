@@ -1,6 +1,6 @@
 %dw 2.0
 output application/json
-var status= if (vars.oppCreatedStatus) ":white_check_mark: *Opportunity created successfully.*" else ":white_check_mark: *Opportunity already exists.*"
+var status= if (vars.oppCreatedStatus default true) ":white_check_mark: *Opportunity created successfully.*" else ":white_check_mark: *Opportunity already exists.*"
 var successbody=status
 var errorbody=":red_circle: *Critical alert! Opportunity creation failed.*"
 var body=if (isEmpty(payload."Error Type")) successbody else errorbody

@@ -9,7 +9,7 @@ http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/em
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
 	<flow name="document-prc-apiFlow"
-		doc:id="a61da17e-ef01-4c69-a0da-e2bb29f79b10" initialState="stopped">
+		doc:id="a61da17e-ef01-4c69-a0da-e2bb29f79b10">
 		<email:listener-imap
 			doc:name="On New Email - IMAP"
 			doc:id="dc132fbc-061c-4c72-85db-4d2747a6f3fe" config-ref="Email_IMAP">
@@ -39,7 +39,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 				<ee:set-variable variableName="client_details" ><![CDATA[{
   "client-details": {
     "client_details": {
-      "name": "Panhandle Community Services, Inc.",
+      "name": "",
       "email": null,
       "fte": "127",
       "due_date": null,
@@ -70,7 +70,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 				<ee:set-variable variableName="broker_opp_details" ><![CDATA[{
   "broker-details": {
     "broker_data": {
-      "name": "Katherine",
+      "name": "Katherine snodgrass",
       "contact": [
         "(806) 507 3981"
       ],
@@ -104,5 +104,6 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 		</ee:transform>
 		<logger level="INFO" doc:name="Info Log" doc:id="f3e18154-01a5-4e50-ae2b-cd193aee8de0" message="#[payload]" />
 		<flow-ref doc:name="slack-subflow" doc:id="66530a8d-37e6-42bc-bdb3-e56bdc030bb3" name="slack-subflow" />
+		<error-handler ref="global-error-handler" />
 	</flow>
 </mule>
