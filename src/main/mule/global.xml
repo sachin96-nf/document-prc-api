@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <mule
+	xmlns:idp-idp-curative-pdf-prod-100="http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-prod-100"
+	xmlns:idp-idp-curative-pdf-dev-150="http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-150"
+	xmlns:idp-idp-curative-emailbody-prod-100="http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-prod-100"
+	xmlns:idp-idp-curative-emailbody-dev-1100="http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-1100"
 	xmlns:idp-idp-curative-emailbody-dev-190="http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-190"
 	xmlns:idp-idp-curative-emailbody-dev-180="http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-180"
 	xmlns:idp-idp-curative-pdf-dev-140="http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-140"
@@ -47,7 +51,11 @@ http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-160 http://ww
 http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-130 http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-130/current/mule-idp-idp-curative-pdf-dev-130.xsd
 http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-140 http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-140/current/mule-idp-idp-curative-pdf-dev-140.xsd
 http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-180 http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-180/current/mule-idp-idp-curative-emailbody-dev-180.xsd
-http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-190 http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-190/current/mule-idp-idp-curative-emailbody-dev-190.xsd">
+http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-190 http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-190/current/mule-idp-idp-curative-emailbody-dev-190.xsd
+http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-1100 http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-1100/current/mule-idp-idp-curative-emailbody-dev-1100.xsd
+http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-prod-100 http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-prod-100/current/mule-idp-idp-curative-emailbody-prod-100.xsd
+http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-150 http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-150/current/mule-idp-idp-curative-pdf-dev-150.xsd
+http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-prod-100 http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-prod-100/current/mule-idp-idp-curative-pdf-prod-100.xsd">
 	<email:imap-config name="Email_IMAP"
 		doc:name="Email IMAP" doc:id="3265d9fc-f0c1-46a3-a81d-2139ed73c016">
 		<email:imaps-connection host="${gmail.host}"
@@ -60,7 +68,7 @@ http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-190 http://ww
 				<reconnect frequency="${gmail.reconnection.freq}"
 					count="${gmail.reconnection.attempts}" />
 			</reconnection>
-			<tls:context >
+			<tls:context>
 				<tls:trust-store insecure="true" />
 			</tls:context>
 		</email:imaps-connection>
@@ -127,10 +135,10 @@ http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-190 http://ww
 				value="Bearer ${secure::slack.token}" />
 		</http:default-headers>
 	</http:request-config>
-	<idp-idp-curative-pdf-dev-140:config
-		name="IDP___idp_curative_pdf_dev___1_4_0_Config"
-		doc:name="IDP - idp-curative-pdf-dev - 1.4.0 Config"
-		doc:id="84d8a404-865c-43d3-a0fc-8c665adbc6c1"
+	<idp-idp-curative-emailbody-dev-1100:config
+		name="IDP___idp_curative_emailbody_dev___1_10_0_Config"
+		doc:name="IDP - idp-curative-emailbody-dev - 1.10.0 Config"
+		doc:id="692ea709-432a-4448-9e5c-4e225c3f8f5f"
 		property_host="${idp.host}" property_port="${idp.port}"
 		property_protocol="${idp.protocol}"
 		property_responseTimeout="${idp.response_timeout}"
@@ -138,10 +146,32 @@ http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-190 http://ww
 		property_client-secret="${secure::idp.client_secret}"
 		property_basePath="${idp.basePath}"
 		property_access-token-url="${idp.access_token_url}" />
-	<idp-idp-curative-emailbody-dev-190:config
-		name="IDP___idp_curative_emailbody_dev___1_9_0_Config"
-		doc:name="IDP - idp-curative-emailbody-dev - 1.9.0 Config"
-		doc:id="f7b222a6-7187-4786-9c08-28b05e679b6e"
+	<idp-idp-curative-emailbody-prod-100:config
+		name="IDP___idp_curative_emailbody_prod___1_0_0_Config"
+		doc:name="IDP - idp-curative-emailbody-prod - 1.0.0 Config"
+		doc:id="0b4fe992-dc9e-44ed-a951-86db2025f3ec"
+		property_host="${idp.host}" property_port="${idp.port}"
+		property_protocol="${idp.protocol}"
+		property_responseTimeout="${idp.response_timeout}"
+		property_client-id="${secure::idp.client_id}"
+		property_client-secret="${secure::idp.client_secret}"
+		property_basePath="${idp.basePath}"
+		property_access-token-url="${idp.access_token_url}" />
+	<idp-idp-curative-pdf-dev-150:config
+		name="IDP___idp_curative_pdf_dev___1_5_0_Config"
+		doc:name="IDP - idp-curative-pdf-dev - 1.5.0 Config"
+		doc:id="3de9242f-de79-4194-8dc2-498b508173b0"
+		property_host="${idp.host}" property_port="${idp.port}"
+		property_protocol="${idp.protocol}"
+		property_responseTimeout="${idp.response_timeout}"
+		property_client-id="${secure::idp.client_id}"
+		property_client-secret="${secure::idp.client_secret}"
+		property_basePath="${idp.basePath}"
+		property_access-token-url="${idp.access_token_url}" />
+	<idp-idp-curative-pdf-prod-100:config
+		name="IDP___idp_curative_pdf_prod___1_0_0_Config"
+		doc:name="IDP - idp-curative-pdf-prod - 1.0.0 Config"
+		doc:id="01c8ea30-afd8-4fe2-b438-9b552b791979"
 		property_host="${idp.host}" property_port="${idp.port}"
 		property_protocol="${idp.protocol}"
 		property_responseTimeout="${idp.response_timeout}"
