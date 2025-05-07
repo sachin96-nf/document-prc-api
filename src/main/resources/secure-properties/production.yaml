@@ -1,0 +1,16 @@
+gmail:
+  username: "![VIrgBz5uuwDFWMin3iM8ENqCrYs5kwprLhNgNzXSj8H2UyzgTHxHTQ==]"
+  password: "![LYiyRt9fHXQZlyd3PLJO6tSf9/1Xwuyv]"
+  
+slack:
+  token: "![]"
+  
+salesforce:
+  consumer_key: "![/WvYKvt2ZgzhypNQYIuk+G69iix1uqHpA4/t7xp227XqfraOQIAr56+Xt/naysw3Y0lr+BxhGOUC3YioWtyAaA0h+l0V+pDINHFKGyYYMnY+KS2ttPaXEg==]"
+  principal: "![V3cXLxLXyqDmQhJlERqsUxDSZauusazNiWct0IMyzSU=]"
+  password: "![AD0PRWmNCY3u6JFtUNZTGA==]"
+  alias: "![ImnZf4jA8kLih8QZ87w4RLdWJc3FAtHL]"
+  
+idp:
+    client_id: "![2BB7DSgTfh1pFuAzqDkahXt/ni34UPCIs/DoYXNuKX4KL0+DnwOoTw==]"
+    client_secret: "![PQ883WdMiDRzW+eJgp9ipRh7d9/qZzS5YpLZtnPdwdarkLEEGIWghg==]"

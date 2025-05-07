@@ -91,13 +91,8 @@ http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-prod-110 http://w
 	<http:listener-config name="HTTPS_Listener_config"
 		doc:name="HTTP Listener config"
 		doc:id="cff39f6b-7d23-4adc-92a6-e1b2c1196d56">
-		<http:listener-connection protocol="HTTPS"
-			host="${https.host}" port="${https.port}"
+		<http:listener-connection host="${https.host}" port="${https.port}"
 			readTimeout="${https.read_timeout}">
-			<tls:context>
-				<tls:key-store type="jks" path="keystore.jks"
-					alias="ssl" keyPassword="mulesoft" password="mulesoft" />
-			</tls:context>
 		</http:listener-connection>
 	</http:listener-config>
 	<os:object-store name="Slack_OS"
@@ -115,7 +110,7 @@ http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-prod-110 http://w
 			audienceUrl="${salesforce.audience_url}"
 			connectionTimeout="${salesforce.conn_timeout}"
 			loginRequestTimeout="${salesforce.login_timeout}">
-			<reconnection>
+			<reconnection failsDeployment="true">
 				<reconnect frequency="${salesforce.reconnection.freq}"
 					count="${salesforce.reconnection.attempts}" />
 			</reconnection>
