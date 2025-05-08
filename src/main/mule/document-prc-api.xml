@@ -106,4 +106,10 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 		<flow-ref doc:name="slack-subflow" doc:id="66530a8d-37e6-42bc-bdb3-e56bdc030bb3" name="slack-subflow" />
 		<error-handler ref="global-error-handler" />
 	</flow>
+	<flow name="health-check-flow" doc:id="79deb6aa-fa95-48a1-9f79-9aed09563972" >
+		<http:listener doc:name="Listener" doc:id="65c03da0-b922-4d54-9afd-e33138654d07" config-ref="HTTPS_Listener_config" path="/health"/>
+		<set-variable value='#[attributes.headers.query default "select id from Account limit 10"]' doc:name="query" doc:id="48d08374-1760-4ee4-99bc-2e252959da79" variableName="query"/>
+		<flow-ref doc:name="salesforce-query-subflow" doc:id="3f49d922-3c38-4052-a7f4-60877a915e62" name="salesforce-query-subflow" />
+		<logger level="INFO" doc:name="Logger" doc:id="8f445428-a985-45d1-8fa7-e5c4b4ef2599" message="API and Salesforce is working fine"/>
+	</flow>
 </mule>
