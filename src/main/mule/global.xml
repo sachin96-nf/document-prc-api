@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <mule
+	xmlns:idp-idp-curative-emailbody-prod-120="http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-prod-120"
+	xmlns:idp-idp-curative-emailbody-dev-1120="http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-1120"
 	xmlns:idp-idp-curative-emailbody-prod-110="http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-prod-110"
 	xmlns:idp-idp-curative-emailbody-dev-1110="http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-1110"
 	xmlns:idp-idp-curative-pdf-prod-100="http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-prod-100"
@@ -59,7 +61,9 @@ http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-prod-100 http://w
 http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-150 http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-150/current/mule-idp-idp-curative-pdf-dev-150.xsd
 http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-prod-100 http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-prod-100/current/mule-idp-idp-curative-pdf-prod-100.xsd
 http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-1110 http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-1110/current/mule-idp-idp-curative-emailbody-dev-1110.xsd
-http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-prod-110 http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-prod-110/current/mule-idp-idp-curative-emailbody-prod-110.xsd">
+http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-prod-110 http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-prod-110/current/mule-idp-idp-curative-emailbody-prod-110.xsd
+http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-1120 http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-1120/current/mule-idp-idp-curative-emailbody-dev-1120.xsd
+http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-prod-120 http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-prod-120/current/mule-idp-idp-curative-emailbody-prod-120.xsd">
 	<email:imap-config name="Email_IMAP"
 		doc:name="Email IMAP" doc:id="3265d9fc-f0c1-46a3-a81d-2139ed73c016">
 		<email:imaps-connection host="${gmail.host}"
@@ -91,7 +95,8 @@ http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-prod-110 http://w
 	<http:listener-config name="HTTPS_Listener_config"
 		doc:name="HTTP Listener config"
 		doc:id="cff39f6b-7d23-4adc-92a6-e1b2c1196d56">
-		<http:listener-connection host="${https.host}" port="${https.port}"
+		<http:listener-connection
+			host="${https.host}" port="${https.port}"
 			readTimeout="${https.read_timeout}">
 		</http:listener-connection>
 	</http:listener-config>
@@ -156,10 +161,10 @@ http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-prod-110 http://w
 		property_client-secret="${secure::idp.client_secret}"
 		property_basePath="${idp.basePath}"
 		property_access-token-url="${idp.access_token_url}" />
-	<idp-idp-curative-emailbody-dev-1110:config
-		name="IDP___idp_curative_emailbody_dev___1_11_0_Config"
-		doc:name="IDP - idp-curative-emailbody-dev - 1.11.0 Config"
-		doc:id="2bfe12e5-52b7-4a44-a7f3-463007e8867d"
+	<idp-idp-curative-emailbody-dev-1120:config
+		name="IDP___idp_curative_emailbody_dev___1_12_0_Config"
+		doc:name="IDP - idp-curative-emailbody-dev - 1.12.0 Config"
+		doc:id="a8a128c4-6254-42d6-892a-225c2632f4d8"
 		property_host="${idp.host}" property_port="${idp.port}"
 		property_protocol="${idp.protocol}"
 		property_responseTimeout="${idp.response_timeout}"
@@ -167,10 +172,10 @@ http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-prod-110 http://w
 		property_client-secret="${secure::idp.client_secret}"
 		property_basePath="${idp.basePath}"
 		property_access-token-url="${idp.access_token_url}" />
-	<idp-idp-curative-emailbody-prod-110:config
-		name="IDP___idp_curative_emailbody_prod___1_1_0_Config"
-		doc:name="IDP - idp-curative-emailbody-prod - 1.1.0 Config"
-		doc:id="ac22eb38-38b5-4ec0-8328-9076f3daeb75"
+	<idp-idp-curative-emailbody-prod-120:config
+		name="IDP___idp_curative_emailbody_prod___1_2_0_Config"
+		doc:name="IDP - idp-curative-emailbody-prod - 1.2.0 Config"
+		doc:id="5e5b62e0-55ff-4711-a173-44cfe9a477e7"
 		property_host="${idp.host}" property_port="${idp.port}"
 		property_protocol="${idp.protocol}"
 		property_responseTimeout="${idp.response_timeout}"
