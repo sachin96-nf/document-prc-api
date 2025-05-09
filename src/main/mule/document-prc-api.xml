@@ -39,30 +39,30 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 				<ee:set-variable variableName="client_details" ><![CDATA[{
   "client-details": {
     "client_details": {
-      "name": "",
-      "email": null,
-      "fte": "127",
-      "due_date": null,
-      "commission": null,
+      "name": "Chemject International, Inc",
+      "email": "msoliz.bmbinc.com",
+      "fte": "158",
+      "due_date": "05/21/2024",
+      "commission": "10",
       "address": {
-        "street": "1309 SW 8th Ave",
-        "city": "Amarillo",
-        "state": "TX",
-        "zip": "79101"
+        "street": "16600 Park Row",
+        "city": "Houston",
+        "state": "Texas",
+        "zip": "77084"
       },
       "carrier": {
-        "name": "BCBSTX",
-        "type": "Medical"
+        "name": "Cigna",
+        "type": "Voluntary Vision Plan"
       }
     },
     "broker_details": {
-      "agency_name": "Gallagher Benefit Services",
-      "email": "Katherine_snodgrass@ajg.com",
+      "agency_name": "Bowen, Miclette & Britt Insurance Agency, LLC",
+      "email": null,
       "address": {
-        "street": "5312 114th Street",
-        "city": "Lubbock",
-        "state": "TX",
-        "zip": "79424"
+        "street": null,
+        "city": null,
+        "state": null,
+        "zip": null
       }
     }
   }
@@ -70,26 +70,27 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 				<ee:set-variable variableName="broker_opp_details" ><![CDATA[{
   "broker-details": {
     "broker_data": {
-      "name": "Katherine snodgrass",
+      "name": "Melinda Soliz",
       "contact": [
-        "(806) 507 3981"
+        "(713) 880-7100",
+        "(713) 867-5393"
       ],
       "address": {
-        "street": "5312 114th Street",
-        "city": "Lubbock",
+        "street": "2800 North Loop W, Ste 1100",
+        "city": "Houston",
         "state": "TX",
-        "zip": "79424"
+        "zip": "77092"
       },
-      "email": "snodgrass@ajg.com",
+      "email": "imsoliz@bmbinc.com",
       "commission": null
     }
   },
   "opportunity-data": {
     "opportunity_data": {
-      "name": "Michael Kohl",
-      "email": "mikekohl@curative.com",
-      "contact": null,
-      "received_date": "05/02/2025"
+      "name": "Brady Lenz",
+      "email": "bradylenz@curative.com",
+      "contact": "713-352-9211",
+      "received_date": "05/08/2025"
     }
   }
 }]]></ee:set-variable>
