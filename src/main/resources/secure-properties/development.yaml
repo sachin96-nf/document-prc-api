@@ -5,10 +5,6 @@ gmail:
 slack:
   token: "![txDzxqQqCXEOrQQFbPfIIXGg3JZZUR7pj1C3TW1ShqhGz8EYjoaTdnKYsQvCdLJCRaHURkDcc9oWwqEek48NDA==]"
   
-sf:
-  client_id: "![dTEg4FOb0w4TgFpOeRGy4Thj81Ol7KHalvKPY1PkmM/1phBP86fGKA==]"
-  client_secret: "![K2Vmd+T6Vs1Ot8oOvyvTJN9A4wxtuX/Sj6O/rb67nKRhVULocWybDg==]"
-  
 salesforce:
   consumer_key: "![Fe0XqYZvQlxNk+NfVf0O6Z9WOkZrSxbLkBy4vs1Mix3Ieeb7jQqVX8fzZxm5DUX/gHf9M7pJnYlPyVuLhsribElrJ99Lilxo3VHt07HK0yYG/WZCXNPTiQ==]"
   principal: "![a7LlmzHokGCHRxuyljWIoSWnNrtNLlb6kdQ3GouuD+g=]"
