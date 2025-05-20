@@ -52,6 +52,7 @@ output application/json
 				<ee:set-variable resource="dataweave/vEmailAttachmentsPayload.dwl" variableName="emailPayload" />
 				<ee:set-variable resource="dataweave/vFromAddress.dwl" variableName="fromAddress" />
 				<ee:set-variable resource="dataweave/vScanNotes.dwl" variableName="notes" />
+				<ee:set-variable resource="dataweave/vBrokerNameEmail.dwl" variableName="broker_name_email" />
 			</ee:variables>
 		</ee:transform>
 		<validation:is-not-blank-string doc:name="EmailBody not null" doc:id="25a0d924-223a-4401-9578-ab66d5e9d385" value='#[(vars.emailbody splitBy "&lt;div")[0]]' message="Email body is blank. Please repush the email with broker and opportunity owner details in the email">

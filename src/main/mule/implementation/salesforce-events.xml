@@ -79,7 +79,7 @@ output application/java
 "Account"]]></ee:set-variable>
 							</ee:variables>
 				</ee:transform>
-				<validation:is-true doc:name="Check null values" doc:id="cfab5bcb-0812-44b6-859a-74eb3154e117" expression="#[!isEmpty(payload[0].Name) and (!isEmpty(payload[0].BillingStreet) or !isEmpty(payload[0].BillingCity) or !isEmpty(payload[0].BillingState))]" message='#[(if (isEmpty(payload[0].Name)) "Broker Agency Name " else "Broker Address ") ++ "is missing from the Email Attachment"]'>
+				<validation:is-true doc:name="Check null values" doc:id="cfab5bcb-0812-44b6-859a-74eb3154e117" expression="#[!isEmpty(payload[0].Name)]" message='#["Broker Agency Name is missing from the Email Attachment"]'>
 			<error-mapping targetType="BROKER_ACCOUNT:MISSING_FILEDS" />
 		</validation:is-true>
 				<flow-ref doc:name="salesforce-upsert-subflow" doc:id="c6f5fb6a-5d01-4153-8c05-ce9e6e409328" name="salesforce-upsert-subflow" />
@@ -103,7 +103,7 @@ output application/java
 "Contact"]]></ee:set-variable>
 					</ee:variables>
 				</ee:transform>
-		<validation:is-true doc:name="Check null values" doc:id="33d472df-2a73-46c1-be3f-8e9a9cb4efee" expression="#[!isEmpty(payload[0].LastName) and (!isEmpty(payload[0].MailingStreet) or !isEmpty(payload[0].MailingCity))]" message='#[(if (isEmpty(payload[0].LastName)) "Broker Last Name " else "Broker Address ") ++ "is missing from the Email Body"]' >
+		<validation:is-true doc:name="Check null values" doc:id="33d472df-2a73-46c1-be3f-8e9a9cb4efee" expression="#[!isEmpty(payload[0].LastName)]" message='#["Broker Last Name is missing from the Email Body"]' >
 			<error-mapping targetType="BROKER_CONTACT:MISSING_FILEDS" />
 		</validation:is-true>
 		<flow-ref doc:name="salesforce-upsert-subflow" doc:id="7812e106-0e22-416f-b6da-c5d07efeec2c" name="salesforce-upsert-subflow" />
@@ -141,7 +141,7 @@ output application/java
 "Account"]]></ee:set-variable>
 			</ee:variables>
 		</ee:transform>
-				<validation:is-true doc:name="Check null values" doc:id="7c26f8ef-4163-4947-9a68-f068648282db" expression="#[!isEmpty(payload[0].Name) and (!isEmpty(payload[0].BillingStreet) or !isEmpty(payload[0].BillingState) or !isEmpty(payload[0].BillingCity))]" message='#[(if (isEmpty(payload[0].Name)) "Client Name " else "Client Address ") ++ "is missing from the Email Attachment"]'>
+				<validation:is-true doc:name="Check null values" doc:id="7c26f8ef-4163-4947-9a68-f068648282db" expression="#[!isEmpty(payload[0].Name)]" message='#["Client Name is missing from the Email Attachment"]'>
 			<error-mapping targetType="CLIENT_ACCOUNT:MISSING_FILEDS" />
 		</validation:is-true>
 				<flow-ref doc:name="salesforce-upsert-subflow" doc:id="4a521aca-bd48-4ac8-9f95-1100d1ea5fb0" name="salesforce-upsert-subflow" />
