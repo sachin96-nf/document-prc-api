@@ -52,6 +52,7 @@ output application/json
 				<ee:set-variable resource="dataweave/vEmailAttachmentsPayload.dwl" variableName="emailPayload" />
 				<ee:set-variable resource="dataweave/vFromAddress.dwl" variableName="fromAddress" />
 				<ee:set-variable resource="dataweave/vScanNotes.dwl" variableName="notes" />
+				<ee:set-variable resource="dataweave/vBrokerNameEmail.dwl" variableName="broker_name_email" />
 			</ee:variables>
 		</ee:transform>
 		<validation:is-not-blank-string doc:name="EmailBody not null" doc:id="25a0d924-223a-4401-9578-ab66d5e9d385" value='#[(vars.emailbody splitBy "&lt;div")[0]]' message="Email body is blank. Please repush the email with broker and opportunity owner details in the email">
@@ -62,7 +63,7 @@ output application/json
 		</validation:is-true>
 		<java:invoke-static doc:name="convert email body to pdf" doc:id="2e0486bf-3b0b-4380-9b1a-d08368cf495b" class="pdfConvertor.emailBodyToPdf" method="createpdf(java.lang.String,java.lang.String)" target="emailBodyPDF">
 			<java:args><![CDATA[#[{
-	args: ("<div" ++ ((vars.emailbody splitBy "\n<div")[1 to -1] joinBy " ")) as String,
+	args: (("<div" ++ ((vars.emailbody splitBy "\n<div")[1 to -1] joinBy "\n<div")) replace /<a\s+href="mailto:[^"]*"\s+target="_blank">/ with "<a>") as String,
 	path: vars.path as String
 }]]]></java:args>
 		</java:invoke-static>
@@ -97,8 +98,16 @@ vars.emailPayload filter (lower(vars.scan_pdf_filename) contains lower($.key))]]
 			doc:id="bf9ce829-2ebd-46be-9c7d-4542ad8c64a5"
 			name="upsert-broker-client-opp-details-sf-subflow"
 			target="opp_payload" targetValue="#[payload default {}]"/>
-		<flow-ref doc:name="zip-attachments-subflow" doc:id="3959772d-59ec-49a6-90c0-b63d34363cc2" name="zip-attachments-subflow" target="zipped_data" />
-		<flow-ref doc:name="send-attachments-to-sf-subflow" doc:id="19db82f4-8afb-4b81-b4f4-ecbdb0ff2c74" name="send-attachments-to-sf-subflow" />
+		<set-variable value="#[vars.opp_payload.items.payload.created[0] default true]" doc:name="oppCreatedStatus" doc:id="9d0d0628-8b42-43a5-8e5c-5f2e02f5ddd1" variableName="oppCreatedStatus"/>
+		<choice doc:name="Check if Duplicate Opportunity" doc:id="74eb4efd-c776-4cab-8c01-a4891ea5b312" >
+			<when expression="#[vars.oppCreatedStatus == true]">
+				<flow-ref doc:name="zip-attachments-subflow" doc:id="3959772d-59ec-49a6-90c0-b63d34363cc2" name="zip-attachments-subflow" target="zipped_data" />
+				<flow-ref doc:name="send-attachments-to-sf-subflow" doc:id="19db82f4-8afb-4b81-b4f4-ecbdb0ff2c74" name="send-attachments-to-sf-subflow" />
+			</when>
+			<otherwise >
+				<logger level="INFO" doc:name="Log INFO" doc:id="41767b53-f088-444e-ae00-fd42a1c4964c" message="Skipping Attachments since Opportunity already created"/>
+			</otherwise>
+		</choice>
 		<async doc:name="Async" doc:id="600f48d9-2c54-42b7-aae1-66350c309aa6" >
 			<ee:transform doc:name="Success Slack Message" doc:id="b0b34367-4dff-4a60-b009-b4f631fc4c51">
 			<ee:message>

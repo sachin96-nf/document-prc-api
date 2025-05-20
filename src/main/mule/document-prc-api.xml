@@ -39,28 +39,28 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 				<ee:set-variable variableName="client_details" ><![CDATA[{
   "client-details": {
     "client_details": {
-      "name": "Mac Texas Realty Group, LLC",
-      "email": null,
-      "fte": "380",
-      "due_date": "04/09/2025",
-      "commission": "40",
+      "name": "Chemject International, Inc",
+      "email": "msoliz.bmbinc.com",
+      "fte": "158",
+      "due_date": "05/21/2024",
+      "commission": "10",
       "address": {
-        "street": "400 E Centre Park Blvd Ste 101",
-        "city": "Desoto",
+        "street": "16600 Park Row",
+        "city": "Houston",
         "state": "Texas",
-        "zip": "75115-8802"
+        "zip": "77084"
       },
       "carrier": {
-        "name": null,
-        "type": null
+        "name": "Cigna",
+        "type": "Voluntary Vision Plan"
       }
     },
     "broker_details": {
-      "agency_name": "Gallager Office",
+      "agency_name": "Bowen, Miclette & Britt Insurance Agency, LLC",
       "email": null,
       "address": {
         "street": null,
-        "city": "Dallas",
+        "city": null,
         "state": null,
         "zip": null
       }
@@ -70,32 +70,34 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 				<ee:set-variable variableName="broker_opp_details" ><![CDATA[{
   "broker-details": {
     "broker_data": {
-      "name": "Stephen Schulze",
+      "name": "Melinda Soliz",
       "contact": [
-        
+        "(713) 880-7100",
+        "(713) 867-5393"
       ],
       "address": {
-        "street": "",
-        "city": "Dallas",
-        "state": "Texas",
-        "zip": ""
+        "street": "2800 North Loop W, Ste 1100",
+        "city": "Houston",
+        "state": "TX",
+        "zip": "77092"
       },
-      "email": null,
-      "commission": "40"
+      "email": "imsoliz@bmbinc.com",
+      "commission": null
     }
   },
   "opportunity-data": {
     "opportunity_data": {
-      "name": "Michael Kohl",
-      "email": "mikekohl@curative.com",
-      "contact": null,
-      "received_date": "04/02/2025"
+      "name": "Brady Lenz",
+      "email": "bradylenz@curative.com",
+      "contact": "713-352-9211",
+      "received_date": "05/08/2025"
     }
   }
 }]]></ee:set-variable>
 			</ee:variables>
 		</ee:transform>
 		<flow-ref doc:name="upsert-broker-client-opp-details-sf-subflow" doc:id="6abe0cee-1560-4d33-9f41-7aaee8b3f8e7" name="upsert-broker-client-opp-details-sf-subflow" target="opp_payload"/>
+		<set-variable value="#[vars.opp_payload.items.payload.created[0] default true]" doc:name="oppCreatedStatus" doc:id="441069c1-dcf8-4f17-8f20-c9d8115558e2" variableName="oppCreatedStatus" />
 		<ee:transform doc:name="Success Slack Message" doc:id="0c93e16d-dfd7-44ca-992d-6b84cc4802c9" >
 			<ee:message >
 				<ee:set-payload resource="dataweave/pSlackSuccessPayload.dwl" />
@@ -103,5 +105,12 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 		</ee:transform>
 		<logger level="INFO" doc:name="Info Log" doc:id="f3e18154-01a5-4e50-ae2b-cd193aee8de0" message="#[payload]" />
 		<flow-ref doc:name="slack-subflow" doc:id="66530a8d-37e6-42bc-bdb3-e56bdc030bb3" name="slack-subflow" />
+		<error-handler ref="global-error-handler" />
+	</flow>
+	<flow name="health-check-flow" doc:id="79deb6aa-fa95-48a1-9f79-9aed09563972" >
+		<http:listener doc:name="Listener" doc:id="65c03da0-b922-4d54-9afd-e33138654d07" config-ref="HTTPS_Listener_config" path="/health"/>
+		<set-variable value='#[attributes.headers.query default "select id from Account limit 10"]' doc:name="query" doc:id="48d08374-1760-4ee4-99bc-2e252959da79" variableName="query"/>
+		<flow-ref doc:name="salesforce-query-subflow" doc:id="3f49d922-3c38-4052-a7f4-60877a915e62" name="salesforce-query-subflow" />
+		<logger level="INFO" doc:name="Logger" doc:id="8f445428-a985-45d1-8fa7-e5c4b4ef2599" message="API and Salesforce is working fine"/>
 	</flow>
 </mule>

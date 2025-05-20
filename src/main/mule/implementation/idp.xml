@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <mule
-	xmlns:idp-idp-curative-emailbody-dev-190="http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-190"
-	xmlns:idp-idp-curative-emailbody-dev-180="http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-180"
-	xmlns:idp-idp-curative-pdf-dev-140="http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-140"
-	xmlns:idp-idp-curative-pdf-dev-130="http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-130"
-	xmlns:idp-idp-curative-emailbody-dev-160="http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-160"
-	xmlns:idp-idp-curative-emailbody-dev-150="http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-150"
-	xmlns:idp-idp-curative-emailbody-dev-140="http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-140"
-	xmlns:idp-idp-curative-pdf-dev-120="http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-120"
-	xmlns:idp-idp-curative-emailbody-dev-130="http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-130" xmlns:idp-idp-curative-pdf-dev-110="http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-110" xmlns:idp-idp-curative-emailbody-dev-120="http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-120" xmlns:idp-idp-curative-pdf-dev-100="http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-100" xmlns:idp-idp-curative-emailbody-dev-100="http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-100" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+	xmlns:idp-idp-curative-emailbody-prod-140="http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-prod-140"
+	xmlns:idp-idp-curative-emailbody-prod-130="http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-prod-130"
+	xmlns:idp-idp-curative-emailbody-dev-1140="http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-1140"
+	xmlns:idp-idp-curative-emailbody-dev-1120="http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-1120"
+	xmlns:idp-idp-curative-emailbody-dev-1110="http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-1110"
+	xmlns:idp-idp-curative-emailbody-prod-110="http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-prod-110"
+	xmlns:idp-idp-curative-pdf-prod-100="http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-prod-100"
+	xmlns:idp-idp-curative-emailbody-prod-100="http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-prod-100"
+	xmlns:idp-idp-curative-pdf-dev-150="http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-150" xmlns:idp-idp-curative-emailbody-dev-1100="http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-1100" xmlns:idp-idp-curative-emailbody-dev-190="http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-190" xmlns:idp-idp-curative-emailbody-dev-180="http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-180" xmlns:idp-idp-curative-pdf-dev-140="http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-140" xmlns:idp-idp-curative-pdf-dev-130="http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-130" xmlns:idp-idp-curative-emailbody-dev-160="http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-160" xmlns:idp-idp-curative-emailbody-dev-150="http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-150" xmlns:idp-idp-curative-emailbody-dev-140="http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-140" xmlns:idp-idp-curative-pdf-dev-120="http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-120" xmlns:idp-idp-curative-emailbody-dev-130="http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-130" xmlns:idp-idp-curative-pdf-dev-110="http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-110" xmlns:idp-idp-curative-emailbody-dev-120="http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-120" xmlns:idp-idp-curative-pdf-dev-100="http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-100" xmlns:idp-idp-curative-emailbody-dev-100="http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-100" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-100 http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-100/current/mule-idp-idp-curative-emailbody-dev-100.xsd
 http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-100 http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-100/current/mule-idp-idp-curative-pdf-dev-100.xsd
@@ -23,7 +23,17 @@ http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-160 http://ww
 http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-130 http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-130/current/mule-idp-idp-curative-pdf-dev-130.xsd
 http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-140 http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-140/current/mule-idp-idp-curative-pdf-dev-140.xsd
 http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-180 http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-180/current/mule-idp-idp-curative-emailbody-dev-180.xsd
-http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-190 http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-190/current/mule-idp-idp-curative-emailbody-dev-190.xsd">
+http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-190 http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-190/current/mule-idp-idp-curative-emailbody-dev-190.xsd
+http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-1100 http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-1100/current/mule-idp-idp-curative-emailbody-dev-1100.xsd
+http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-150 http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-dev-150/current/mule-idp-idp-curative-pdf-dev-150.xsd
+http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-prod-100 http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-prod-100/current/mule-idp-idp-curative-emailbody-prod-100.xsd
+http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-prod-100 http://www.mulesoft.org/schema/mule/idp-idp-curative-pdf-prod-100/current/mule-idp-idp-curative-pdf-prod-100.xsd
+http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-prod-110 http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-prod-110/current/mule-idp-idp-curative-emailbody-prod-110.xsd
+http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-1110 http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-1110/current/mule-idp-idp-curative-emailbody-dev-1110.xsd
+http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-1120 http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-1120/current/mule-idp-idp-curative-emailbody-dev-1120.xsd
+http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-1140 http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-1140/current/mule-idp-idp-curative-emailbody-dev-1140.xsd
+http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-prod-130 http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-prod-130/current/mule-idp-idp-curative-emailbody-prod-130.xsd
+http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-prod-140 http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-prod-140/current/mule-idp-idp-curative-emailbody-prod-140.xsd">
 	<sub-flow name="idp-post-emailbody-subflow"
 		doc:id="febb0716-ca6f-4d46-bd03-cddefc1065ff">
 		<logger level="INFO" doc:name="Info Log"
@@ -31,7 +41,14 @@ http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-190 http://ww
 			message="Start posting pdf file into IDP" />
 		<try doc:name="Try" doc:id="b7949688-aa65-4517-8c05-107c9a01a87a" >
 			<until-successful maxRetries="${retry.count}" doc:name="Until Successful" doc:id="fa46ff39-c58f-490a-82b4-ddf72b8feae3" millisBetweenRetries="${retry.freq}">
-				<idp-idp-curative-emailbody-dev-190:postdocumentactionexecution doc:name="postDocumentActionExecution" doc:id="192f7de3-d66b-45fd-bb53-c6c2ed14c3e9" config-ref="IDP___idp_curative_emailbody_dev___1_9_0_Config"/>
+				<choice doc:name="Check IF production" doc:id="65adcc18-4a81-4701-8edd-337160ed9b70" >
+					<when expression="#[Mule::p('mule.env') == 'production']">
+						<idp-idp-curative-emailbody-prod-140:postdocumentactionexecution doc:name="postDocumentActionExecution" doc:id="005b435f-d482-434e-8faf-c3edab5d2984" config-ref="IDP___idp_curative_emailbody_prod___1_4_0_Config"/>
+					</when>
+					<otherwise>
+						<idp-idp-curative-emailbody-dev-1140:postdocumentactionexecution doc:name="postDocumentActionExecution" doc:id="4bc4ef47-9672-421d-93c9-41053aec7d6e" config-ref="IDP___idp_curative_emailbody_dev___1_14_0_Config"/>
+					</otherwise>
+				</choice>
 		</until-successful>
 			<error-handler >
 				<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="626c2979-9a38-4b04-8c1e-15f83d5283e3" >
@@ -57,7 +74,14 @@ http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-190 http://ww
 		</ee:transform>
 		<try doc:name="Try" doc:id="63598100-0b1c-4178-9ed5-8a80dba7b628" >
 			<until-successful maxRetries="${retry.count}" doc:name="Until Successful" doc:id="1323a1b5-46e5-43ea-8b23-7af5ecfd07c0" millisBetweenRetries="${retry.freq}">
-				<idp-idp-curative-emailbody-dev-190:getdocumentactionexecution doc:name="getDocumentActionExecution" doc:id="afbdd824-6333-403f-b688-af4575074215" execution-id="#[payload.id]" config-ref="IDP___idp_curative_emailbody_dev___1_9_0_Config"/>
+				<choice doc:name="Check IF production" doc:id="5ce8f9f2-f0fb-41f5-977b-7f3821c6c37b" >
+					<when expression="#[Mule::p('mule.env') == 'production']">
+						<idp-idp-curative-emailbody-prod-140:getdocumentactionexecution doc:name="getDocumentActionExecution" doc:id="6de39bd2-7ce4-451b-9746-2060cf085793" config-ref="IDP___idp_curative_emailbody_prod___1_4_0_Config" execution-id="#[payload.id]"/>
+					</when>
+					<otherwise>
+						<idp-idp-curative-emailbody-dev-1140:getdocumentactionexecution doc:name="getDocumentActionExecution" doc:id="f8cc750c-1314-40b9-b23c-0824e72cf7ef" config-ref="IDP___idp_curative_emailbody_dev___1_14_0_Config" execution-id="#[payload.id]"/>
+					</otherwise>
+				</choice>
 		</until-successful>
 			<error-handler >
 				<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="816efcc5-567d-4dc9-b1fd-7ce68e0c433e" >
@@ -96,7 +120,14 @@ http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-190 http://ww
 			message="Start posting pdf file into IDP" />
 		<try doc:name="Try" doc:id="f7f6f835-ecdb-46a7-a53a-281c9fcf7fa2" >
 			<until-successful maxRetries="${retry.count}" doc:name="Until Successful" doc:id="f3211829-7f05-4971-943e-95a188284bbd" millisBetweenRetries="${retry.freq}">
-			<idp-idp-curative-pdf-dev-140:postdocumentactionexecution doc:name="postDocumentActionExecution" doc:id="f493e260-fc2c-4ddd-ac01-ede254d850a3" config-ref="IDP___idp_curative_pdf_dev___1_4_0_Config" />
+				<choice doc:name="Check IF production" doc:id="35afbf0e-387d-4d90-90f7-0d316feec733" >
+					<when expression="#[Mule::p('mule.env') == 'production']">
+						<idp-idp-curative-pdf-prod-100:postdocumentactionexecution doc:name="postDocumentActionExecution-prod" doc:id="0a1d49f8-a69a-4cf0-a844-cbf4054f3268" config-ref="IDP___idp_curative_pdf_prod___1_0_0_Config"/>
+					</when>
+					<otherwise>
+						<idp-idp-curative-pdf-dev-150:postdocumentactionexecution doc:name="postDocumentActionExecution-nonprod" doc:id="7d71b2bc-3b1d-4bd0-b27f-7fdcc513313e" config-ref="IDP___idp_curative_pdf_dev___1_5_0_Config"/>
+					</otherwise>
+				</choice>
 		</until-successful>
 			<error-handler >
 				<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="2e519440-f655-4b5e-af53-535d6c628f4d" >
@@ -123,7 +154,14 @@ http://www.mulesoft.org/schema/mule/idp-idp-curative-emailbody-dev-190 http://ww
 		</ee:transform>
 		<try doc:name="Try" doc:id="c2b0e8a3-f071-4cbb-8288-0ef1d8077217" >
 			<until-successful maxRetries="${retry.count}" doc:name="Until Successful" doc:id="a2f6faf4-97ee-4657-8fc9-060c26c531a3" millisBetweenRetries="${retry.freq}">
-			<idp-idp-curative-pdf-dev-140:getdocumentactionexecution doc:name="getDocumentActionExecution" doc:id="3ca4e3d0-d255-4d15-a78e-f88ea339c983" config-ref="IDP___idp_curative_pdf_dev___1_4_0_Config" execution-id="#[payload.id]" />
+				<choice doc:name="Check IF production" doc:id="dab528f3-002d-4363-b934-761a2f754ac4" >
+					<when expression="#[Mule::p('mule.env') == 'production']">
+						<idp-idp-curative-pdf-prod-100:getdocumentactionexecution doc:name="getDocumentActionExecution-prod" doc:id="dbb4b2c1-e078-4e49-b0ab-c9d279fbbc58" config-ref="IDP___idp_curative_pdf_prod___1_0_0_Config" execution-id="#[payload.id]"/>
+					</when>
+					<otherwise>
+						<idp-idp-curative-pdf-dev-150:getdocumentactionexecution doc:name="getDocumentActionExecution-nonprod" doc:id="7070f52e-7945-45ba-bb99-a6d942c4eadf" config-ref="IDP___idp_curative_pdf_dev___1_5_0_Config" execution-id="#[payload.id]"/>
+					</otherwise>
+				</choice>
 		</until-successful>
 			<error-handler >
 				<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="7d794518-84a7-4e95-a244-1836db252448" >

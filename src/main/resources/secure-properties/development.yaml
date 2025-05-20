@@ -3,11 +3,7 @@ gmail:
   password: "![0Sw/HPq3o0s3clKXaLM/M2D5Ltg/6T4l]"
   
 slack:
-  token: "![zOlpJsPd1MMaRwwnkrhMv3E6mBFAM7TwW40Dqzcblg91F2Kjpw+VxcWam6dlNadURDqCMMByOTLo139mNHw4SH65XuQ7rDvErdVaIiXmRGQ=]"
-  
-sf:
-  client_id: "![dTEg4FOb0w4TgFpOeRGy4Thj81Ol7KHalvKPY1PkmM/1phBP86fGKA==]"
-  client_secret: "![K2Vmd+T6Vs1Ot8oOvyvTJN9A4wxtuX/Sj6O/rb67nKRhVULocWybDg==]"
+  token: "![txDzxqQqCXEOrQQFbPfIIXGg3JZZUR7pj1C3TW1ShqhGz8EYjoaTdnKYsQvCdLJCRaHURkDcc9oWwqEek48NDA==]"
   
 salesforce:
   consumer_key: "![Fe0XqYZvQlxNk+NfVf0O6Z9WOkZrSxbLkBy4vs1Mix3Ieeb7jQqVX8fzZxm5DUX/gHf9M7pJnYlPyVuLhsribElrJ99Lilxo3VHt07HK0yYG/WZCXNPTiQ==]"

@@ -1,0 +1,66 @@
+# Http Configuration
+https:
+    port: "8081"
+    read_timeout: "30000"
+    host: "0.0.0.0"
+
+# Gmail Connector Configuration
+gmail:
+    host: "imap.gmail.com"
+    port: "993"
+    conn_timeout: "30"
+    read_timeout: "30"
+    write_timeout: "30"
+    subject: ""
+    read_freq_secs: "300"
+    reconnection:
+        freq: "30000"
+        attempts: "3"
+
+# Slack Configuration
+slack:
+    host: "slack.com"
+    port: "443"
+    path: "/api/chat.postMessage"
+    response_timeout: "300000"
+    conn_idle_timeout: "30000"
+    channel: "ext-prod-neuraflash"
+    reconnection:
+        freq: "30000"
+        attempts: "3"
+
+# Salesforce Configuration
+salesforce:
+    keystore: "certs/prod.jks"
+    token_endpoint: "https://login.salesforce.com/services/oauth2/token"
+    audience_url: "https://login.salesforce.com"
+    conn_timeout: "60"
+    login_timeout: "60"
+    docobj_contentversion: "ContentVersion"
+    docobj_contentdocumentlink: "ContentDocumentLink"
+    docobj_externalid: "Id"
+    record_type:
+        broker: "0124W000000yAn2QAE" #Broker Account
+        client: "0124W000000yAmxQAE" #Client Account
+        broker_account: "0124W000000yAnCQAU" #Broker Contact
+        opportunity: "0124W000000yAnHQAU" #Sales Opportunity
+    reconnection:
+        freq: "30000"
+        attempts: "3"
+
+# IDP Configuration
+idp:
+    host: "idp-rt.us-east-1.anypoint.mulesoft.com"
+    port: "443"
+    basePath: "/"
+    protocol: "HTTPS"
+    response_timeout: "90000"
+    access_token_url: "https://anypoint.mulesoft.com/accounts/api/v2/oauth2/token"
+
+# Common Configurations
+sleep:
+    freq: "30000"
+    retry_count: "3"
+retry:
+    freq: "30000"
+    count: "2"

@@ -3,7 +3,7 @@ output application/json
 var name=attributes.fromAddresses[0] splitBy "<"
 ---
 {
-	"fullName": name,
+	"fullName": attributes.fromAddresses[0],
 	"name" : trim(name[0]),
 	"address": name[1] replace ">" with ""
 }

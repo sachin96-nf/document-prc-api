@@ -7,8 +7,11 @@ fun phoneCheck(data) =
  if ( data is Array ) data
  else if ( data startsWith "[" ) data replace "[" with "" replace "]" with "" splitBy "," map (item) -> trim(item) replace "'" with ""
  else data
- 
-//var broker_details=vars.client_details.'client-details'.broker_details 
-//var broker_opp_details=vars.broker_opp_details.'broker-details'.broker_data
-//var client_details=vars.client_details.'client-details'.client_details
-//var opp_details=vars.broker_opp_details.'opportunity-data'.opportunity_data
+fun emailReplace(p) = do {
+  var a = (p splitBy ".")
+  ---
+  if ((p contains ('@')) or nullChars(p)==null)
+    nullChars(p)
+  else
+    ((a[0 to -3] joinBy ".") default "xyz") ++ "@" ++ (a[-2] default "") ++ "." ++ (a[-1] default "")
+}
