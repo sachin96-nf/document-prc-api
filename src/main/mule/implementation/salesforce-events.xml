@@ -79,7 +79,7 @@ output application/java
 "Account"]]></ee:set-variable>
 							</ee:variables>
 				</ee:transform>
-				<validation:is-true doc:name="Check null values" doc:id="cfab5bcb-0812-44b6-859a-74eb3154e117" expression="#[!isEmpty(payload[0].Name) and (!isEmpty(payload[0].BillingStreet) or !isEmpty(payload[0].BillingCity) or !isEmpty(payload[0].BillingState))]" message="Important fields are missing from the Email attachment like Broker agency name or address.">
+				<validation:is-true doc:name="Check null values" doc:id="cfab5bcb-0812-44b6-859a-74eb3154e117" expression="#[!isEmpty(payload[0].Name)]" message='#["Broker Agency Name is missing from the Email Attachment"]'>
 			<error-mapping targetType="BROKER_ACCOUNT:MISSING_FILEDS" />
 		</validation:is-true>
 				<flow-ref doc:name="salesforce-upsert-subflow" doc:id="c6f5fb6a-5d01-4153-8c05-ce9e6e409328" name="salesforce-upsert-subflow" />
@@ -103,7 +103,7 @@ output application/java
 "Contact"]]></ee:set-variable>
 					</ee:variables>
 				</ee:transform>
-		<validation:is-true doc:name="Check null values" doc:id="33d472df-2a73-46c1-be3f-8e9a9cb4efee" expression="#[!isEmpty(payload[0].LastName) and (!isEmpty(payload[0].MailingStreet) or !isEmpty(payload[0].MailingCity))]" message='Important fields are missing from the Email body like Broker name or address' >
+		<validation:is-true doc:name="Check null values" doc:id="33d472df-2a73-46c1-be3f-8e9a9cb4efee" expression="#[!isEmpty(payload[0].LastName)]" message='#["Broker Last Name is missing from the Email Body"]' >
 			<error-mapping targetType="BROKER_CONTACT:MISSING_FILEDS" />
 		</validation:is-true>
 		<flow-ref doc:name="salesforce-upsert-subflow" doc:id="7812e106-0e22-416f-b6da-c5d07efeec2c" name="salesforce-upsert-subflow" />
@@ -141,7 +141,7 @@ output application/java
 "Account"]]></ee:set-variable>
 			</ee:variables>
 		</ee:transform>
-				<validation:is-true doc:name="Check null values" doc:id="7c26f8ef-4163-4947-9a68-f068648282db" expression="#[!isEmpty(payload[0].Name) and (!isEmpty(payload[0].BillingStreet) or !isEmpty(payload[0].BillingState) or !isEmpty(payload[0].BillingCity))]" message="Important fields are missing from the Email body like Client name or address">
+				<validation:is-true doc:name="Check null values" doc:id="7c26f8ef-4163-4947-9a68-f068648282db" expression="#[!isEmpty(payload[0].Name)]" message='#["Client Name is missing from the Email Attachment"]'>
 			<error-mapping targetType="CLIENT_ACCOUNT:MISSING_FILEDS" />
 		</validation:is-true>
 				<flow-ref doc:name="salesforce-upsert-subflow" doc:id="4a521aca-bd48-4ac8-9f95-1100d1ea5fb0" name="salesforce-upsert-subflow" />
@@ -173,6 +173,7 @@ output application/java
 output application/java
 ---
 "Opportunity"]]></ee:set-variable>
+				<ee:set-variable resource="dataweave/vOppExternalId.dwl" variableName="externalid" />
 			</ee:variables>
 		</ee:transform>
 		<flow-ref doc:name="salesforce-upsert-subflow" doc:id="61a2fd47-d2ba-417d-a25a-84a9e08324a8" name="salesforce-upsert-subflow" />
@@ -186,6 +187,9 @@ output application/java
 		<set-variable value='#["attachment.zip"]' doc:name="attachmentName" doc:id="ba392d34-d097-4364-9619-91bfdab751de" variableName="attachmentName" />
 		<set-payload value='#[%dw 2.0&#10;import * from dw::core::Binaries&#10;output application/java&#10;---&#10;[{&#10;    PathOnClient: vars.attachmentName,&#10;    VersionData: vars.zipped_data as Binary {&#10;        class: "byte[]"&#10;    }&#10;}]]' doc:name="Payload to Zip" doc:id="fd90123b-7aa3-4900-a16a-5951556f2b1c" />
 		<flow-ref doc:name="salesforce-upsert-subflow" doc:id="e4883456-7ae5-4824-ae70-e9c66f0655e9" name="salesforce-upsert-subflow" />
+		<validation:is-true doc:name="Check if empty errors" doc:id="5e0bb6a0-0672-4d72-bff2-6b0c8b04a36d" expression="#[isEmpty(payload.items[0].payload.errors)]" message='#["Salesforce Upsert failed for Content Version object with message : " ++ (payload.items[0].exception.message default "")]'>
+			<error-mapping targetType="SF:UPSERT_FAILED" />
+		</validation:is-true>
 		<set-variable value="#[&quot;SELECT ContentDocumentId FROM ContentVersion WHERE Id = '&quot; ++ payload.items[0].id as String ++ &quot;'&quot;]" doc:name="query" doc:id="bf0400a2-518b-4fb2-9743-617fec5e1f9b" variableName="query" />
 		<flow-ref doc:name="salesforce-query-subflow" doc:id="41cc6c89-59cb-497a-8cbd-31b1a4662986" name="salesforce-query-subflow" />
 		<ee:transform doc:name="Link zip to oppurtunity" doc:id="b834d8ba-aee9-4f45-8d17-66f65f63e9be">
@@ -227,6 +231,7 @@ if (payload.items[0].statusCode=="DUPLICATES_DETECTED")
 ) else payload]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
+		<remove-variable doc:name="Remove externalid" doc:id="66030918-2fa5-47d4-b82a-1e4e2d63e954" variableName="externalid"/>
 		<logger level="INFO" doc:name="Exit Log" doc:id="c60de00d-7ce2-4c37-84ed-594d93fe4fab" message='#["Finished upserting data into Salesforce for Object: " ++ (vars.objectname default "") as String]' />
 	</sub-flow>
 	<sub-flow name="salesforce-query-subflow" doc:id="6e64ce08-24ae-4f32-8219-f9bab4424101" >
