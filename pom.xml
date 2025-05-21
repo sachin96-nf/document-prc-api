@@ -245,6 +245,11 @@
 			<version>1.16.0</version>
 			<classifier>mule-plugin</classifier>
 		</dependency>
+		<dependency>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+			<version>1.17.2</version>
+		</dependency>
 	</dependencies>
 
 	<distributionManagement>
