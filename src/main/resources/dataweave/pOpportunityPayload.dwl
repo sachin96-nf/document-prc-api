@@ -5,8 +5,9 @@ var client_details=vars.client_details.'client-details'.client_details
 var broker_details=vars.client_details.'client-details'.broker_details 
 var opp_details=vars.broker_opp_details.'opportunity-data'.opportunity_data
 var broker_opp_details=vars.broker_opp_details.'broker-details'.broker_data
+var effectiveDate=if (regex::nullChars(broker_opp_details.effective_date default opp_details.received_date) != null) (broker_opp_details.effective_date default opp_details.received_date) as Date {format:"MM/dd/yyyy"} as Date  {format:"yyyy/MM/dd"} else null
 var currentDate = now() as Date
-var dateMinus30Days = currentDate - |P30D|
+var dateMinus30Days = (effectiveDate default currentDate) - |P30D|
 var due_date=regex::nullChars(opp_details.due_date) default regex::nullChars(client_details.due_date)
 var duedate=if (due_date != null) due_date as Date {format:"MM/dd/yyyy"} as Date  {format:"yyyy/MM/dd"} else null
 var duedate_day=(duedate default "") as String {format: "EEEE"}
@@ -32,15 +33,15 @@ fun getStateCategory(market_value: String) =
 		"AccountId": vars.client_id,
 		"Associated_Broker_Agency__c": vars.broker_account_id,
 		"Broker_RFP_Contact__c": vars.broker_contact_id,
-		"Effective_Date__c": currentDate as Date {format:"yyyy/MM/dd"},
+		"RFP_Received_Date__c": currentDate as Date {format:"yyyy/MM/dd"},
 		"CloseDate": dateMinus30Days as Date {format:"yyyy/MM/dd"},
-		"RFP_Received_Date__c": if (regex::nullChars(opp_details.received_date) != null) opp_details.received_date as Date {format:"MM/dd/yyyy"} as Date  {format:"yyyy/MM/dd"} else null,
+		"Effective_Date__c": effectiveDate,
 		"RFP_Due_Date__c": if (["Saturday","Sunday"] contains(duedate_day)) null else duedate,
 		"Market__c": getStateCategory(upper(client_details.address.state) default ""),
 		"Sale_Type__c": "Full Replacement",
 		"StageName": "Receipt of RFP",
 		"Plan_Type__c": "Both",
-		"Product_Offering__c": "PPO;EPO/PPO/PPO Max",
+		"Product_Offering__c": if (getStateCategory(upper(client_details.address.state) default "") == "Georgia") "PPO;PPOx/PPO/PPOmax (GA)" else "PPO;EPO/PPO/PPO Max",
 		"OwnerId": payload[0].Id,
 		"Proposed_Broker_External_Commission__c": (regex::nullChars(broker_opp_details.commission) default regex::nullChars(client_details.commission) default "") as String,
 		"Proposed_Commission_Type__c": "Percent",
