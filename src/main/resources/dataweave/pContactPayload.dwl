@@ -3,7 +3,7 @@ output application/json skipNullOn="everywhere"
 import dataweave::regex
 var broker_details=vars.client_details.'client-details'.broker_details
 var broker_opp_details=vars.broker_opp_details.'broker-details'.broker_data
-var name=regex::nullChars(broker_opp_details.name default broker_details.agency_name default vars.broker_name_email.name default "") splitBy " "
+var name=(regex::nullChars(broker_opp_details.name) default regex::nullChars(vars.broker_name_email.name) default regex::nullChars(broker_details.agency_name) default "") splitBy " "
 ---
 [
 	{

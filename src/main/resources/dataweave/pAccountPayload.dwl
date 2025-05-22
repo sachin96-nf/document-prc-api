@@ -7,7 +7,7 @@ var broker_opp_details=vars.broker_opp_details.'broker-details'.broker_data
 [
 	{
 		"RecordTypeId": Mule::p('salesforce.record_type.broker'),
-		"Name": regex::nullChars(broker_details.agency_name) default regex::nullChars(broker_opp_details.name default vars.broker_name_email.agency),
+		"Name": regex::nullChars(broker_details.agency_name) default regex::nullChars(broker_opp_details.name) default vars.broker_name_email.agency,
 		"BillingCity": regex::nullChars(broker_details.address.city) default regex::nullChars(broker_opp_details.address.city),
 		"BillingCountry": 'United States',
 		"BillingPostalCode": regex::nullChars(broker_details.address.zip) default regex::nullChars(broker_opp_details.address.zip),
