@@ -148,17 +148,8 @@ payload.value]]></ee:set-variable>
 						doc:id="fd898a9c-be62-4fcc-a587-ee038ad93940"
 						variableName="attachments" />
 				</when>
-				<when expression='#[(lower(vars.filename) contains ".xls") or (lower(vars.filename) contains ".doc") or (lower(vars.filename) contains ".zip")]'>
-					<set-variable
-						value='#[output application/java --- &#10;vars.attachments ++ {&#10;	"$(vars.filename)" : payload.value&#10;}]'
-						doc:name="attachments"
-						doc:id="b05fa4ae-6d01-4fc9-bb2e-31bf2caaa338"
-						variableName="attachments" />
-				</when>
 				<otherwise>
-					<logger level="INFO" doc:name="Ignore other files"
-						doc:id="9506dae2-477b-4e6c-9042-fee934a901bb"
-						message='#["Ignore file to attach in Salesforce: " ++ vars.filename]' />
+					<set-variable value='#[output application/java --- &#10;vars.attachments ++ {&#10;	"$(vars.filename)" : payload.value&#10;}]' doc:name="attachments" doc:id="b05fa4ae-6d01-4fc9-bb2e-31bf2caaa338" variableName="attachments" />
 				</otherwise>
 			</choice>
 			<logger level="INFO" doc:name="Success Logger"
