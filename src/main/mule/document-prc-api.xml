@@ -4,7 +4,9 @@
 	xmlns:http="http://www.mulesoft.org/schema/mule/http"
 	xmlns:email="http://www.mulesoft.org/schema/mule/email"
 	xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
@@ -31,12 +33,16 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 			message="End processing email into Salesforce through IDP" />
 		<error-handler ref="global-error-handler" />
 	</flow>
-	<flow name="Test-flow" doc:id="47883e7a-1780-49f9-8bff-9193bc7abca2" >
-		<http:listener doc:name="Listener" doc:id="192fcfb4-5866-4e48-b857-4d67a7412152" config-ref="HTTPS_Listener_config" path="/temp"/>
-		<ee:transform doc:name="Transform Message" doc:id="f3bcd156-541a-4ef0-9342-4efa8ae32e8f" >
+	<flow name="Test-flow"
+		doc:id="47883e7a-1780-49f9-8bff-9193bc7abca2">
+		<http:listener doc:name="Listener"
+			doc:id="192fcfb4-5866-4e48-b857-4d67a7412152"
+			config-ref="HTTPS_Listener_config" path="/temp" />
+		<ee:transform doc:name="Transform Message"
+			doc:id="f3bcd156-541a-4ef0-9342-4efa8ae32e8f">
 			<ee:message />
-			<ee:variables >
-				<ee:set-variable variableName="client_details" ><![CDATA[{
+			<ee:variables>
+				<ee:set-variable variableName="client_details"><![CDATA[{
   "client-details": {
     "client_details": {
       "name": "Chemject International, Inc",
@@ -67,7 +73,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
     }
   }
 }]]></ee:set-variable>
-				<ee:set-variable variableName="broker_opp_details" ><![CDATA[{
+				<ee:set-variable variableName="broker_opp_details"><![CDATA[{
   "broker-details": {
     "broker_data": {
       "name": "Melinda Soliz",
@@ -96,21 +102,43 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 }]]></ee:set-variable>
 			</ee:variables>
 		</ee:transform>
-		<flow-ref doc:name="upsert-broker-client-opp-details-sf-subflow" doc:id="6abe0cee-1560-4d33-9f41-7aaee8b3f8e7" name="upsert-broker-client-opp-details-sf-subflow" target="opp_payload"/>
-		<set-variable value="#[vars.opp_payload.items.payload.created[0] default true]" doc:name="oppCreatedStatus" doc:id="441069c1-dcf8-4f17-8f20-c9d8115558e2" variableName="oppCreatedStatus" />
-		<ee:transform doc:name="Success Slack Message" doc:id="0c93e16d-dfd7-44ca-992d-6b84cc4802c9" >
-			<ee:message >
-				<ee:set-payload resource="dataweave/pSlackSuccessPayload.dwl" />
+		<flow-ref
+			doc:name="upsert-broker-client-opp-details-sf-subflow"
+			doc:id="6abe0cee-1560-4d33-9f41-7aaee8b3f8e7"
+			name="upsert-broker-client-opp-details-sf-subflow"
+			target="opp_payload" />
+		<set-variable
+			value="#[vars.opp_payload.items.payload.created[0] default true]"
+			doc:name="oppCreatedStatus"
+			doc:id="441069c1-dcf8-4f17-8f20-c9d8115558e2"
+			variableName="oppCreatedStatus" />
+		<ee:transform doc:name="Success Slack Message"
+			doc:id="0c93e16d-dfd7-44ca-992d-6b84cc4802c9">
+			<ee:message>
+				<ee:set-payload
+					resource="dataweave/pSlackSuccessPayload.dwl" />
 			</ee:message>
 		</ee:transform>
-		<logger level="INFO" doc:name="Info Log" doc:id="f3e18154-01a5-4e50-ae2b-cd193aee8de0" message="#[payload]" />
-		<flow-ref doc:name="slack-subflow" doc:id="66530a8d-37e6-42bc-bdb3-e56bdc030bb3" name="slack-subflow" />
+		<logger level="INFO" doc:name="Info Log"
+			doc:id="f3e18154-01a5-4e50-ae2b-cd193aee8de0" message="#[payload]" />
+		<flow-ref doc:name="slack-subflow"
+			doc:id="66530a8d-37e6-42bc-bdb3-e56bdc030bb3" name="slack-subflow" />
 		<error-handler ref="global-error-handler" />
 	</flow>
-	<flow name="health-check-flow" doc:id="79deb6aa-fa95-48a1-9f79-9aed09563972" >
-		<http:listener doc:name="Listener" doc:id="65c03da0-b922-4d54-9afd-e33138654d07" config-ref="HTTPS_Listener_config" path="/health"/>
-		<set-variable value='#[attributes.headers.query default "select id from Account limit 10"]' doc:name="query" doc:id="48d08374-1760-4ee4-99bc-2e252959da79" variableName="query"/>
-		<flow-ref doc:name="salesforce-query-subflow" doc:id="3f49d922-3c38-4052-a7f4-60877a915e62" name="salesforce-query-subflow" />
-		<logger level="INFO" doc:name="Logger" doc:id="8f445428-a985-45d1-8fa7-e5c4b4ef2599" message="API and Salesforce is working fine"/>
+	<flow name="health-check-flow"
+		doc:id="79deb6aa-fa95-48a1-9f79-9aed09563972">
+		<http:listener doc:name="Listener"
+			doc:id="65c03da0-b922-4d54-9afd-e33138654d07"
+			config-ref="HTTPS_Listener_config" path="/health" />
+		<set-variable
+			value='#[attributes.headers.query default "select id from Account limit 10"]'
+			doc:name="query" doc:id="48d08374-1760-4ee4-99bc-2e252959da79"
+			variableName="query" />
+		<flow-ref doc:name="salesforce-query-subflow"
+			doc:id="3f49d922-3c38-4052-a7f4-60877a915e62"
+			name="salesforce-query-subflow" />
+		<logger level="INFO" doc:name="Logger"
+			doc:id="8f445428-a985-45d1-8fa7-e5c4b4ef2599"
+			message="API and Salesforce is working fine" />
 	</flow>
 </mule>

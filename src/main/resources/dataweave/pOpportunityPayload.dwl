@@ -5,6 +5,8 @@ var client_details=vars.client_details.'client-details'.client_details
 var broker_details=vars.client_details.'client-details'.broker_details 
 var opp_details=vars.broker_opp_details.'opportunity-data'.opportunity_data
 var broker_opp_details=vars.broker_opp_details.'broker-details'.broker_data
+var commission_types=["Percent", "PEPM", "PMPM"]
+var commission_type=regex::nullChars(broker_opp_details.'commission_type') default regex::nullChars(client_details.'commission_type')
 var effectiveDate=if (regex::nullChars(broker_opp_details.effective_date default opp_details.received_date) != null) (broker_opp_details.effective_date default opp_details.received_date) as Date {format:"MM/dd/yyyy"} as Date  {format:"yyyy/MM/dd"} else null
 var currentDate = now() as Date
 var dateMinus30Days = (effectiveDate default currentDate) - |P30D|
@@ -44,7 +46,7 @@ fun getStateCategory(market_value: String) =
 		"Product_Offering__c": if (getStateCategory(upper(client_details.address.state) default "") == "Georgia") "PPO;PPOx/PPO/PPOmax (GA)" else "PPO;EPO/PPO/PPO Max",
 		"OwnerId": payload[0].Id,
 		"Proposed_Broker_External_Commission__c": (regex::nullChars(broker_opp_details.commission) default regex::nullChars(client_details.commission) default "") as String,
-		"Proposed_Commission_Type__c": "Percent",
+		"Proposed_Commission_Type__c": if (commission_types contains commission_type) commission_type else "Percent",
 		"FTEs__c": regex::nullChars(client_details.fte),
 		"Notes_to_Underwriting__c": vars.notes default "",
 		"Incumbent_Carrier__c": if (carrier_values contains client_details.carrier.name) client_details.carrier.name else Incumbent_Carrier_Notes__c,

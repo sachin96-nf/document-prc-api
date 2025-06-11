@@ -37,91 +37,147 @@ output application/java
 output application/java
 ---
 attributes.subject]]></ee:set-variable>
-				<ee:set-variable variableName="client_details" ><![CDATA[%dw 2.0
+				<ee:set-variable variableName="client_details"><![CDATA[%dw 2.0
 output application/json
 ---
 {
 }]]></ee:set-variable>
-				<ee:set-variable variableName="broker_opp_details" ><![CDATA[%dw 2.0
+				<ee:set-variable variableName="broker_opp_details"><![CDATA[%dw 2.0
 output application/json
 ---
 {
 }]]></ee:set-variable>
-				<ee:set-variable resource="dataweave/vPath.dwl" variableName="path" />
-				<ee:set-variable resource="dataweave/vScanFileFromEmail.dwl" variableName="scan_pdf_filename" />
-				<ee:set-variable resource="dataweave/vEmailAttachmentsPayload.dwl" variableName="emailPayload" />
-				<ee:set-variable resource="dataweave/vFromAddress.dwl" variableName="fromAddress" />
-				<ee:set-variable resource="dataweave/vScanNotes.dwl" variableName="notes" />
-				<ee:set-variable resource="dataweave/vBrokerNameEmail.dwl" variableName="broker_name_email" />
+				<ee:set-variable resource="dataweave/vPath.dwl"
+					variableName="path" />
+				<ee:set-variable
+					resource="dataweave/vScanFileFromEmail.dwl"
+					variableName="scan_pdf_filename" />
+				<ee:set-variable
+					resource="dataweave/vEmailAttachmentsPayload.dwl"
+					variableName="emailPayload" />
+				<ee:set-variable
+					resource="dataweave/vFromAddress.dwl" variableName="fromAddress" />
+				<ee:set-variable resource="dataweave/vScanNotes.dwl"
+					variableName="notes" />
+				<ee:set-variable
+					resource="dataweave/vBrokerNameEmail.dwl"
+					variableName="broker_name_email" />
 			</ee:variables>
 		</ee:transform>
-		<validation:is-not-blank-string doc:name="EmailBody not null" doc:id="25a0d924-223a-4401-9578-ab66d5e9d385" value='#[(vars.emailbody splitBy "&lt;div")[0]]' message="Email body is blank. Please repush the email with broker and opportunity owner details in the email">
-			<error-mapping sourceType="VALIDATION:BLANK_STRING" targetType="EMAIL_ERROR:BLANK_EMAIL" />
+		<validation:is-not-blank-string
+			doc:name="EmailBody not null"
+			doc:id="25a0d924-223a-4401-9578-ab66d5e9d385"
+			value='#[(vars.emailbody splitBy "&lt;div")[0]]'
+			message="Email body is blank. Please repush the email with broker and opportunity owner details in the email">
+			<error-mapping sourceType="VALIDATION:BLANK_STRING"
+				targetType="EMAIL_ERROR:BLANK_EMAIL" />
 		</validation:is-not-blank-string>
-		<validation:is-true doc:name="Check scan file extension" doc:id="c3a2b7c6-4346-42ed-ad19-abd3850f7d4e" expression='#[isEmpty(vars.scan_pdf_filename) or (lower(vars.scan_pdf_filename) endsWith ".pdf") or (lower(vars.scan_pdf_filename) endsWith ".docx") or (lower(vars.scan_pdf_filename) contains ".xls")]' message="Could not scan the document. Expected document types are pdf,docx,xls,xlsx,xlsm">
-			<error-mapping sourceType="VALIDATION:INVALID_BOOLEAN" targetType="ATTACHMENT:INVALID_TYPE" />
+		<validation:is-true
+			doc:name="Check scan file extension"
+			doc:id="c3a2b7c6-4346-42ed-ad19-abd3850f7d4e"
+			expression='#[isEmpty(vars.scan_pdf_filename) or (lower(vars.scan_pdf_filename) endsWith ".pdf") or (lower(vars.scan_pdf_filename) endsWith ".docx") or (lower(vars.scan_pdf_filename) contains ".xls")]'
+			message="Could not scan the document. Expected document types are pdf,docx,xls,xlsx,xlsm">
+			<error-mapping sourceType="VALIDATION:INVALID_BOOLEAN"
+				targetType="ATTACHMENT:INVALID_TYPE" />
 		</validation:is-true>
-		<java:invoke-static doc:name="convert email body to pdf" doc:id="2e0486bf-3b0b-4380-9b1a-d08368cf495b" class="pdfConvertor.emailBodyToPdf" method="createpdf(java.lang.String,java.lang.String)" target="emailBodyPDF">
+		<java:invoke-static
+			doc:name="convert email body to pdf"
+			doc:id="2e0486bf-3b0b-4380-9b1a-d08368cf495b"
+			class="pdfConvertor.emailBodyToPdf"
+			method="createpdf(java.lang.String,java.lang.String)"
+			target="emailBodyPDF">
 			<java:args><![CDATA[#[{
 	args: (("<div" ++ ((vars.emailbody splitBy "\n<div")[1 to -1] joinBy "\n<div")) replace /<a\s+href="mailto:[^"]*"\s+target="_blank">/ with "<a>") as String,
 	path: vars.path as String
 }]]]></java:args>
 		</java:invoke-static>
-		<ee:transform doc:name="convert emailbody as idp format" doc:id="3e8bbb1b-e85a-4fbf-8aa4-b7a80e97195d">
+		<ee:transform doc:name="convert emailbody as idp format"
+			doc:id="3e8bbb1b-e85a-4fbf-8aa4-b7a80e97195d">
 			<ee:message>
-				<ee:set-payload resource="dataweave/pIDP-EmaikBody-Payload.dwl" />
+				<ee:set-payload
+					resource="dataweave/pIDP-EmaikBody-Payload.dwl" />
 			</ee:message>
 			<ee:variables>
-				<ee:set-variable variableName="pdfPayload" ><![CDATA[%dw 2.0
+				<ee:set-variable variableName="pdfPayload"><![CDATA[%dw 2.0
 output application/java
 ---
 vars.emailPayload filter (lower(vars.scan_pdf_filename) contains lower($.key))]]></ee:set-variable>
 			</ee:variables>
 		</ee:transform>
-		<choice doc:name="Check if no attachment to scan" doc:id="c8b148d6-77f5-4a01-a516-747d29501879" >
+		<choice doc:name="Check if no attachment to scan"
+			doc:id="c8b148d6-77f5-4a01-a516-747d29501879">
 			<when expression="#[isEmpty(vars.pdfPayload)]">
-				<validation:is-null doc:name="Attachment name not given in Email" doc:id="02962236-3b4a-46b7-ad4b-7aab9f94fbf1" value="#[vars.scan_pdf_filename]" message='#["The file: " ++ ((vars.scan_pdf_filename default "") as String) ++ " is not found in the Email attachments. File present are : " ++ ((vars.emailPayload.key joinBy "; ") default "") as String]'>
-					<error-mapping sourceType="VALIDATION:NOT_NULL" targetType="ATTACHMENT:NOT_FOUND" />
+				<validation:is-null
+					doc:name="Attachment name not given in Email"
+					doc:id="02962236-3b4a-46b7-ad4b-7aab9f94fbf1"
+					value="#[vars.scan_pdf_filename]"
+					message='#["The file: " ++ ((vars.scan_pdf_filename default "") as String) ++ " is not found in the Email attachments. File present are : " ++ ((vars.emailPayload.key joinBy "; ") default "") as String]'>
+					<error-mapping sourceType="VALIDATION:NOT_NULL"
+						targetType="ATTACHMENT:NOT_FOUND" />
 				</validation:is-null>
-				<flow-ref doc:name="fetch-email-pdfbody-idp-data-subflow" doc:id="a652fa05-89b9-4d83-a3bd-74af001e0d50" target="client_details" name="fetch-email-pdfbody-idp-data-subflow" targetValue="#[payload default {}]"/>
+				<flow-ref doc:name="fetch-email-pdfbody-idp-data-subflow"
+					doc:id="a652fa05-89b9-4d83-a3bd-74af001e0d50"
+					target="client_details" name="fetch-email-pdfbody-idp-data-subflow"
+					targetValue="#[payload default {}]" />
 			</when>
-			<otherwise >
-				<flow-ref doc:name="fetch-pdfbody-idp-data-subflow" doc:id="f2274926-9dbc-4a87-bf5d-db8340a25d7c" target="client_details" name="fetch-pdfbody-idp-data-subflow" targetValue="#[payload default {}]"/>
+			<otherwise>
+				<flow-ref doc:name="fetch-pdfbody-idp-data-subflow"
+					doc:id="f2274926-9dbc-4a87-bf5d-db8340a25d7c"
+					target="client_details" name="fetch-pdfbody-idp-data-subflow"
+					targetValue="#[payload default {}]" />
 			</otherwise>
 		</choice>
 		<flow-ref doc:name="fetch-emailbody-idp-data-subflow"
 			doc:id="5e16b0e0-1c2b-4ded-8f69-81a8245e002b"
-			name="fetch-emailbody-idp-data-subflow" target="broker_opp_details" targetValue="#[payload default {}]"/>
+			name="fetch-emailbody-idp-data-subflow" target="broker_opp_details"
+			targetValue="#[payload default {}]" />
 
 		<flow-ref
 			doc:name="upsert-broker-client-opp-details-sf-subflow"
 			doc:id="bf9ce829-2ebd-46be-9c7d-4542ad8c64a5"
 			name="upsert-broker-client-opp-details-sf-subflow"
-			target="opp_payload" targetValue="#[payload default {}]"/>
-		<set-variable value="#[vars.opp_payload.items.payload.created[0] default true]" doc:name="oppCreatedStatus" doc:id="9d0d0628-8b42-43a5-8e5c-5f2e02f5ddd1" variableName="oppCreatedStatus"/>
-		<choice doc:name="Check if Duplicate Opportunity" doc:id="74eb4efd-c776-4cab-8c01-a4891ea5b312" >
+			target="opp_payload" targetValue="#[payload default {}]" />
+		<set-variable
+			value="#[vars.opp_payload.items.payload.created[0] default true]"
+			doc:name="oppCreatedStatus"
+			doc:id="9d0d0628-8b42-43a5-8e5c-5f2e02f5ddd1"
+			variableName="oppCreatedStatus" />
+		<choice doc:name="Check if Duplicate Opportunity"
+			doc:id="74eb4efd-c776-4cab-8c01-a4891ea5b312">
 			<when expression="#[vars.oppCreatedStatus == true]">
-				<flow-ref doc:name="zip-attachments-subflow" doc:id="3959772d-59ec-49a6-90c0-b63d34363cc2" name="zip-attachments-subflow" target="zipped_data" />
-				<flow-ref doc:name="send-attachments-to-sf-subflow" doc:id="19db82f4-8afb-4b81-b4f4-ecbdb0ff2c74" name="send-attachments-to-sf-subflow" />
+				<flow-ref doc:name="zip-attachments-subflow"
+					doc:id="3959772d-59ec-49a6-90c0-b63d34363cc2"
+					name="zip-attachments-subflow" target="zipped_data" />
+				<flow-ref doc:name="send-attachments-to-sf-subflow"
+					doc:id="19db82f4-8afb-4b81-b4f4-ecbdb0ff2c74"
+					name="send-attachments-to-sf-subflow" />
 			</when>
-			<otherwise >
-				<logger level="INFO" doc:name="Log INFO" doc:id="41767b53-f088-444e-ae00-fd42a1c4964c" message="Skipping Attachments since Opportunity already created"/>
+			<otherwise>
+				<logger level="INFO" doc:name="Log INFO"
+					doc:id="41767b53-f088-444e-ae00-fd42a1c4964c"
+					message="Skipping Attachments since Opportunity already created" />
 			</otherwise>
 		</choice>
-		<async doc:name="Async" doc:id="600f48d9-2c54-42b7-aae1-66350c309aa6" >
-			<ee:transform doc:name="Success Slack Message" doc:id="b0b34367-4dff-4a60-b009-b4f631fc4c51">
-			<ee:message>
-				<ee:set-payload resource="dataweave/pSlackSuccessPayload.dwl" />
-			</ee:message>
-		</ee:transform>
-			<logger level="INFO" doc:name="Info Log" doc:id="98970a4a-4bdc-49c9-8803-a63b6814e0be" message="#[payload]" />
-			<flow-ref doc:name="slack-subflow" doc:id="0e9dd9bb-ebf2-4185-ac33-258812b0cd03" name="slack-subflow" />
+		<async doc:name="Async"
+			doc:id="600f48d9-2c54-42b7-aae1-66350c309aa6">
+			<ee:transform doc:name="Success Slack Message"
+				doc:id="b0b34367-4dff-4a60-b009-b4f631fc4c51">
+				<ee:message>
+					<ee:set-payload
+						resource="dataweave/pSlackSuccessPayload.dwl" />
+				</ee:message>
+			</ee:transform>
+			<logger level="INFO" doc:name="Info Log"
+				doc:id="98970a4a-4bdc-49c9-8803-a63b6814e0be" message="#[payload]" />
+			<flow-ref doc:name="slack-subflow"
+				doc:id="0e9dd9bb-ebf2-4185-ac33-258812b0cd03" name="slack-subflow" />
 		</async>
 	</sub-flow>
 	<sub-flow name="zip-attachments-subflow"
 		doc:id="8e798583-1781-43ed-bb98-49aa9e8b11b9">
-		<set-variable value='#[{&#10;	"EmailBody.pdf" : vars.emailBodyPDF&#10;}]' doc:name="attachments"
-			doc:id="7eded7f3-e8de-40d4-9be2-68dee0576aeb"
+		<set-variable
+			value='#[{&#10;	"EmailBody.pdf" : vars.emailBodyPDF&#10;}]'
+			doc:name="attachments" doc:id="7eded7f3-e8de-40d4-9be2-68dee0576aeb"
 			variableName="attachments" />
 		<foreach doc:name="For Each Attachment"
 			doc:id="2c0e2d18-a11d-4d44-acbe-6fb3f456735e"
@@ -149,7 +205,11 @@ payload.value]]></ee:set-variable>
 						variableName="attachments" />
 				</when>
 				<otherwise>
-					<set-variable value='#[output application/java --- &#10;vars.attachments ++ {&#10;	"$(vars.filename)" : payload.value&#10;}]' doc:name="attachments" doc:id="b05fa4ae-6d01-4fc9-bb2e-31bf2caaa338" variableName="attachments" />
+					<set-variable
+						value='#[output application/java --- &#10;vars.attachments ++ {&#10;	"$(vars.filename)" : payload.value&#10;}]'
+						doc:name="attachments"
+						doc:id="b05fa4ae-6d01-4fc9-bb2e-31bf2caaa338"
+						variableName="attachments" />
 				</otherwise>
 			</choice>
 			<logger level="INFO" doc:name="Success Logger"
@@ -173,46 +233,70 @@ payload.value]]></ee:set-variable>
 		<logger level="INFO" doc:name="Info Log"
 			doc:id="20ad2d53-9022-4ed4-a050-8aa9c39b8a04"
 			message='#["Scanning File : " ++ vars.pdfPayload[0].key as String]' />
-		<choice doc:name="Check IF scan file is pdf, doc, docx, xls, xlsx" doc:id="7851b150-46fa-4f16-8578-279da95bf902" >
-			<when expression='#[lower(vars.scan_pdf_filename) endsWith ".pdf"]'>
-				<ee:transform doc:name="PDF Attachment" doc:id="481b5d11-f2aa-488b-8484-3f23a3e96586">
-			<ee:message>
-				<ee:set-payload resource="dataweave/pPdfPayloadConvert.dwl" />
-			</ee:message>
-			<ee:variables>
-			</ee:variables>
-		</ee:transform>
+		<choice
+			doc:name="Check IF scan file is pdf, doc, docx, xls, xlsx"
+			doc:id="7851b150-46fa-4f16-8578-279da95bf902">
+			<when
+				expression='#[lower(vars.scan_pdf_filename) endsWith ".pdf"]'>
+				<ee:transform doc:name="PDF Attachment"
+					doc:id="481b5d11-f2aa-488b-8484-3f23a3e96586">
+					<ee:message>
+						<ee:set-payload
+							resource="dataweave/pPdfPayloadConvert.dwl" />
+					</ee:message>
+					<ee:variables>
+					</ee:variables>
+				</ee:transform>
 			</when>
-			<when expression='#[lower(vars.scan_pdf_filename) endsWith ".docx"]'>
-				<ee:transform doc:name="convert to base64" doc:id="54fae777-fd62-4508-9d17-6659d61c2775" >
-					<ee:message >
-						<ee:set-payload resource="dataweave/pDocDocxBase64.dwl" />
+			<when
+				expression='#[lower(vars.scan_pdf_filename) endsWith ".docx"]'>
+				<ee:transform doc:name="convert to base64"
+					doc:id="54fae777-fd62-4508-9d17-6659d61c2775">
+					<ee:message>
+						<ee:set-payload
+							resource="dataweave/pDocDocxBase64.dwl" />
 					</ee:message>
 				</ee:transform>
-				<java:invoke-static method="convertDocOrDocxToPdf(java.lang.String)" doc:name="doc/docx to pdf" doc:id="3630788b-05b4-4d5d-a242-8af855fc2610" class="pdfConvertor.DocToPdf" >
-					<java:args ><![CDATA[#[{
+				<java:invoke-static
+					method="convertDocOrDocxToPdf(java.lang.String)"
+					doc:name="doc/docx to pdf"
+					doc:id="3630788b-05b4-4d5d-a242-8af855fc2610"
+					class="pdfConvertor.DocToPdf">
+					<java:args><![CDATA[#[{
 	base64Input: payload.encodedFile
 }]]]></java:args>
 				</java:invoke-static>
-				<ee:transform doc:name="base64 to pdf" doc:id="93f39617-5850-4d85-bf5c-c9fdcb37765d" >
-					<ee:message >
-						<ee:set-payload resource="dataweave/pDecodePDFPayload.dwl" />
+				<ee:transform doc:name="base64 to pdf"
+					doc:id="93f39617-5850-4d85-bf5c-c9fdcb37765d">
+					<ee:message>
+						<ee:set-payload
+							resource="dataweave/pDecodePDFPayload.dwl" />
 					</ee:message>
 				</ee:transform>
 			</when>
-			<otherwise >
-				<ee:transform doc:name="convert to base64" doc:id="ed5d0df6-f79f-4438-8976-76cb8d7fe9b6" >
-					<ee:message >
-						<ee:set-payload resource="dataweave/pEncodePDFPayload.dwl" />
+			<otherwise>
+				<ee:transform doc:name="convert to base64"
+					doc:id="ed5d0df6-f79f-4438-8976-76cb8d7fe9b6">
+					<ee:message>
+						<ee:set-payload
+							resource="dataweave/pEncodePDFPayload.dwl" />
 					</ee:message>
 				</ee:transform>
-				<java:invoke-static method="excel2HtmlFromBase64(java.lang.String)" doc:name="excel to html" doc:id="06c4aed1-86fa-49db-9a0e-581aacdb2550" class="pdfConvertor.excelToHTML" >
-					<java:args ><![CDATA[#[{
+				<java:invoke-static
+					method="excel2HtmlFromBase64(java.lang.String)"
+					doc:name="excel to html"
+					doc:id="06c4aed1-86fa-49db-9a0e-581aacdb2550"
+					class="pdfConvertor.excelToHTML">
+					<java:args><![CDATA[#[{
 	base64Excel: payload.encodedFile
 }]]]></java:args>
 				</java:invoke-static>
-				<java:invoke-static method="createpdf(java.lang.String,java.lang.String)" doc:name="html to pdf" doc:id="fcbd6b4c-8362-468d-b64e-a1e5a3e9214d" class="pdfConvertor.htmlToPDF" >
-					<java:args ><![CDATA[#[{
+				<java:invoke-static
+					method="createpdf(java.lang.String,java.lang.String)"
+					doc:name="html to pdf"
+					doc:id="fcbd6b4c-8362-468d-b64e-a1e5a3e9214d"
+					class="pdfConvertor.htmlToPDF">
+					<java:args><![CDATA[#[{
 	htmlContent: payload as String,
 	outputPath: vars.path as String
 }]]]></java:args>
@@ -245,20 +329,33 @@ payload.value]]></ee:set-variable>
 			doc:name="Log Client and broker-agency details"
 			doc:id="878553c5-1377-413d-94a8-c4b04bbf0927" message="#[payload]" />
 	</sub-flow>
-	<sub-flow name="fetch-email-pdfbody-idp-data-subflow" doc:id="7d12cec8-e1e2-49d6-985b-a61ca1aa7f30" >
-		<logger level="INFO" doc:name="Log Info" doc:id="e55bcf1a-fc64-44ee-8852-90f0c08cd4df" message="Scanning Email body to fetch client details"/>
-		<flow-ref doc:name="idp-post-attachment-subflow" doc:id="62510477-8a73-45ed-9af6-84a3db831a1e" name="idp-post-attachment-subflow" />
-		<flow-ref doc:name="idp-get-attachment-subflow" doc:id="f8e2d22b-7347-4f2c-a5fd-976cff69b4fb" name="idp-get-attachment-subflow" />
-		<ee:transform doc:name="client-details" doc:id="76ac60e2-2f4a-425d-a207-05eaf73ab662" >
-			<ee:message >
-				<ee:set-payload resource="dataweave/pClientDetailsPayload.dwl" />
+	<sub-flow name="fetch-email-pdfbody-idp-data-subflow"
+		doc:id="7d12cec8-e1e2-49d6-985b-a61ca1aa7f30">
+		<logger level="INFO" doc:name="Log Info"
+			doc:id="e55bcf1a-fc64-44ee-8852-90f0c08cd4df"
+			message="Scanning Email body to fetch client details" />
+		<flow-ref doc:name="idp-post-attachment-subflow"
+			doc:id="62510477-8a73-45ed-9af6-84a3db831a1e"
+			name="idp-post-attachment-subflow" />
+		<flow-ref doc:name="idp-get-attachment-subflow"
+			doc:id="f8e2d22b-7347-4f2c-a5fd-976cff69b4fb"
+			name="idp-get-attachment-subflow" />
+		<ee:transform doc:name="client-details"
+			doc:id="76ac60e2-2f4a-425d-a207-05eaf73ab662">
+			<ee:message>
+				<ee:set-payload
+					resource="dataweave/pClientDetailsPayload.dwl" />
 			</ee:message>
 		</ee:transform>
-		<logger level="INFO" doc:name="Log Client and broker-agency details" doc:id="a481f04b-31f2-41da-8fc3-c324104102fe" message="#[payload]" />
+		<logger level="INFO"
+			doc:name="Log Client and broker-agency details"
+			doc:id="a481f04b-31f2-41da-8fc3-c324104102fe" message="#[payload]" />
 	</sub-flow>
 	<sub-flow name="fetch-emailbody-idp-data-subflow"
 		doc:id="5b5f0bac-ede2-494e-9eec-3d21f9844ad5">
-		<logger level="INFO" doc:name="Log Info" doc:id="5b87ced0-1f02-4b23-855f-01d01ad40f10" message="Scanning Email body to fetch broker/opportunity-owner details" />
+		<logger level="INFO" doc:name="Log Info"
+			doc:id="5b87ced0-1f02-4b23-855f-01d01ad40f10"
+			message="Scanning Email body to fetch broker/opportunity-owner details" />
 		<flow-ref doc:name="idp-post-emailbody-subflow"
 			doc:id="ed865993-c405-4bb2-9787-d3507ec47f79"
 			name="idp-post-emailbody-subflow" />
@@ -289,14 +386,24 @@ payload.value]]></ee:set-variable>
 					resource="dataweave/pSlackMessageColor.dwl" />
 			</ee:message>
 		</ee:transform>
-		<try doc:name="Try" doc:id="e1e8f60f-b233-453a-925d-5491c7ff12c4" >
-			<until-successful maxRetries="${retry.count}" doc:name="Until Successful" doc:id="75b5be66-0b0f-40a1-9b6e-6ccd625910dd" millisBetweenRetries="${retry.freq}">
-			<http:request method="POST" doc:name="Slack" doc:id="1ce7f508-faf5-4586-bfd6-7d7f3c299b08" config-ref="Slack_Request" path="${slack.path}" sendCorrelationId="ALWAYS">
-		</http:request>
-		</until-successful>
-			<error-handler >
-				<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="7f2ebe00-15b0-40ce-94e3-6b0b1a68b3be" >
-					<logger level="ERROR" doc:name="Log Error" doc:id="60e7df1c-f939-4e83-847d-daafa1a7ab5e" message="Unable to send notifications to slack due to connectivity/messaging issues" />
+		<try doc:name="Try" doc:id="e1e8f60f-b233-453a-925d-5491c7ff12c4">
+			<until-successful maxRetries="${retry.count}"
+				doc:name="Until Successful"
+				doc:id="75b5be66-0b0f-40a1-9b6e-6ccd625910dd"
+				millisBetweenRetries="${retry.freq}">
+				<http:request method="POST" doc:name="Slack"
+					doc:id="1ce7f508-faf5-4586-bfd6-7d7f3c299b08"
+					config-ref="Slack_Request" path="${slack.path}"
+					sendCorrelationId="ALWAYS">
+				</http:request>
+			</until-successful>
+			<error-handler>
+				<on-error-propagate enableNotifications="true"
+					logException="true" doc:name="On Error Propagate"
+					doc:id="7f2ebe00-15b0-40ce-94e3-6b0b1a68b3be">
+					<logger level="ERROR" doc:name="Log Error"
+						doc:id="60e7df1c-f939-4e83-847d-daafa1a7ab5e"
+						message="Unable to send notifications to slack due to connectivity/messaging issues" />
 				</on-error-propagate>
 			</error-handler>
 		</try>

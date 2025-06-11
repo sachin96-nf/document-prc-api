@@ -121,18 +121,6 @@
 			<version>2.0.7</version>
 			<classifier>mule-plugin</classifier>
 		</dependency>
-		<dependency>
-			<groupId>com.mulesoft.connectors</groupId>
-			<artifactId>mule-salesforce-connector</artifactId>
-			<version>11.0.0</version>
-			<classifier>mule-plugin</classifier>
-		</dependency>
-		<dependency>
-			<groupId>org.mule.connectors</groupId>
-			<artifactId>mule-email-connector</artifactId>
-			<version>1.7.5</version>
-			<classifier>mule-plugin</classifier>
-		</dependency>
 
 		<!-- Required to avoid NoClassDef errors -->
 		<dependency>
@@ -172,11 +160,6 @@
 		</dependency>
 
 		<!-- DOCX to PDF conversion -->
-		<!-- <dependency>
-			<groupId>fr.opensagres.xdocreport</groupId>
-			<artifactId>fr.opensagres.poi.xwpf.converter.pdf</artifactId>
-			<version>2.1.0</version>
-		</dependency> -->
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
@@ -187,18 +170,6 @@
 			<artifactId>poi-scratchpad</artifactId>
 			<version>5.2.3</version>
 		</dependency>
-		<!-- <dependency>
-			<groupId>org.apache.pdfbox</groupId>
-			<artifactId>pdfbox</artifactId>
-			<version>2.0.29</version>
-		</dependency> -->
-
-		<dependency>
-			<groupId>org.mule.modules</groupId>
-			<artifactId>mule-oauth-module</artifactId>
-			<version>1.1.22</version>
-			<classifier>mule-plugin</classifier>
-		</dependency>
 		<dependency>
 			<groupId>org.mule.connectors</groupId>
 			<artifactId>mule-sockets-connector</artifactId>
@@ -206,49 +177,62 @@
 			<classifier>mule-plugin</classifier>
 		</dependency>
 		<dependency>
-			<groupId>org.mule.module</groupId>
-			<artifactId>mule-java-module</artifactId>
-			<version>1.2.13</version>
-			<classifier>mule-plugin</classifier>
-		</dependency>
-		<!-- <dependency>
-			<groupId>fr.opensagres.xdocreport</groupId>
-			<artifactId>org.apache.poi.xwpf.converter.pdf</artifactId>
-			<version>1.0.6</version>
-		</dependency> -->
-		<dependency>
 			<groupId>com.openhtmltopdf</groupId>
 			<artifactId>openhtmltopdf-pdfbox</artifactId>
 			<version>1.0.10</version>
 		</dependency>
 		<dependency>
-			<groupId>355e5afc-f268-4623-b311-7e3a7073590f</groupId>
-			<artifactId>mule-plugin-idp-action-9b41efdf-4d24-4bf4-9474-18e6cc18f41b</artifactId>
-			<version>1.0.0</version>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+			<version>1.17.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mule.connectors</groupId>
+			<artifactId>mule-email-connector</artifactId>
+			<version>1.7.6</version>
+			<classifier>mule-plugin</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.mule.modules</groupId>
+			<artifactId>mule-oauth-module</artifactId>
+			<version>1.1.24</version>
 			<classifier>mule-plugin</classifier>
 		</dependency>
 		<dependency>
 			<groupId>355e5afc-f268-4623-b311-7e3a7073590f</groupId>
 			<artifactId>mule-plugin-idp-action-72233c34-4305-406b-81ec-f800bfddd1f9</artifactId>
-			<version>1.5.0</version>
+			<version>1.6.0</version>
 			<classifier>mule-plugin</classifier>
 		</dependency>
 		<dependency>
 			<groupId>355e5afc-f268-4623-b311-7e3a7073590f</groupId>
 			<artifactId>mule-plugin-idp-action-bca1978a-6d45-4dcf-b013-d81c6760dd9c</artifactId>
-			<version>1.5.0</version>
+			<version>1.6.0</version>
 			<classifier>mule-plugin</classifier>
 		</dependency>
 		<dependency>
 			<groupId>355e5afc-f268-4623-b311-7e3a7073590f</groupId>
 			<artifactId>mule-plugin-idp-action-adfd78c2-0e2f-465d-956f-9108e40385db</artifactId>
-			<version>1.16.0</version>
+			<version>1.17.0</version>
 			<classifier>mule-plugin</classifier>
 		</dependency>
 		<dependency>
-			<groupId>org.jsoup</groupId>
-			<artifactId>jsoup</artifactId>
-			<version>1.17.2</version>
+			<groupId>355e5afc-f268-4623-b311-7e3a7073590f</groupId>
+			<artifactId>mule-plugin-idp-action-9b41efdf-4d24-4bf4-9474-18e6cc18f41b</artifactId>
+			<version>1.1.0</version>
+			<classifier>mule-plugin</classifier>
+		</dependency>
+		<dependency>
+			<groupId>com.mulesoft.connectors</groupId>
+			<artifactId>mule-salesforce-connector</artifactId>
+			<version>11.0.0</version>
+			<classifier>mule-plugin</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.mule.module</groupId>
+			<artifactId>mule-java-module</artifactId>
+			<version>1.2.13</version>
+			<classifier>mule-plugin</classifier>
 		</dependency>
 	</dependencies>
 

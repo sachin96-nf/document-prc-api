@@ -7,213 +7,370 @@
 	xmlns:http="http://www.mulesoft.org/schema/mule/http"
 	xmlns="http://www.mulesoft.org/schema/mule/core"
 	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
 http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
-	<sub-flow name="upsert-broker-client-opp-details-sf-subflow" doc:id="7ab1bc87-b1a5-4c33-918d-d2eee0ec6456" >
-		<ee:transform doc:name="query" doc:id="e1f9baaa-0693-49c1-954f-cf80f26bd566" >
-			<ee:message >
+	<sub-flow name="upsert-broker-client-opp-details-sf-subflow"
+		doc:id="7ab1bc87-b1a5-4c33-918d-d2eee0ec6456">
+		<ee:transform doc:name="query"
+			doc:id="e1f9baaa-0693-49c1-954f-cf80f26bd566">
+			<ee:message>
 			</ee:message>
-			<ee:variables >
-				<ee:set-variable variableName="broker_account_id" ><![CDATA[%dw 2.0
+			<ee:variables>
+				<ee:set-variable variableName="broker_account_id"><![CDATA[%dw 2.0
 output application/java
 ---
 ""]]></ee:set-variable>
-				<ee:set-variable variableName="broker_contact_id" ><![CDATA[%dw 2.0
+				<ee:set-variable variableName="broker_contact_id"><![CDATA[%dw 2.0
 output application/java
 ---
 ""]]></ee:set-variable>
-				<ee:set-variable resource="dataweave/vContactQuery.dwl" variableName="query" />
+				<ee:set-variable
+					resource="dataweave/vContactQuery.dwl" variableName="query" />
 			</ee:variables>
 		</ee:transform>
-		<flow-ref doc:name="salesforce-query-subflow" doc:id="65bdf9e9-c6e1-491b-9174-5ccbb55a8efb" name="salesforce-query-subflow"/>
-		<ee:transform doc:name="Filter response based on email" doc:id="000cc7f9-53be-42b1-b918-72c5d64cd722" >
-			<ee:message >
-				<ee:set-payload resource="dataweave/pQueryResponseFilter.dwl" />
+		<flow-ref doc:name="salesforce-query-subflow"
+			doc:id="65bdf9e9-c6e1-491b-9174-5ccbb55a8efb"
+			name="salesforce-query-subflow" />
+		<ee:transform doc:name="Filter response based on email"
+			doc:id="000cc7f9-53be-42b1-b918-72c5d64cd722">
+			<ee:message>
+				<ee:set-payload
+					resource="dataweave/pQueryResponseFilter.dwl" />
 			</ee:message>
 		</ee:transform>
-		<choice doc:name="Check IF broker-contact exist" doc:id="bdc4583d-5ca7-40c7-a4ce-0e3c1a0bb87f" >
+		<choice doc:name="Check IF broker-contact exist"
+			doc:id="bdc4583d-5ca7-40c7-a4ce-0e3c1a0bb87f">
 			<when expression="#[!isEmpty(payload)]">
-				<logger level="INFO" doc:name="Log Info" doc:id="44337f0e-2017-4b5b-b242-1ff68bc34ccc" message="Broker contact and account details already present in Salesforce"/>
-				<set-variable value="#[payload[0].AccountId]" doc:name="broker_account_id" doc:id="7ad7a386-2d83-4ab2-bbc8-d8f9f8f043a8" variableName="broker_account_id" />
-				<set-variable value="#[payload[0].Id]" doc:name="broker_contact_id" doc:id="d7de65c4-3318-487f-9176-ec2b79ccced2" variableName="broker_contact_id"/>
+				<logger level="INFO" doc:name="Log Info"
+					doc:id="44337f0e-2017-4b5b-b242-1ff68bc34ccc"
+					message="Broker contact and account details already present in Salesforce" />
+				<set-variable value="#[payload[0].AccountId]"
+					doc:name="broker_account_id"
+					doc:id="7ad7a386-2d83-4ab2-bbc8-d8f9f8f043a8"
+					variableName="broker_account_id" />
+				<set-variable value="#[payload[0].Id]"
+					doc:name="broker_contact_id"
+					doc:id="d7de65c4-3318-487f-9176-ec2b79ccced2"
+					variableName="broker_contact_id" />
 			</when>
 			<otherwise>
-				<flow-ref doc:name="sf-upsert-account-subflow" doc:id="17b2ed81-6267-437b-bf59-20acc3445df7" name="sf-upsert-account-subflow" target="broker_account_id"/>
-				<flow-ref doc:name="sf-upsert-contact-subflow" doc:id="2e111bd6-ad75-43ac-acb2-f23eca80b9d7" name="sf-upsert-contact-subflow" target="broker_contact_id" targetValue="#[payload.items.id[0]]"/>
+				<flow-ref doc:name="sf-upsert-account-subflow"
+					doc:id="17b2ed81-6267-437b-bf59-20acc3445df7"
+					name="sf-upsert-account-subflow" target="broker_account_id" />
+				<flow-ref doc:name="sf-upsert-contact-subflow"
+					doc:id="2e111bd6-ad75-43ac-acb2-f23eca80b9d7"
+					name="sf-upsert-contact-subflow" target="broker_contact_id"
+					targetValue="#[payload.items.id[0]]" />
 			</otherwise>
 		</choice>
-		<flow-ref doc:name="sf-upsert-client-subflow" doc:id="d87a22eb-4a61-45b9-bbc7-e99905133b62" name="sf-upsert-client-subflow" target="client_id"/>
-		<logger level="INFO" doc:name="Log Info" doc:id="7c94485c-abd7-414d-a3ec-b0b62b439734" message='#[{&#10;	"Broker Account ID": vars.broker_account_id,&#10;	"Broker Contact ID": vars.broker_contact_id,&#10;	"Client Account ID": vars.client_id,&#10;}]'/>
-		<flow-ref doc:name="sf-upsert-opportunity-subflow" doc:id="3929ae47-843d-42f7-bcba-6fc4a6fa703b" name="sf-upsert-opportunity-subflow"/>
+		<flow-ref doc:name="sf-upsert-client-subflow"
+			doc:id="d87a22eb-4a61-45b9-bbc7-e99905133b62"
+			name="sf-upsert-client-subflow" target="client_id" />
+		<logger level="INFO" doc:name="Log Info"
+			doc:id="7c94485c-abd7-414d-a3ec-b0b62b439734"
+			message='#[{&#10;	"Broker Account ID": vars.broker_account_id,&#10;	"Broker Contact ID": vars.broker_contact_id,&#10;	"Client Account ID": vars.client_id,&#10;}]' />
+		<flow-ref doc:name="sf-upsert-opportunity-subflow"
+			doc:id="3929ae47-843d-42f7-bcba-6fc4a6fa703b"
+			name="sf-upsert-opportunity-subflow" />
 	</sub-flow>
-	<sub-flow name="sf-upsert-account-subflow" doc:id="14aaa2c3-7b24-46d3-bc8c-fc20a47138be">
-		<ee:transform doc:name="Query and account_id" doc:id="d871569e-9831-4a79-8b08-6cb8a777edd4" >
-			<ee:message >
+	<sub-flow name="sf-upsert-account-subflow"
+		doc:id="14aaa2c3-7b24-46d3-bc8c-fc20a47138be">
+		<ee:transform doc:name="Query and account_id"
+			doc:id="d871569e-9831-4a79-8b08-6cb8a777edd4">
+			<ee:message>
 			</ee:message>
-			<ee:variables >
-				<ee:set-variable resource="dataweave/pAccountQuery.dwl" variableName="query" />
-				<ee:set-variable variableName="account_id" ><![CDATA[%dw 2.0
+			<ee:variables>
+				<ee:set-variable
+					resource="dataweave/pAccountQuery.dwl" variableName="query" />
+				<ee:set-variable variableName="account_id"><![CDATA[%dw 2.0
 output application/java
 ---
 ""]]></ee:set-variable>
 			</ee:variables>
 		</ee:transform>
-		<flow-ref doc:name="salesforce-query-subflow" doc:id="1f9d7870-7dcb-4d08-b1d8-b4e8b7f95fae" name="salesforce-query-subflow" />
-		<choice doc:name="Check IF empty response from Query" doc:id="6a89a2f6-6cdb-4162-b627-471febda3fd0" >
+		<flow-ref doc:name="salesforce-query-subflow"
+			doc:id="1f9d7870-7dcb-4d08-b1d8-b4e8b7f95fae"
+			name="salesforce-query-subflow" />
+		<choice doc:name="Check IF empty response from Query"
+			doc:id="6a89a2f6-6cdb-4162-b627-471febda3fd0">
 			<when expression="#[!isEmpty(payload)]">
-				<logger level="INFO" doc:name="Log Info" doc:id="0ac76735-e95e-4d1a-a661-bf3539b2f721" message="Broker account details already present in Salesforce" />
-				<set-variable value="#[payload[0].Id]" doc:name="account_id" doc:id="46cb1285-66f5-44a9-80a6-f91a6b13a171" variableName="account_id" />
+				<logger level="INFO" doc:name="Log Info"
+					doc:id="0ac76735-e95e-4d1a-a661-bf3539b2f721"
+					message="Broker account details already present in Salesforce" />
+				<set-variable value="#[payload[0].Id]"
+					doc:name="account_id" doc:id="46cb1285-66f5-44a9-80a6-f91a6b13a171"
+					variableName="account_id" />
 			</when>
-			<otherwise >
-				<ee:transform doc:name="account payload" doc:id="c6e97ffb-e23e-4cb4-8cb4-b1c43575ddd8">
+			<otherwise>
+				<ee:transform doc:name="account payload"
+					doc:id="c6e97ffb-e23e-4cb4-8cb4-b1c43575ddd8">
 					<ee:message>
-				<ee:set-payload resource="dataweave/pAccountPayload.dwl" />
-					</ee:message>
-							<ee:variables>
-								<ee:set-variable variableName="objectname"><![CDATA[%dw 2.0
-output application/java
----
-"Account"]]></ee:set-variable>
-							</ee:variables>
-				</ee:transform>
-				<validation:is-true doc:name="Check null values" doc:id="cfab5bcb-0812-44b6-859a-74eb3154e117" expression="#[!isEmpty(payload[0].Name)]" message='#["Broker Agency Name is missing from the Email Attachment"]'>
-			<error-mapping targetType="BROKER_ACCOUNT:MISSING_FILEDS" />
-		</validation:is-true>
-				<flow-ref doc:name="salesforce-upsert-subflow" doc:id="c6f5fb6a-5d01-4153-8c05-ce9e6e409328" name="salesforce-upsert-subflow" />
-				<validation:is-true doc:name="Check if empty errors" doc:id="d90e0385-d7d4-4f7c-8c80-6b70f33c43ee" expression="#[isEmpty(payload.items[0].payload.errors)]" message='#["Salesforce Upsert failed for Broker account object with message : " ++ (payload.items[0].exception.message default "")]'>
-			<error-mapping targetType="SF:UPSERT_FAILED" />
-		</validation:is-true>
-				<set-variable value="#[payload.items.id[0]]" doc:name="account_id" doc:id="8f013146-6600-4a21-8bce-e84fb2d1aa82" variableName="account_id"/>
-			</otherwise>
-		</choice>
-		<set-payload value="#[vars.account_id]" doc:name="account_id" doc:id="67dc6f20-7e1a-4036-a8d5-fecaf2c36b74" />
-	</sub-flow>
-	<sub-flow name="sf-upsert-contact-subflow" doc:id="214ec610-1446-446c-8a4f-f1ac89026e2e">
-		<ee:transform doc:name="contact payload" doc:id="b161e172-f2b2-4d37-b891-7e78b4ef76d9">
-					<ee:message>
-				<ee:set-payload resource="dataweave/pContactPayload.dwl" />
+						<ee:set-payload
+							resource="dataweave/pAccountPayload.dwl" />
 					</ee:message>
 					<ee:variables>
 						<ee:set-variable variableName="objectname"><![CDATA[%dw 2.0
 output application/java
 ---
-"Contact"]]></ee:set-variable>
+"Account"]]></ee:set-variable>
 					</ee:variables>
 				</ee:transform>
-		<validation:is-true doc:name="Check null values" doc:id="33d472df-2a73-46c1-be3f-8e9a9cb4efee" expression="#[!isEmpty(payload[0].LastName)]" message='#["Broker Last Name is missing from the Email Body"]' >
-			<error-mapping targetType="BROKER_CONTACT:MISSING_FILEDS" />
-		</validation:is-true>
-		<flow-ref doc:name="salesforce-upsert-subflow" doc:id="7812e106-0e22-416f-b6da-c5d07efeec2c" name="salesforce-upsert-subflow" />
-		<validation:is-true doc:name="Check if empty errors" doc:id="71c8c1c0-e0e0-48d2-9c82-22349366b2b3" expression="#[isEmpty(payload.items[0].payload.errors)]" message='#["Salesforce Upsert failed for Broker contact object with message : " ++ (payload.items[0].exception.message default "")]'>
-			<error-mapping targetType="SF:UPSERT_FAILED" />
-		</validation:is-true>
+				<validation:is-true doc:name="Check null values"
+					doc:id="cfab5bcb-0812-44b6-859a-74eb3154e117"
+					expression="#[!isEmpty(payload[0].Name)]"
+					message='#["Broker Agency Name is missing from the Email Attachment"]'>
+					<error-mapping
+						targetType="BROKER_ACCOUNT:MISSING_FILEDS" />
+				</validation:is-true>
+				<flow-ref doc:name="salesforce-upsert-subflow"
+					doc:id="c6f5fb6a-5d01-4153-8c05-ce9e6e409328"
+					name="salesforce-upsert-subflow" />
+				<validation:is-true
+					doc:name="Check if empty errors"
+					doc:id="d90e0385-d7d4-4f7c-8c80-6b70f33c43ee"
+					expression="#[isEmpty(payload.items[0].payload.errors)]"
+					message='#["Salesforce Upsert failed for Broker account object with message : " ++ (payload.items[0].exception.message default "")]'>
+					<error-mapping targetType="SF:UPSERT_FAILED" />
+				</validation:is-true>
+				<set-variable value="#[payload.items.id[0]]"
+					doc:name="account_id" doc:id="8f013146-6600-4a21-8bce-e84fb2d1aa82"
+					variableName="account_id" />
+			</otherwise>
+		</choice>
+		<set-payload value="#[vars.account_id]"
+			doc:name="account_id" doc:id="67dc6f20-7e1a-4036-a8d5-fecaf2c36b74" />
 	</sub-flow>
-	<sub-flow name="sf-upsert-client-subflow" doc:id="20e37be4-52ca-43e1-b923-5cb90dc9ca05">
-		<ee:transform doc:name="query and client_id" doc:id="bdd8c7e7-03c0-4624-87ee-cc45bf2821d7" >
-			<ee:message >
-			</ee:message>
-			<ee:variables >
-				<ee:set-variable resource="dataweave/vClientQuery.dwl" variableName="query" />
-				<ee:set-variable variableName="client_id" ><![CDATA[%dw 2.0
-output application/java
----
-""]]></ee:set-variable>
-			</ee:variables>
-		</ee:transform>
-		<flow-ref doc:name="salesforce-query-subflow" doc:id="d928985f-61db-4751-b3ea-ab38b44980b0" name="salesforce-query-subflow" />
-		<choice doc:name="Check IF empty response from Query" doc:id="ce553af2-cd57-4431-a438-3e4d97428e7e" >
-			<when expression="#[!isEmpty(payload)]">
-				<logger level="INFO" doc:name="Log Info" doc:id="626029aa-ddd1-4474-953b-cb21f14d2c70" message="Client account details already present in Salesforce" />
-				<set-variable value="#[payload[0].Id]" doc:name="client_id" doc:id="df8e6300-3d2d-42d6-a7b0-01bedd4873b9" variableName="client_id" />
-			</when>
-			<otherwise >
-				<ee:transform doc:name="client payload" doc:id="69498fde-2bd3-4bfb-b0e8-11b839f93a4d">
+	<sub-flow name="sf-upsert-contact-subflow"
+		doc:id="214ec610-1446-446c-8a4f-f1ac89026e2e">
+		<ee:transform doc:name="contact payload"
+			doc:id="b161e172-f2b2-4d37-b891-7e78b4ef76d9">
 			<ee:message>
-				<ee:set-payload resource="dataweave/pClientPayload.dwl" />
+				<ee:set-payload
+					resource="dataweave/pContactPayload.dwl" />
 			</ee:message>
 			<ee:variables>
 				<ee:set-variable variableName="objectname"><![CDATA[%dw 2.0
 output application/java
 ---
-"Account"]]></ee:set-variable>
+"Contact"]]></ee:set-variable>
 			</ee:variables>
 		</ee:transform>
-				<validation:is-true doc:name="Check null values" doc:id="7c26f8ef-4163-4947-9a68-f068648282db" expression="#[!isEmpty(payload[0].Name)]" message='#["Client Name is missing from the Email Attachment"]'>
-			<error-mapping targetType="CLIENT_ACCOUNT:MISSING_FILEDS" />
+		<validation:is-true doc:name="Check null values"
+			doc:id="33d472df-2a73-46c1-be3f-8e9a9cb4efee"
+			expression="#[!isEmpty(payload[0].LastName)]"
+			message='#["Broker Last Name is missing from the Email Body"]'>
+			<error-mapping
+				targetType="BROKER_CONTACT:MISSING_FILEDS" />
 		</validation:is-true>
-				<flow-ref doc:name="salesforce-upsert-subflow" doc:id="4a521aca-bd48-4ac8-9f95-1100d1ea5fb0" name="salesforce-upsert-subflow" />
-				<validation:is-true doc:name="Check if empty errors" doc:id="1224ae26-ccb7-41af-83e3-ba7c73bd6c02" expression="#[isEmpty(payload.items[0].payload.errors)]" message='#["Salesforce Upsert failed for Client account object with message : " ++ (payload.items[0].exception.message default "")]'>
+		<flow-ref doc:name="salesforce-upsert-subflow"
+			doc:id="7812e106-0e22-416f-b6da-c5d07efeec2c"
+			name="salesforce-upsert-subflow" />
+		<validation:is-true
+			doc:name="Check if empty errors"
+			doc:id="71c8c1c0-e0e0-48d2-9c82-22349366b2b3"
+			expression="#[isEmpty(payload.items[0].payload.errors)]"
+			message='#["Salesforce Upsert failed for Broker contact object with message : " ++ (payload.items[0].exception.message default "")]'>
 			<error-mapping targetType="SF:UPSERT_FAILED" />
 		</validation:is-true>
-				<set-variable value="#[payload.items.id[0]]" doc:name="client_id" doc:id="34f61ef6-c098-4f0b-91c3-a256022ba432" variableName="client_id" />
-			</otherwise>
-		</choice>
-		<set-payload value="#[vars.client_id]" doc:name="client_id" doc:id="62086df7-4454-4b65-8aeb-be866f14efc1" />
 	</sub-flow>
-	<sub-flow name="sf-upsert-opportunity-subflow" doc:id="670a1dde-e8a6-4da2-b511-a05dec81a872" >
-		<ee:transform doc:name="query" doc:id="f662e212-bb18-4461-8c84-1541cbada020">
-			<ee:message />
+	<sub-flow name="sf-upsert-client-subflow"
+		doc:id="20e37be4-52ca-43e1-b923-5cb90dc9ca05">
+		<ee:transform doc:name="query and client_id"
+			doc:id="bdd8c7e7-03c0-4624-87ee-cc45bf2821d7">
+			<ee:message>
+			</ee:message>
 			<ee:variables>
-				<ee:set-variable resource="dataweave/vOppQuery.dwl" variableName="query" />
+				<ee:set-variable
+					resource="dataweave/vClientQuery.dwl" variableName="query" />
+				<ee:set-variable variableName="client_id"><![CDATA[%dw 2.0
+output application/java
+---
+""]]></ee:set-variable>
 			</ee:variables>
 		</ee:transform>
-		<flow-ref doc:name="salesforce-query-subflow" doc:id="bc10d62f-6703-4f60-9193-436bde728c15" name="salesforce-query-subflow"/>
-		<validation:is-true doc:name="Check if empty payload" doc:id="e7408b8b-1d23-4e4e-899c-d4e06238f8d0" expression="#[!isEmpty(payload)]" message="#[&quot;Salesforce could not find any Opportunity Owner with email id : &quot; ++ (vars.broker_opp_details.'opportunity-data'.opportunity_data.email default &quot;&quot;)]">
+		<flow-ref doc:name="salesforce-query-subflow"
+			doc:id="d928985f-61db-4751-b3ea-ab38b44980b0"
+			name="salesforce-query-subflow" />
+		<choice doc:name="Check IF empty response from Query"
+			doc:id="ce553af2-cd57-4431-a438-3e4d97428e7e">
+			<when expression="#[!isEmpty(payload)]">
+				<logger level="INFO" doc:name="Log Info"
+					doc:id="626029aa-ddd1-4474-953b-cb21f14d2c70"
+					message="Client account details already present in Salesforce" />
+				<set-variable value="#[payload[0].Id]"
+					doc:name="client_id" doc:id="df8e6300-3d2d-42d6-a7b0-01bedd4873b9"
+					variableName="client_id" />
+			</when>
+			<otherwise>
+				<ee:transform doc:name="client payload"
+					doc:id="69498fde-2bd3-4bfb-b0e8-11b839f93a4d">
+					<ee:message>
+						<ee:set-payload
+							resource="dataweave/pClientPayload.dwl" />
+					</ee:message>
+					<ee:variables>
+						<ee:set-variable variableName="objectname"><![CDATA[%dw 2.0
+output application/java
+---
+"Account"]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+				<validation:is-true doc:name="Check null values"
+					doc:id="7c26f8ef-4163-4947-9a68-f068648282db"
+					expression="#[!isEmpty(payload[0].Name)]"
+					message='#["Client Name is missing from the Email Attachment"]'>
+					<error-mapping
+						targetType="CLIENT_ACCOUNT:MISSING_FILEDS" />
+				</validation:is-true>
+				<flow-ref doc:name="salesforce-upsert-subflow"
+					doc:id="4a521aca-bd48-4ac8-9f95-1100d1ea5fb0"
+					name="salesforce-upsert-subflow" />
+				<validation:is-true
+					doc:name="Check if empty errors"
+					doc:id="1224ae26-ccb7-41af-83e3-ba7c73bd6c02"
+					expression="#[isEmpty(payload.items[0].payload.errors)]"
+					message='#["Salesforce Upsert failed for Client account object with message : " ++ (payload.items[0].exception.message default "")]'>
+					<error-mapping targetType="SF:UPSERT_FAILED" />
+				</validation:is-true>
+				<set-variable value="#[payload.items.id[0]]"
+					doc:name="client_id" doc:id="34f61ef6-c098-4f0b-91c3-a256022ba432"
+					variableName="client_id" />
+			</otherwise>
+		</choice>
+		<set-payload value="#[vars.client_id]"
+			doc:name="client_id" doc:id="62086df7-4454-4b65-8aeb-be866f14efc1" />
+	</sub-flow>
+	<sub-flow name="sf-upsert-opportunity-subflow"
+		doc:id="670a1dde-e8a6-4da2-b511-a05dec81a872">
+		<ee:transform doc:name="query"
+			doc:id="f662e212-bb18-4461-8c84-1541cbada020">
+			<ee:message />
+			<ee:variables>
+				<ee:set-variable resource="dataweave/vOppQuery.dwl"
+					variableName="query" />
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="salesforce-query-subflow"
+			doc:id="bc10d62f-6703-4f60-9193-436bde728c15"
+			name="salesforce-query-subflow" />
+		<validation:is-true
+			doc:name="Check if empty payload"
+			doc:id="e7408b8b-1d23-4e4e-899c-d4e06238f8d0"
+			expression="#[!isEmpty(payload)]"
+			message="#[&quot;Salesforce could not find any Opportunity Owner with email id : &quot; ++ (vars.broker_opp_details.'opportunity-data'.opportunity_data.email default &quot;&quot;)]">
 			<error-mapping targetType="OPPORTUNITY:USER_MISSING" />
 		</validation:is-true>
-		<ee:transform doc:name="opp payload" doc:id="c8da7c7d-5529-47d0-8df9-d55ce4fc132e">
+		<ee:transform doc:name="opp payload"
+			doc:id="c8da7c7d-5529-47d0-8df9-d55ce4fc132e">
 			<ee:message>
-				<ee:set-payload resource="dataweave/pOpportunityPayload.dwl" />
+				<ee:set-payload
+					resource="dataweave/pOpportunityPayload.dwl" />
 			</ee:message>
 			<ee:variables>
 				<ee:set-variable variableName="objectname"><![CDATA[%dw 2.0
 output application/java
 ---
 "Opportunity"]]></ee:set-variable>
-				<ee:set-variable resource="dataweave/vOppExternalId.dwl" variableName="externalid" />
+				<ee:set-variable
+					resource="dataweave/vOppExternalId.dwl" variableName="externalid" />
 			</ee:variables>
 		</ee:transform>
-		<flow-ref doc:name="salesforce-upsert-subflow" doc:id="61a2fd47-d2ba-417d-a25a-84a9e08324a8" name="salesforce-upsert-subflow" />
-		<validation:is-true doc:name="Check if empty errors" doc:id="5a6655ac-9fff-4904-8cc7-ea5fdfc555bd" expression="#[isEmpty(payload.items[0].payload.errors)]" message='#["Salesforce Upsert failed for Opportunity object with message : " ++ (payload.items[0].exception.message default "")]'>
+		<flow-ref doc:name="salesforce-upsert-subflow"
+			doc:id="61a2fd47-d2ba-417d-a25a-84a9e08324a8"
+			name="salesforce-upsert-subflow" />
+		<validation:is-true
+			doc:name="Check if empty errors"
+			doc:id="5a6655ac-9fff-4904-8cc7-ea5fdfc555bd"
+			expression="#[isEmpty(payload.items[0].payload.errors)]"
+			message='#["Salesforce Upsert failed for Opportunity object with message : " ++ (payload.items[0].exception.message default "")]'>
 			<error-mapping targetType="SF:UPSERT_FAILED" />
 		</validation:is-true>
 	</sub-flow>
-	<sub-flow name="send-attachments-to-sf-subflow" doc:id="228a2836-e332-46a1-a591-eac8b78cd79d">
-		<set-variable value="${salesforce.docobj_contentversion}" doc:name="contentversion" doc:id="d7979970-2dd5-4cc1-91e8-f83a11b6b7da" variableName="objectname" />
-		<set-variable value="${salesforce.docobj_externalid}" doc:name="externalid" doc:id="c3be2dc8-ffe3-40ed-9eb9-8457daa0a762" variableName="externalid" />
-		<set-variable value='#["attachment.zip"]' doc:name="attachmentName" doc:id="ba392d34-d097-4364-9619-91bfdab751de" variableName="attachmentName" />
-		<set-payload value='#[%dw 2.0&#10;import * from dw::core::Binaries&#10;output application/java&#10;---&#10;[{&#10;    PathOnClient: vars.attachmentName,&#10;    VersionData: vars.zipped_data as Binary {&#10;        class: "byte[]"&#10;    }&#10;}]]' doc:name="Payload to Zip" doc:id="fd90123b-7aa3-4900-a16a-5951556f2b1c" />
-		<flow-ref doc:name="salesforce-upsert-subflow" doc:id="e4883456-7ae5-4824-ae70-e9c66f0655e9" name="salesforce-upsert-subflow" />
-		<validation:is-true doc:name="Check if empty errors" doc:id="5e0bb6a0-0672-4d72-bff2-6b0c8b04a36d" expression="#[isEmpty(payload.items[0].payload.errors)]" message='#["Salesforce Upsert failed for Content Version object with message : " ++ (payload.items[0].exception.message default "")]'>
+	<sub-flow name="send-attachments-to-sf-subflow"
+		doc:id="228a2836-e332-46a1-a591-eac8b78cd79d">
+		<set-variable value="${salesforce.docobj_contentversion}"
+			doc:name="contentversion"
+			doc:id="d7979970-2dd5-4cc1-91e8-f83a11b6b7da"
+			variableName="objectname" />
+		<set-variable value="${salesforce.docobj_externalid}"
+			doc:name="externalid" doc:id="c3be2dc8-ffe3-40ed-9eb9-8457daa0a762"
+			variableName="externalid" />
+		<set-variable value='#["attachment.zip"]'
+			doc:name="attachmentName"
+			doc:id="ba392d34-d097-4364-9619-91bfdab751de"
+			variableName="attachmentName" />
+		<set-payload
+			value='#[%dw 2.0&#10;import * from dw::core::Binaries&#10;output application/java&#10;---&#10;[{&#10;    PathOnClient: vars.attachmentName,&#10;    VersionData: vars.zipped_data as Binary {&#10;        class: "byte[]"&#10;    }&#10;}]]'
+			doc:name="Payload to Zip"
+			doc:id="fd90123b-7aa3-4900-a16a-5951556f2b1c" />
+		<flow-ref doc:name="salesforce-upsert-subflow"
+			doc:id="e4883456-7ae5-4824-ae70-e9c66f0655e9"
+			name="salesforce-upsert-subflow" />
+		<validation:is-true
+			doc:name="Check if empty errors"
+			doc:id="5e0bb6a0-0672-4d72-bff2-6b0c8b04a36d"
+			expression="#[isEmpty(payload.items[0].payload.errors)]"
+			message='#["Salesforce Upsert failed for Content Version object with message : " ++ (payload.items[0].exception.message default "")]'>
 			<error-mapping targetType="SF:UPSERT_FAILED" />
 		</validation:is-true>
-		<set-variable value="#[&quot;SELECT ContentDocumentId FROM ContentVersion WHERE Id = '&quot; ++ payload.items[0].id as String ++ &quot;'&quot;]" doc:name="query" doc:id="bf0400a2-518b-4fb2-9743-617fec5e1f9b" variableName="query" />
-		<flow-ref doc:name="salesforce-query-subflow" doc:id="41cc6c89-59cb-497a-8cbd-31b1a4662986" name="salesforce-query-subflow" />
-		<ee:transform doc:name="Link zip to oppurtunity" doc:id="b834d8ba-aee9-4f45-8d17-66f65f63e9be">
+		<set-variable
+			value="#[&quot;SELECT ContentDocumentId FROM ContentVersion WHERE Id = '&quot; ++ payload.items[0].id as String ++ &quot;'&quot;]"
+			doc:name="query" doc:id="bf0400a2-518b-4fb2-9743-617fec5e1f9b"
+			variableName="query" />
+		<flow-ref doc:name="salesforce-query-subflow"
+			doc:id="41cc6c89-59cb-497a-8cbd-31b1a4662986"
+			name="salesforce-query-subflow" />
+		<ee:transform doc:name="Link zip to oppurtunity"
+			doc:id="b834d8ba-aee9-4f45-8d17-66f65f63e9be">
 			<ee:message>
-				<ee:set-payload resource="dataweave/pAttachmentPayload.dwl" />
+				<ee:set-payload
+					resource="dataweave/pAttachmentPayload.dwl" />
 			</ee:message>
 		</ee:transform>
-		<set-variable value="${salesforce.docobj_contentdocumentlink}" doc:name="contentdocumentlink" doc:id="953ed2c2-8b9b-4297-b0be-65db2472ad7c" variableName="objectname" />
-		<flow-ref doc:name="salesforce-upsert-subflow1" doc:id="4b8a5b02-41ef-4ac4-b10c-1ae9f3c3df0d" name="salesforce-upsert-subflow" />
-		<logger level="INFO" doc:name="Info Log" doc:id="e2fa42c1-0ecf-4dc4-b42d-0a36c96d326e" message='#[{&#10;	"Salesforce Output": payload&#10;}]' />
+		<set-variable
+			value="${salesforce.docobj_contentdocumentlink}"
+			doc:name="contentdocumentlink"
+			doc:id="953ed2c2-8b9b-4297-b0be-65db2472ad7c"
+			variableName="objectname" />
+		<flow-ref doc:name="salesforce-upsert-subflow1"
+			doc:id="4b8a5b02-41ef-4ac4-b10c-1ae9f3c3df0d"
+			name="salesforce-upsert-subflow" />
+		<logger level="INFO" doc:name="Info Log"
+			doc:id="e2fa42c1-0ecf-4dc4-b42d-0a36c96d326e"
+			message='#[{&#10;	"Salesforce Output": payload&#10;}]' />
 	</sub-flow>
-	<sub-flow name="salesforce-upsert-subflow" doc:id="8664effd-8f43-49a7-ade6-e2c481d43168" >
-		<logger level="INFO" doc:name="Info Log" doc:id="515fbb36-0f0f-45b7-a6b4-91519c8c0f3b" message='#["Start upserting data into Salesforce for Object: " ++ (vars.objectname default "") as String]'/>
-		<try doc:name="Try" doc:id="4229be27-5f08-4aac-a00b-803da5db5ebe" >
-			<until-successful maxRetries="${retry.count}" doc:name="Until Successful" doc:id="34a27fcc-5809-4170-9ff5-6a26efab77ae" millisBetweenRetries="${retry.freq}">
-			<salesforce:upsert objectType="#[vars.objectname]" externalIdFieldName='#[vars.externalid default "Id"]' doc:name="Upsert in SF" doc:id="b0b5f341-e211-423a-bfad-4b3d84ba7f86" config-ref="Salesforce_Config" />
-		</until-successful>
-			<error-handler >
-				<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="d336d2d3-27b6-4551-8191-55cd2984a3ea" >
-					<logger level="ERROR" doc:name="Log Error" doc:id="b7db6cd3-d062-4674-abf3-ebc1b6ff0df7" message="Salesforce Upsert failed due to connectivity/upsert issues"/>
+	<sub-flow name="salesforce-upsert-subflow"
+		doc:id="8664effd-8f43-49a7-ade6-e2c481d43168">
+		<logger level="INFO" doc:name="Info Log"
+			doc:id="515fbb36-0f0f-45b7-a6b4-91519c8c0f3b"
+			message='#["Start upserting data into Salesforce for Object: " ++ (vars.objectname default "") as String]' />
+		<try doc:name="Try" doc:id="4229be27-5f08-4aac-a00b-803da5db5ebe">
+			<until-successful maxRetries="${retry.count}"
+				doc:name="Until Successful"
+				doc:id="34a27fcc-5809-4170-9ff5-6a26efab77ae"
+				millisBetweenRetries="${retry.freq}">
+				<salesforce:upsert objectType="#[vars.objectname]"
+					externalIdFieldName='#[vars.externalid default "Id"]'
+					doc:name="Upsert in SF"
+					doc:id="b0b5f341-e211-423a-bfad-4b3d84ba7f86"
+					config-ref="Salesforce_Config" />
+			</until-successful>
+			<error-handler>
+				<on-error-propagate enableNotifications="true"
+					logException="true" doc:name="On Error Propagate"
+					doc:id="d336d2d3-27b6-4551-8191-55cd2984a3ea">
+					<logger level="ERROR" doc:name="Log Error"
+						doc:id="b7db6cd3-d062-4674-abf3-ebc1b6ff0df7"
+						message="Salesforce Upsert failed due to connectivity/upsert issues" />
 				</on-error-propagate>
 			</error-handler>
 		</try>
-		<ee:transform doc:name="Convert Response to JSON" doc:id="5e0ac34d-0055-4462-aef1-44e4ef4c64c6">
+		<ee:transform doc:name="Convert Response to JSON"
+			doc:id="5e0ac34d-0055-4462-aef1-44e4ef4c64c6">
 			<ee:message>
 				<ee:set-payload><![CDATA[%dw 2.0
 output application/json
@@ -231,24 +388,41 @@ if (payload.items[0].statusCode=="DUPLICATES_DETECTED")
 ) else payload]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<remove-variable doc:name="Remove externalid" doc:id="66030918-2fa5-47d4-b82a-1e4e2d63e954" variableName="externalid"/>
-		<logger level="INFO" doc:name="Exit Log" doc:id="c60de00d-7ce2-4c37-84ed-594d93fe4fab" message='#["Finished upserting data into Salesforce for Object: " ++ (vars.objectname default "") as String]' />
+		<remove-variable doc:name="Remove externalid"
+			doc:id="66030918-2fa5-47d4-b82a-1e4e2d63e954"
+			variableName="externalid" />
+		<logger level="INFO" doc:name="Exit Log"
+			doc:id="c60de00d-7ce2-4c37-84ed-594d93fe4fab"
+			message='#["Finished upserting data into Salesforce for Object: " ++ (vars.objectname default "") as String]' />
 	</sub-flow>
-	<sub-flow name="salesforce-query-subflow" doc:id="6e64ce08-24ae-4f32-8219-f9bab4424101" >
-		<logger level="INFO" doc:name="Info Log" doc:id="1a117354-10cd-479e-9fa1-b21224a23cd9" message='#["Start query data from Salesforce : " ++ vars.query as String]' />
-		<try doc:name="Try" doc:id="fbecf16b-9780-4232-9d18-0d97cee156a9" >
-			<until-successful maxRetries="${retry.count}" doc:name="Until Successful" doc:id="6f278469-ed88-470f-866a-abcfa7ed4713" millisBetweenRetries="${retry.freq}">
-			<salesforce:query doc:name="Query Salesforce" doc:id="86290577-fa43-4729-abb1-183b17676270" config-ref="Salesforce_Config">
-			<salesforce:salesforce-query><![CDATA[#[vars.query]]]></salesforce:salesforce-query>
-		</salesforce:query>
-		</until-successful>
-			<error-handler >
-				<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="30c0c121-0dda-4210-a340-5d23b3bd531b" >
-					<logger level="ERROR" doc:name="Log Error" doc:id="2abc2336-7604-49a6-acc6-f864901438f0" message="Salesforce Query failed due to connectivity/invalid-query issues" />
+	<sub-flow name="salesforce-query-subflow"
+		doc:id="6e64ce08-24ae-4f32-8219-f9bab4424101">
+		<logger level="INFO" doc:name="Info Log"
+			doc:id="1a117354-10cd-479e-9fa1-b21224a23cd9"
+			message='#["Start query data from Salesforce : " ++ vars.query as String]' />
+		<try doc:name="Try" doc:id="fbecf16b-9780-4232-9d18-0d97cee156a9">
+			<until-successful maxRetries="${retry.count}"
+				doc:name="Until Successful"
+				doc:id="6f278469-ed88-470f-866a-abcfa7ed4713"
+				millisBetweenRetries="${retry.freq}">
+				<salesforce:query doc:name="Query Salesforce"
+					doc:id="86290577-fa43-4729-abb1-183b17676270"
+					config-ref="Salesforce_Config">
+					<salesforce:salesforce-query><![CDATA[#[vars.query]]]></salesforce:salesforce-query>
+				</salesforce:query>
+			</until-successful>
+			<error-handler>
+				<on-error-propagate enableNotifications="true"
+					logException="true" doc:name="On Error Propagate"
+					doc:id="30c0c121-0dda-4210-a340-5d23b3bd531b">
+					<logger level="ERROR" doc:name="Log Error"
+						doc:id="2abc2336-7604-49a6-acc6-f864901438f0"
+						message="Salesforce Query failed due to connectivity/invalid-query issues" />
 				</on-error-propagate>
 			</error-handler>
 		</try>
-		<ee:transform doc:name="Convert Response to JSON" doc:id="01b52378-5f66-4adf-935c-813c5c4a0e66">
+		<ee:transform doc:name="Convert Response to JSON"
+			doc:id="01b52378-5f66-4adf-935c-813c5c4a0e66">
 			<ee:message>
 				<ee:set-payload><![CDATA[%dw 2.0
 output application/json
@@ -256,6 +430,8 @@ output application/json
 payload]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<logger level="INFO" doc:name="Exit Log" doc:id="582ffbeb-eb3e-4441-a8b8-8ec139684a75" message="Finished query data from Salesforce" />
+		<logger level="INFO" doc:name="Exit Log"
+			doc:id="582ffbeb-eb3e-4441-a8b8-8ec139684a75"
+			message="Finished query data from Salesforce" />
 	</sub-flow>
 </mule>
